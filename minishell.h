@@ -16,8 +16,8 @@
 # define WORD 1
 # define PIPE 2
 # define REDI 3
-# define T_DOUBLE_QUOTES 4
-# define T_SINGLE_QUOTES 5
+# define DOUBLE_QUOTES 4
+# define SINGLE_QUOTES 5
 
 typedef struct s_token
 {
