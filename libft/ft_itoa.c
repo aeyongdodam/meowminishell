@@ -3,59 +3,67 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sohlee <sohlee@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: mkwon <mkwon@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/02 21:32:10 by sohlee            #+#    #+#             */
-/*   Updated: 2022/04/07 17:31:57 by sohlee           ###   ########.fr       */
+/*   Created: 2022/05/19 10:49:44 by mkwon             #+#    #+#             */
+/*   Updated: 2022/05/21 13:37:24 by mkwon            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
 
-static int	ft_size(long long num)
+static int	countn(int n)
 {
-	int	rtn;
+	int	cnt;
 
-	rtn = 0;
-	if (num == 0)
+	cnt = 0;
+	if (n == 0)
 		return (1);
-	if (num < 0)
+	if (n < 0)
 	{
-		rtn++;
-		num *= -1;
-	}
-	while (num > 0)
+		cnt++;
+		n = -n;
+	}	
+	while (n != 0)
 	{
-		num /= 10;
-		rtn++;
+		n = n / 10;
+		cnt++;
 	}
-	return (rtn);
+	return (cnt);
+}
+
+static void	ntostr(char *str, int *i, int n)
+{
+	if (n < 0)
+	{
+		str[(*i)] = '-';
+		(*i)++;
+		n = -n;
+	}
+	if (n > 9)
+	{
+		ntostr(str, i, n / 10);
+		ntostr(str, i, n % 10);
+	}
+	else
+		str[(*i)++] = n + '0';
 }
 
 char	*ft_itoa(int n)
 {
-	char		*dst;
-	long long	num;
-	int			size;
-	int			i;
+	char	*str;
+	int		index;
+	int		size;
 
-	num = n;
-	size = ft_size(num);
-	i = 0;
-	dst = malloc(sizeof(char) * (size + 1));
-	if (!dst)
+	size = 0;
+	index = 0;
+	if (n == -2147483648)
+		return (ft_strdup("-2147483648"));
+	size = countn(n);
+	str = (char *)malloc(sizeof(char) * (size + 1));
+	if (!str)
 		return (0);
-	if (num < 0)
-	{
-		num *= -1;
-		dst[0] = '-';
-		i++;
-	}
-	dst[size--] = 0;
-	while (size >= i)
-	{
-		dst[size--] = num % 10 + '0';
-		num /= 10;
-	}
-	return (dst);
+	str[size] = 0;
+	ntostr(str, &index, n);
+	return (str);
 }
