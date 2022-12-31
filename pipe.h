@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 typedef struct s_pipe{
-	int	*fd;
+	int	**fd;
 	int pipe_cnt;
 }t_pipe;
 
