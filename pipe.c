@@ -58,11 +58,15 @@ char	*find_path(char **envp, char *s)
 
 void wait_process(int cnt)
 {
-int	i;
+	int	i;
+	int	status;
 
 	i = 0;
-	while (i++ < cnt)
-		wait(NULL);
+	while (i < cnt + 1)
+	{
+		wait(&status);
+		i++;
+	}
 }
 
 char **get_command(t_node *tr)
@@ -85,7 +89,7 @@ char **get_command(t_node *tr)
 	while (tmp)
 	{
 		save_command[i] = ft_strdup(tmp->str);
-		//printf("save_command[i] %s\n",save_command[i]);
+
 		tmp = tmp->next;
 		i++;
 	}
@@ -109,6 +113,8 @@ void	main_pipe(t_tree *tree, char *envp[])
 	char **command;
 	int final = dup(1);
 
+	if (!tr->left_child)
+		return ;
 	i = 0;
 	while (i < pi->pipe_cnt + 1)
 	{
@@ -120,7 +126,19 @@ void	main_pipe(t_tree *tree, char *envp[])
 		pid = fork();
 		if (pid == 0) //자식 프로세스
 		{
-			if (i == 0)
+
+			if (i == pi->pipe_cnt)
+			{
+				if (i != 0)
+				{
+					dup2(pi->fd[i-1][0], 0);
+					dup2(final, 1);
+					close(pi->fd[i - 1][0]);
+					close(pi->fd[i - 1][1]);
+					close(final);
+				}
+			}
+			else if (i == 0)
 			{
 				openfd = open(NULL, O_RDONLY, 0644);
 				dup2(openfd, 0);
@@ -128,14 +146,6 @@ void	main_pipe(t_tree *tree, char *envp[])
 				close(pi->fd[i][0]);
 				close(openfd);
 				close(pi->fd[i][1]);
-			}
-			else if (i == pi->pipe_cnt)
-			{
-				dup2(pi->fd[i-1][0], 0);
-				dup2(final, 1);
-				close(pi->fd[i - 1][0]);
-				close(pi->fd[i - 1][1]);
-				close(final);
 			}
 			else
 			{

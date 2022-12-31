@@ -37,3 +37,12 @@ void	set_signal_handler(int flag)
 		signal(SIGINT, signal_handler);
 	}
 }
+
+void	set_terminal(void)
+{
+	struct termios	term;
+
+	tcgetattr(STDOUT_FILENO, &term);
+	term.c_lflag &= ~(ECHOCTL);
+	tcsetattr(STDOUT_FILENO, TCSANOW, &term);
+}

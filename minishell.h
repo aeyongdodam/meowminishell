@@ -51,6 +51,7 @@ typedef struct s_pipe{
 void	signal_handler(int sig);
 void	signal_handler2(int sig);
 void	set_signal_handler(int flag);
+void	set_terminal(void);
 
 //init.c
 t_token  *init_token(void);
