@@ -103,43 +103,43 @@ int main(int argc, char **argv, char *envp[])
 
 
 	int j = 0;
-//트리 짜본거
-	tr = malloc(sizeof(t_node));
-	pi = malloc(sizeof(t_pipe));
-	tr->token = malloc(sizeof(t_token));
-	tr->token->str = "start";
+////트리 짜본거
+//	tr = malloc(sizeof(t_node));
+//	pi = malloc(sizeof(t_pipe));
+//	tr->token = malloc(sizeof(t_token));
+//	tr->token->str = "start";
 
-	tr->left_child = malloc(sizeof(t_node));
-	tr->left_child->token = malloc(sizeof(t_token));
-	tr->left_child->token->str = "grep";
-	tr->left_child->token->next = malloc(sizeof(t_token));
-	tr->left_child->token->next->str = "a";
-	tr->left_child->token->next->next = malloc(sizeof(t_token));
-	tr->left_child->token->next->next->str = "Makefile";
-	tr->left_child->token->next->next->next = malloc(sizeof(t_token));
-	tr->left_child->token->next->next->next->str = "a.txt";
+//	tr->left_child = malloc(sizeof(t_node));
+//	tr->left_child->token = malloc(sizeof(t_token));
+//	tr->left_child->token->str = "grep";
+//	tr->left_child->token->next = malloc(sizeof(t_token));
+//	tr->left_child->token->next->str = "a";
+//	tr->left_child->token->next->next = malloc(sizeof(t_token));
+//	tr->left_child->token->next->next->str = "Makefile";
+//	tr->left_child->token->next->next->next = malloc(sizeof(t_token));
+//	tr->left_child->token->next->next->next->str = "a.txt";
 
-	tmp = malloc(sizeof(t_node));
-	tmp->token = malloc(sizeof(t_token));
-	tr->right_child = tmp;
+//	tmp = malloc(sizeof(t_node));
+//	tmp->token = malloc(sizeof(t_token));
+//	tr->right_child = tmp;
 
-	tmp->left_child = malloc(sizeof(t_node));
-	tmp->left_child->token = malloc(sizeof(t_token));
-	tmp->left_child->token->str = "ls";
-	tmp->left_child->token->next = malloc(sizeof(t_token));
-	tmp->left_child->token->next->str = "-la";
+//	tmp->left_child = malloc(sizeof(t_node));
+//	tmp->left_child->token = malloc(sizeof(t_token));
+//	tmp->left_child->token->str = "ls";
+//	tmp->left_child->token->next = malloc(sizeof(t_token));
+//	tmp->left_child->token->next->str = "-la";
 
-	tmp2 = malloc(sizeof(t_pipe));
-	tmp2->token=malloc(sizeof(t_token));
-	tmp->right_child = tmp2;
+//	tmp2 = malloc(sizeof(t_pipe));
+//	tmp2->token=malloc(sizeof(t_token));
+//	tmp->right_child = tmp2;
 
-	tmp2->left_child = malloc(sizeof(t_node));
-	tmp2->left_child->token = malloc(sizeof(t_token));
-	tmp2->left_child->token->str = "wc";
-	tmp2->left_child->token->next = malloc(sizeof(t_token));
-	tmp2->left_child->token->next->str = "-l";
+//	tmp2->left_child = malloc(sizeof(t_node));
+//	tmp2->left_child->token = malloc(sizeof(t_token));
+//	tmp2->left_child->token->str = "wc";
+//	tmp2->left_child->token->next = malloc(sizeof(t_token));
+//	tmp2->left_child->token->next->str = "-l";
 
-//트리끝
+////트리끝
 
 
 	pipe_count(tr, pi);
