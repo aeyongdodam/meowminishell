@@ -3,16 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   ft_striteri.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sohlee <sohlee@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: mkwon <mkwon@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/02 21:53:36 by sohlee            #+#    #+#             */
-/*   Updated: 2022/04/02 21:55:45 by sohlee           ###   ########.fr       */
+/*   Created: 2022/05/19 11:11:36 by mkwon             #+#    #+#             */
+/*   Updated: 2022/05/19 11:14:13 by mkwon            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
+
 void	ft_striteri(char *s, void (*f)(unsigned int, char*))
 {
-	unsigned int	i;
+	int	i;
 
 	i = 0;
 	while (s[i] != 0)

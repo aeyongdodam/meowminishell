@@ -1,7 +1,6 @@
-#include "pipe.h"
-#include "tree.h"
-#include "libft/libft.h"
-#include <fcntl.h>
+
+#include "minishell.h"
+
 void	pipe_count(t_node *tr, t_pipe *pi)
 {
 	pi->pipe_cnt = 0;
@@ -86,7 +85,7 @@ char **get_command(t_node *tr)
 	while (tmp)
 	{
 		save_command[i] = ft_strdup(tmp->str);
-		//printf("save_command[i] %s\n",save_command[i]);
+
 		tmp = tmp->next;
 		i++;
 	}
@@ -94,54 +93,13 @@ char **get_command(t_node *tr)
 	return (save_command);
 }
 
-int main(int argc, char **argv, char *envp[])
+void	main_pipe(t_tree *tree, char *envp[])
 {
 	t_pipe *pi;
 	t_node *tr;
-	t_node *tmp;
-	t_node *tmp2;
 
-
+	tr = tree->root;
 	int j = 0;
-////트리 짜본거
-//	tr = malloc(sizeof(t_node));
-//	pi = malloc(sizeof(t_pipe));
-//	tr->token = malloc(sizeof(t_token));
-//	tr->token->str = "start";
-
-//	tr->left_child = malloc(sizeof(t_node));
-//	tr->left_child->token = malloc(sizeof(t_token));
-//	tr->left_child->token->str = "grep";
-//	tr->left_child->token->next = malloc(sizeof(t_token));
-//	tr->left_child->token->next->str = "a";
-//	tr->left_child->token->next->next = malloc(sizeof(t_token));
-//	tr->left_child->token->next->next->str = "Makefile";
-//	tr->left_child->token->next->next->next = malloc(sizeof(t_token));
-//	tr->left_child->token->next->next->next->str = "a.txt";
-
-//	tmp = malloc(sizeof(t_node));
-//	tmp->token = malloc(sizeof(t_token));
-//	tr->right_child = tmp;
-
-//	tmp->left_child = malloc(sizeof(t_node));
-//	tmp->left_child->token = malloc(sizeof(t_token));
-//	tmp->left_child->token->str = "ls";
-//	tmp->left_child->token->next = malloc(sizeof(t_token));
-//	tmp->left_child->token->next->str = "-la";
-
-//	tmp2 = malloc(sizeof(t_pipe));
-//	tmp2->token=malloc(sizeof(t_token));
-//	tmp->right_child = tmp2;
-
-//	tmp2->left_child = malloc(sizeof(t_node));
-//	tmp2->left_child->token = malloc(sizeof(t_token));
-//	tmp2->left_child->token->str = "wc";
-//	tmp2->left_child->token->next = malloc(sizeof(t_token));
-//	tmp2->left_child->token->next->str = "-l";
-
-////트리끝
-
-
 	pipe_count(tr, pi);
 	pipe_malloc_open(pi);
 	int	i;
@@ -151,6 +109,8 @@ int main(int argc, char **argv, char *envp[])
 	char **command;
 	int final = dup(1);
 
+	if (!tr->left_child)
+		return ;
 	i = 0;
 	while (i < pi->pipe_cnt + 1)
 	{
@@ -162,7 +122,19 @@ int main(int argc, char **argv, char *envp[])
 		pid = fork();
 		if (pid == 0) //자식 프로세스
 		{
-			if (i == 0)
+
+			if (i == pi->pipe_cnt)
+			{
+				if (i != 0)
+				{
+					dup2(pi->fd[i-1][0], 0);
+					dup2(final, 1);
+					close(pi->fd[i - 1][0]);
+					close(pi->fd[i - 1][1]);
+					close(final);
+				}
+			}
+			else if (i == 0)
 			{
 				openfd = open(NULL, O_RDONLY, 0644);
 				dup2(openfd, 0);
@@ -170,14 +142,6 @@ int main(int argc, char **argv, char *envp[])
 				close(pi->fd[i][0]);
 				close(openfd);
 				close(pi->fd[i][1]);
-			}
-			else if (i == pi->pipe_cnt)
-			{
-				dup2(pi->fd[i-1][0], 0);
-				dup2(final, 1);
-				close(pi->fd[i - 1][0]);
-				close(pi->fd[i - 1][1]);
-				close(final);
 			}
 			else
 			{

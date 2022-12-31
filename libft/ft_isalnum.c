@@ -3,19 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isalnum.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sohlee <sohlee@42.fr>                      +#+  +:+       +#+        */
+/*   By: mkwon <mkwon@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/22 20:24:19 by sohlee            #+#    #+#             */
-/*   Updated: 2022/03/25 22:28:16 by sohlee           ###   ########.fr       */
+/*   Created: 2022/03/11 15:25:54 by mkwon             #+#    #+#             */
+/*   Updated: 2022/03/12 16:49:33 by mkwon            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 int	ft_isalnum(int c)
 {
-	if (c >= '0' && c <= '9')
+	if (c >= 'A' && c <= 'Z')
 		return (1);
-	else if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
-		return (1);
+	else if (c >= 'a' && c <= 'z')
+		return (2);
+	else if (c >= '0' && c <= '9')
+		return (4);
 	else
 		return (0);
 }

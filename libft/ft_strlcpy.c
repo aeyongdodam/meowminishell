@@ -3,31 +3,45 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlcpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sohlee <sohlee@42.fr>                      +#+  +:+       +#+        */
+/*   By: mkwon <mkwon@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/25 16:37:32 by sohlee            #+#    #+#             */
-/*   Updated: 2022/05/02 20:05:52 by sohlee           ###   ########.fr       */
+/*   Created: 2022/03/11 18:02:50 by mkwon             #+#    #+#             */
+/*   Updated: 2022/05/19 16:04:18 by mkwon            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
+static void	change_str(char *dest, const char *src, size_t size)
 {
 	size_t	i;
-	size_t	len;
 
 	i = 0;
-	len = 0;
-	while (src[len] != 0)
-		len++;
-	if (dstsize == 0)
-		return (len);
-	while (i < dstsize - 1 && src[i] != 0)
+	while (1)
 	{
-		dst[i] = src[i];
+		if (src[i] == 0)
+		{
+			dest[i] = 0;
+			break ;
+		}
+		if (i == size - 1)
+		{
+			dest[i] = 0;
+			break ;
+		}
+		dest[i] = src[i];
 		i++;
 	}
-	dst[i] = 0;
-	return (len);
+}
+
+size_t	ft_strlcpy(char *dest, const char *src, size_t size)
+{
+	size_t	i;
+
+	i = 0;
+	if (size != 0)
+		change_str(dest, src, size);
+	while (src[i] != 0)
+		i++;
+	return (i);
 }

@@ -3,17 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isalpha.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sohlee <sohlee@42.fr>                      +#+  +:+       +#+        */
+/*   By: mkwon <mkwon@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/22 19:39:38 by sohlee            #+#    #+#             */
-/*   Updated: 2022/03/22 20:08:03 by sohlee           ###   ########.fr       */
+/*   Created: 2022/03/11 15:19:38 by mkwon             #+#    #+#             */
+/*   Updated: 2022/03/12 16:49:22 by mkwon            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 int	ft_isalpha(int c)
 {
-	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+	if (c >= 'A' && c <= 'Z')
 		return (1);
+	else if (c >= 'a' && c <= 'z')
+		return (2);
 	else
 		return (0);
 }

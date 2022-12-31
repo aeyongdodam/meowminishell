@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sohlee <sohlee@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: mkwon <mkwon@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/26 13:31:42 by sohlee            #+#    #+#             */
-/*   Updated: 2022/04/07 17:34:16 by sohlee           ###   ########.fr       */
+/*   Created: 2022/03/14 17:30:56 by mkwon             #+#    #+#             */
+/*   Updated: 2022/05/20 12:26:54 by mkwon            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,24 @@
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-	char	*dst;
-	size_t	s1_len;
-	size_t	s2_len;
 	size_t	i;
+	size_t	j;
+	char	*str;
 
-	s1_len = ft_strlen(s1);
-	s2_len = ft_strlen(s2);
-	dst = malloc(sizeof(char) * (s1_len + s2_len + 1));
-	if (!dst)
+	i = 0;
+	j = 0;
+	if (!s1 || !s2)
 		return (0);
-	i = 0;
-	while (i < s1_len)
+	str = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (!str)
+		return (0);
+	while (i < ft_strlen(s1))
 	{
-		dst[i] = s1[i];
+		str[i] = s1[i];
 		i++;
 	}
-	i = 0;
-	while (i < s2_len)
-	{
-		dst[i + s1_len] = s2[i];
-		i++;
-	}
-	dst[s1_len + s2_len] = 0;
-	return (dst);
+	while (j < ft_strlen(s2))
+		str[i++] = s2[j++];
+	str[i] = 0;
+	return (str);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sohlee <sohlee@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: mkwon <mkwon@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/26 13:13:43 by sohlee            #+#    #+#             */
-/*   Updated: 2022/05/11 16:28:45 by sohlee           ###   ########.fr       */
+/*   Created: 2022/03/12 17:17:10 by mkwon             #+#    #+#             */
+/*   Updated: 2022/05/21 17:08:57 by mkwon            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,28 @@
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	char	*dst;
+	char	*str;
 	size_t	i;
-	size_t	s_len;
+	size_t	j;
 
-	s_len = ft_strlen(s);
-	if (s_len <= len)
-		dst = malloc(sizeof(char) * (s_len + 1));
-	else
-		dst = malloc(sizeof(char) * (len + 1));
-	if (!dst)
-		return (0);
 	i = 0;
-	while (i < len)
+	j = 0;
+	if (!s)
+		return (0);
+	if (ft_strlen(s) < len)
+		len = ft_strlen(s);
+	str = (char *)malloc(sizeof(char) * (len + 1));
+	if (!str)
+		return (0);
+	while (s[i] != 0)
 	{
-		if (start + i >= s_len)
+		if (i >= start && j < len)
 		{
-			dst[i] = 0;
-			break ;
+			str[j] = s[i];
+			j++;
 		}
-		else
-			dst[i] = s[start + i];
 		i++;
 	}
-	dst[i] = 0;
-	return (dst);
+	str[j] = 0;
+	return (str);
 }
