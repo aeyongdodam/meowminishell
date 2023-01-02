@@ -18,7 +18,7 @@ char	*str_one_join(char *s1, char c)
 		i++;
 	}
 	str[i] = c;
-	str[i+1] = 0;
+	str[i + 1] = 0;
 	free(s1);
 	return (str);
 }
@@ -35,7 +35,7 @@ void	save_token(t_node *node, char *str, int flag)
 {
 	t_token	*token;
 
-	if (node->left_child == NULL) //처음 토큰
+	if (node->left_child == NULL)
 	{
 		node->left_child = init_node();
 		node->left_child->flag = flag;
@@ -53,23 +53,81 @@ void	save_token(t_node *node, char *str, int flag)
 	}
 }
 
-void	prt_tree(t_node *node, int le, int ri)
+t_tree	*lexer(char	*line)
 {
-	t_token	*token;
+	t_tree	*tree;
+	t_node	*node;
+	char	*str;
+	int		space;
+	int		pipe;
 
-	printf("flag : %d, L : %d, R : %d :::",node->flag,le,ri);
-	if (node->flag != 0)
+	str = malloc(1);
+	str[0] = 0;
+	tree = init_tree();
+	node = tree->root;
+	node->flag = 0;
+	space = 0;
+	while (*line)
 	{
-		token = node->token;
-		while (token)
+		if (*line == ' ')
 		{
-			printf("%s ",token->str);
-			token = token->next;
+			if (space == 0 && str[0] != 0) //연속 space 제거
+			{
+				save_token(node, str, 1);
+				str = re_str(str);
+				space = 1;
+				pipe = 0;
+			}
 		}
+		else if (*line == '|')
+		{
+			if (pipe == 1)
+			{
+				exit(1);
+				//연속된 파이프는 전부 에러처리함 ||이거도 | | 이거도
+				// input : echo hi | | echo hello
+				// ouput : bash: syntax error near unexpected token `|'
+			}
+			if (space == 0 && str) //space없이 바로 파이프
+			{
+				save_token(node, str, 1);
+				str = re_str(str);
+			}
+			node->right_child = init_node();
+			node->right_child->flag = 2;
+			node->right_child->token->str = ft_strdup("|");
+			node = node->right_child;
+			space = 0;
+			pipe = 1;
+			tree->pipe_cnt++;
+		}
+		else if (*line == '<' && *(line+1) == '<')
+		{
+			printf("here");
+			line++;
+		}
+		else if (*line == '>' && *(line+1) == '>')
+		{
+			printf("redi");
+			line++;
+		}
+		else if (*line == '<' || *line == '>')
+		{
+			printf("ridi");
+		}
+		else //word일때 차곡차곡 str에 담아요
+		{
+			str = str_one_join(str, line[0]);
+			space = 0;
+			pipe = 0;
+		}
+		line++;
 	}
-	printf("\n");
-	if (node->left_child != NULL)
-		prt_tree(node->left_child,le+1,ri);
-	if (node->right_child != NULL)
-		prt_tree(node->right_child,le,ri+1);
+	if (str[0] != 0) //마지막 문자열
+	{
+		save_token(node, str, 1);
+	}
+	//prt_tree(tree->root, 0, 0);
+	free(str);
+	return (tree);
 }

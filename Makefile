@@ -1,12 +1,14 @@
 
 
 CC = cc
-SRC = main.c signal.c init.c lexer.c pipe.c
+SRC = main.c signal.c init.c lexer.c 
+SRC += pipe.c
+SRC += utils.c
 OBJ = $(SRC:.c=.o)
 HEADER = -include ./minishell.h
 
 # CFLAGS = #-Wall -Wextra -Werror
-CFLAGS = #-g3 -fsanitize=address
+CFLAGS = -g3 -fsanitize=address
 COMFILE_FLAGS = -lreadline -L /$(shell brew --prefix readline)/lib
 OBJ_FLAGS = -I /$(shell brew --prefix readline)/include
 

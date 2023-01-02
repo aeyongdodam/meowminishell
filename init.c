@@ -1,14 +1,14 @@
 
 #include "minishell.h"
 
-t_token  *init_token(void)
+t_token	*init_token(void)
 {
-    t_token *token;
+	t_token	*token;
 
-    token = malloc(sizeof(t_token));
-    token->prev = NULL;
-    token->next = NULL;
-    return (token);
+	token = malloc(sizeof(t_token));
+	token->prev = NULL;
+	token->next = NULL;
+	return (token);
 }
 
 t_node	*init_node(void)
@@ -28,5 +28,8 @@ t_tree	*init_tree(void)
 
 	tree = malloc(sizeof(t_tree));
 	tree->root = init_node();
+	tree->pipe_cnt = 0;
+	tree->ridi_cnt = 0;
+	tree->heredoc_cnt = 0;
 	return (tree);
 }
