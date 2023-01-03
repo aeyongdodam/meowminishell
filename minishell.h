@@ -19,6 +19,7 @@
 # define REDI 3
 # define DOUBLE_QUOTES 4
 # define SINGLE_QUOTES 5
+# define HERE 6
 
 typedef struct s_token
 {
@@ -40,6 +41,7 @@ typedef struct s_tree
 	struct s_node	*root;
 	int				pipe_cnt;
 	int				ridi_cnt;
+	int				heredoc_cnt;
 }	t_tree;
 
 typedef struct s_pipe{
@@ -62,10 +64,12 @@ t_tree	*init_tree(void);
 char	*re_str(char *str);
 char	*str_one_join(char *s1, char c);
 void	save_token(t_node *node, char *str, int flag);
-void	prt_tree(t_node *node,int le, int ri);
-
+t_tree	*lexer(char	*line);
 
 //pipe.c
 void	main_pipe(t_tree *tree, char *envp[]);
+
+//utils
+void	prt_tree(t_node *node,int le, int ri);
 
 #endif
