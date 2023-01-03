@@ -16,7 +16,7 @@ int main(int argc, char **argv, char *envp[])
 		if (line)
         {
 			tree = lexer(line);
-			// main_pipe(tree, envp);
+			main_pipe(tree, envp);
 			add_history(line);
 			free(line);
         }
