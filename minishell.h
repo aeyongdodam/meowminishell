@@ -26,12 +26,12 @@ typedef struct s_token
 	struct s_token	*prev;
 	struct s_token	*next;
 	char			*str;
+	int				flag;
 }	t_token;
 
 typedef struct s_node
 {
 	t_token			*token;
-	int				flag;
 	struct s_node	*left_child;
 	struct s_node	*right_child;
 }	t_node;

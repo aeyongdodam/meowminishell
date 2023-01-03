@@ -4,13 +4,13 @@ void	prt_tree(t_node *node, int le, int ri)
 {
 	t_token	*token;
 
-	printf("flag : %d, L : %d, R : %d :::", node->flag, le, ri);
-	if (node->flag != 0)
+	printf("L : %d, R : %d :::", le, ri);
+	if (node->token->flag != 0)
 	{
 		token = node->token;
 		while (token)
 		{
-			printf("%s ", token->str);
+			printf("flag : %d, str : %s / ", token->flag, token->str);
 			token = token->next;
 		}
 	}
