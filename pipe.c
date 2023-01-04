@@ -4,7 +4,7 @@
 void	pipe_count(t_node *tr, t_pipe *pi)
 {
 	pi->pipe_cnt = 0;
-//	printf("lll tr-> %s\n",tr->left_child->token->str);
+
 	while (tr->right_child)
 	{
 		pi->pipe_cnt++;
@@ -13,7 +13,7 @@ void	pipe_count(t_node *tr, t_pipe *pi)
 
 }
 
-void pipe_malloc_open(t_pipe *pi,int pipe_cnt)
+void pipe_malloc_open(t_pipe *pi, int pipe_cnt)
 {
 	int	i;
 
@@ -71,6 +71,32 @@ void wait_process(int cnt)
 	}
 }
 
+char **get_redi_command(t_node *tr)
+{
+	t_token *tmp;
+	int	i = 0;
+	int	j = 0;
+	tmp = tr->left_child->token;
+	char **save_command;
+	while (tmp)
+	{
+		if (ft_strncmp(tmp->str, "<", 2) == 0 || ft_strncmp(tmp->str, ">>", 3) == 0 || ft_strncmp(tmp->str, ">", 2) == 0)
+			break;
+		i++;
+		tmp = tmp->next;
+	}
+	tmp = tr->left_child->token;
+	save_command = malloc(sizeof(char *) * (i + 1));
+	while (j < i)
+	{
+		save_command[j] = tmp->str;
+		tmp = tmp->next;
+		j++;
+	}
+	save_command[j] = NULL;
+	return (save_command);
+}
+
 char **get_command(t_node *tr)
 {
 	int	i;
@@ -99,6 +125,26 @@ char **get_command(t_node *tr)
 	return (save_command);
 }
 
+int	check_redi(t_node *tr)
+{
+	int	flag;
+
+	flag = 0;
+	t_token *tmp;
+
+	tmp = tr->left_child->token;
+	while(tmp)
+	{
+	if (ft_strncmp(tmp->str, ">", 2) == 0 || ft_strncmp(tmp->str, "<", 2) == 0 || \
+	ft_strncmp(tmp->str, ">>", 3) == 0)
+		flag = 1;
+	tmp = tmp->next;
+	}
+	return (flag);
+}
+
+
+
 void	main_pipe(t_tree *tree, char *envp[])
 {
 	t_pipe *pi;
@@ -111,7 +157,10 @@ void	main_pipe(t_tree *tree, char *envp[])
 	pid_t	pid;
 	char *str;
 	int openfd;
+	int finalfd;
 	char **command;
+	int redi_flag;
+	t_token	*tmp;
 	int final = dup(1);
 
 	if (!tr->left_child)
@@ -122,13 +171,41 @@ void	main_pipe(t_tree *tree, char *envp[])
 	//path 구하기 시작
 
 		str = find_path(envp, tr->left_child->token->str);
-		command = get_command(tr);
+		if (check_redi(tr) == 1)
+			command = get_redi_command(tr);
+		else
+			command = get_command(tr);
 	//path 구함
 		pid = fork();
 		if (pid == 0) //자식 프로세스
 		{
-
-			if (i == tree->pipe_cnt)
+			if (check_redi(tr) == 1)
+			{
+				tmp = tr->left_child->token;
+				while (tmp)
+				{
+					if (ft_strncmp(tmp->str, "<", 2) == 0)
+						{
+							openfd =  open(tmp->next->str, O_RDONLY);
+							if (openfd >= 0)
+								dup2(openfd, 0);
+						}
+					if (ft_strncmp(tmp->str, ">>", 3) == 0)
+					{
+						finalfd = open(tmp->next->str, O_WRONLY | O_APPEND | O_CREAT, 0644);
+						if (finalfd >= 0)
+							dup2(finalfd, 1);
+					}
+					else if (ft_strncmp(tmp->str, ">", 2) == 0)
+					{
+						finalfd = open(tmp->next->str, O_WRONLY | O_TRUNC | O_CREAT, 0644);
+						if (finalfd >= 0)
+							dup2(finalfd, 1);
+					}
+					tmp = tmp->next;
+				}
+			}
+			else if (i == tree->pipe_cnt)
 			{
 				if (i != 0)
 				{
@@ -141,8 +218,6 @@ void	main_pipe(t_tree *tree, char *envp[])
 			}
 			else if (i == 0)
 			{
-				openfd = open(NULL, O_RDONLY, 0644);
-				dup2(openfd, 0);
 				dup2(pi->fd[i][1], 1);
 				close(pi->fd[i][0]);
 				close(openfd);
