@@ -95,7 +95,10 @@ t_tree	*lexer(char	*line)
 			}
 		}
 		else if (get_type(line) == PIPE)
+		{
 			node = pipe_token(node, str, &space, &pipe);
+			tree->pipe_cnt++;
+		}
 		else if (get_type(line) == REDI || get_type(line) == HERE)
 		{
 			if (redi_token(node, line, str, &space))

@@ -46,7 +46,7 @@ typedef struct s_tree
 
 typedef struct s_pipe{
 	int	**fd;
-	int pipe_cnt;
+	int	pipe_cnt;
 }	t_pipe;
 
 //signal.c
@@ -56,18 +56,18 @@ void	set_signal_handler(int flag);
 void	set_terminal(void);
 
 //init.c
-t_token  *init_token(void);
+t_token	*init_token(void);
 t_node	*init_node(void);
 t_tree	*init_tree(void);
 
 //lexer.c
 void	save_token(t_node *node, char *str, int flag);
 t_node	*pipe_token(t_node *node, char *str, int *space, int *pipe);
-int	redi_token(t_node *node, char *line, char *str, int *space);
+int		redi_token(t_node *node, char *line, char *str, int *space);
 t_tree	*lexer(char	*line);
 
 //lexer_utils
-int	get_type(char *line);
+int		get_type(char *line);
 char	*str_one_join(char *s1, char c);
 char	*re_str(char *str);
 
@@ -75,6 +75,6 @@ char	*re_str(char *str);
 void	main_pipe(t_tree *tree, char *envp[]);
 
 //utils
-void	prt_tree(t_node *node,int le, int ri);
+void	prt_tree(t_node *node, int le, int ri);
 
 #endif
