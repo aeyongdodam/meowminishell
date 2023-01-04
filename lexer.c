@@ -1,36 +1,6 @@
 
 #include "minishell.h"
 
-char	*str_one_join(char *s1, char c)
-{
-	int		i;
-	int		len;
-	char	*str;
-
-	i = 0;
-	len = ft_strlen(s1);
-	str = (char *)malloc(sizeof(char) * (len + 2));
-	if (!str)
-		return (0);
-	while (i < len)
-	{
-		str[i] = s1[i];
-		i++;
-	}
-	str[i] = c;
-	str[i + 1] = 0;
-	free(s1);
-	return (str);
-}
-
-char	*re_str(char *str)
-{
-	free(str);
-	str = malloc(1);
-	str[0] = 0;
-	return (str);
-}
-
 void	save_token(t_node *node, char *str, int flag)
 {
 	t_token	*token;
@@ -52,6 +22,50 @@ void	save_token(t_node *node, char *str, int flag)
 		token->next->str = ft_strdup(str);
 		token->next->flag = flag;
 	}
+}
+
+t_node	*pipe_token(t_node *node, char *str, int *space, int *pipe)
+{
+	if (*pipe == 1)
+	{
+		exit(1);
+	}
+	if (space == 0 && str[0] != 0)
+	{
+		save_token(node, str, WORD);
+		str = re_str(str);
+	}
+	node->right_child = init_node();
+	node->right_child->token->flag = PIPE;
+	node->right_child->token->str = ft_strdup("|");
+	node = node->right_child;
+	*space = 0;
+	*pipe = 1;
+	return (node);
+}
+
+int	redi_token(t_node *node, char *line, char *str, int *space)
+{
+	if (*space == 0 && str[0] != 0)
+	{
+		save_token(node, str, WORD);
+		str = re_str(str);
+	}
+	if (*line == '<' && *(line + 1) == '<')
+	{
+		save_token(node, "<<", HERE);
+		return (1);
+	}
+	else if (*line == '>' && *(line + 1) == '>')
+	{
+		save_token(node, ">>", REDI);
+		return (1);
+	}
+	else if (*line == '<')
+		save_token(node, "<", REDI);
+	else if (*line == '>')
+		save_token(node, ">", REDI);
+	return (0);
 }
 
 t_tree	*lexer(char	*line)
@@ -80,67 +94,14 @@ t_tree	*lexer(char	*line)
 				pipe = 0;
 			}
 		}
-		else if (*line == '|')
+		else if (get_type(line) == PIPE)
+			node = pipe_token(node, str, &space, &pipe);
+		else if (get_type(line) == REDI || get_type(line) == HERE)
 		{
-			if (pipe == 1)
-			{
-				exit(1);
-				//연속된 파이프는 전부 에러처리함 ||이거도 | | 이거도
-				// input : echo hi | | echo hello
-				// ouput : bash: syntax error near unexpected token `|'
-			}
-			if (space == 0 && str) //space없이 바로 파이프
-			{
-				save_token(node, str, WORD);
-				str = re_str(str);
-			}
-			node->right_child = init_node();
-			node->right_child->token->flag = 2;
-			node->right_child->token->str = ft_strdup("|");
-			node = node->right_child;
-			space = 0;
-			pipe = 1;
-			tree->pipe_cnt++;
-		}
-		else if (*line == '<' && *(line+1) == '<')
-		{
-			if (space == 0 && str) //space없이 바로 파이프
-			{
-				save_token(node, str, WORD);
-				str = re_str(str);
-			}
-			save_token(node, "<<", HERE);
+			if (redi_token(node, line, str, &space))
 			line++;
 		}
-		else if (*line == '>' && *(line+1) == '>')
-		{
-			if (space == 0 && str) //space없이 바로 파이프
-			{
-				save_token(node, str, WORD);
-				str = re_str(str);
-			}
-			save_token(node, ">>", REDI);
-			line++;
-		}
-		else if (*line == '<')
-		{
-			if (space == 0 && str) //space없이 바로 파이프
-			{
-				save_token(node, "str", WORD);
-				str = re_str(str);
-			}
-			save_token(node, "<", REDI);
-		}
-		else if (*line == '>')
-		{
-			if (space == 0 && str) //space없이 바로 파이프
-			{
-				save_token(node, "str", WORD);
-				str = re_str(str);
-			}
-			save_token(node, ">", REDI);
-		}
-		else //word일때 차곡차곡 str에 담아요
+		else
 		{
 			str = str_one_join(str, line[0]);
 			space = 0;
@@ -151,8 +112,9 @@ t_tree	*lexer(char	*line)
 	if (str[0] != 0) //마지막 문자열
 	{
 		save_token(node, str, WORD);
+		str = re_str(str);
 	}
-	prt_tree(tree->root, 0, 0);
+	// prt_tree(tree->root, 0, 0);
 	free(str);
 	return (tree);
 }
