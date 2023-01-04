@@ -114,7 +114,7 @@ t_tree	*lexer(char	*line)
 		save_token(node, str, WORD);
 		str = re_str(str);
 	}
-	// prt_tree(tree->root, 0, 0);
+//	prt_tree(tree->root, 0, 0);
 	free(str);
 	return (tree);
 }

@@ -4,20 +4,22 @@
 void	pipe_count(t_node *tr, t_pipe *pi)
 {
 	pi->pipe_cnt = 0;
+//	printf("lll tr-> %s\n",tr->left_child->token->str);
 	while (tr->right_child)
 	{
 		pi->pipe_cnt++;
 		tr=tr->right_child;
 	}
+
 }
 
-void pipe_malloc_open(t_pipe *pi)
+void pipe_malloc_open(t_pipe *pi,int pipe_cnt)
 {
 	int	i;
 
 	i = 0;
-	pi->fd = malloc(sizeof(int *) * pi->pipe_cnt);
-	while (i < pi->pipe_cnt)
+	pi->fd = malloc(sizeof(int *) * pipe_cnt);
+	while (i < pipe_cnt)
 	{
 		pi->fd[i] = malloc(sizeof(int) * 2);
 		pipe(pi->fd[i]);
@@ -64,7 +66,7 @@ void wait_process(int cnt)
 	i = 0;
 	while (i < cnt + 1)
 	{
-		wait(&status);
+		wait(NULL);
 		i++;
 	}
 }
@@ -104,8 +106,7 @@ void	main_pipe(t_tree *tree, char *envp[])
 
 	tr = tree->root;
 	int j = 0;
-	pipe_count(tr, pi);
-	pipe_malloc_open(pi);
+	pipe_malloc_open(pi, tree->pipe_cnt);
 	int	i;
 	pid_t	pid;
 	char *str;
@@ -116,18 +117,18 @@ void	main_pipe(t_tree *tree, char *envp[])
 	if (!tr->left_child)
 		return ;
 	i = 0;
-	while (i < pi->pipe_cnt + 1)
+	while (i < tree->pipe_cnt + 1)
 	{
 	//path 구하기 시작
+
 		str = find_path(envp, tr->left_child->token->str);
 		command = get_command(tr);
 	//path 구함
-
 		pid = fork();
 		if (pid == 0) //자식 프로세스
 		{
 
-			if (i == pi->pipe_cnt)
+			if (i == tree->pipe_cnt)
 			{
 				if (i != 0)
 				{
@@ -166,5 +167,5 @@ void	main_pipe(t_tree *tree, char *envp[])
 		tr=tr->right_child;
 		i++;
 	}
-	wait_process(pi->pipe_cnt); //다 끝날때까지 부모 프로세스 기다려야함
+	wait_process(tree->pipe_cnt); //다 끝날때까지 부모 프로세스 기다려야함
 }
