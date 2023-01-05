@@ -15,19 +15,19 @@ void pipe_malloc_open(t_pipe *pi, int pipe_cnt)
 	}
 }
 
-char	*find_path(char **envp, char *s)
+char	*find_path(t_envnode *envnode, char *s)
 {
 	int	i;
 	char *save_path;
 	i = 0;
-	while (envp[i] != 0)
+	while (envnode != 0)
 	{
-		if (ft_strncmp("PATH=", envp[i], 5) == 0)
+		if (ft_strncmp("PATH=", envnode->key, 4) == 0)
 		{
-			save_path = ft_strdup(envp[i]);
+			save_path = ft_strdup(envnode->value);
 			break;
 		}
-		i++;
+		envnode = envnode->next;
 	}
 	if (!save_path)
 		return (NULL);
@@ -133,7 +133,7 @@ int	check_redi(t_node *tr)
 
 
 
-void	main_pipe(t_tree *tree, char *envp[])
+void	main_pipe(t_tree *tree, t_envnode *envnode)
 {
 	t_pipe *pi;
 	t_node *tr;
@@ -158,7 +158,7 @@ void	main_pipe(t_tree *tree, char *envp[])
 	{
 	//path 구하기 시작
 
-		str = find_path(envp, tr->left_child->token->str);
+		str = find_path(envnode, tr->left_child->token->str);
 		if (check_redi(tr) == 1)
 			command = get_redi_command(tr);
 		else
@@ -225,7 +225,7 @@ void	main_pipe(t_tree *tree, char *envp[])
 				builtin_echo(command);
 			else
 			{
-				execve(str, command, envp);
+				execve(str, command, NULL);
 			}
 		}
 		if (i != 0)

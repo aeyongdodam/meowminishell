@@ -18,7 +18,7 @@ int main(int argc, char **argv, char **envp)
 		if (line)
         {
 			tree = lexer(line);
-			main_pipe(tree, envp);
+			main_pipe(tree, envnode);
 			add_history(line);
 			free(line);
         }

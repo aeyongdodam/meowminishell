@@ -86,7 +86,7 @@ char	*str_one_join(char *s1, char c);
 char	*re_str(char *str);
 
 //pipe.c
-void	main_pipe(t_tree *tree, char *envp[]);
+void	main_pipe(t_tree *tree, t_envnode *envnode);
 
 //utils
 void	prt_tree(t_node *node, int le, int ri);
