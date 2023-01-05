@@ -222,7 +222,10 @@ void	main_pipe(t_tree *tree, t_envnode *envnode)
 			}
 			// printf("첫번째 %s\n",command[0]);
 			if (ft_strncmp(command[0], "echo", 5) == 0)
+			{
 				builtin_echo(command);
+				exit(0);
+			}
 			else
 			{
 				execve(str, command, NULL);
