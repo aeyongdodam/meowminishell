@@ -77,13 +77,14 @@ t_envnode	*init_envnode(t_envnode	**head, char	*str);
 //lexer.c
 void	save_token(t_node *node, char *str, int flag);
 t_node	*pipe_token(t_node *node, char *str, t_tree *tree);
-int		redi_token(t_node *node, char *line, char *str, t_tree *tree);
+void	redi_token(t_node *node, char **line, char *str, t_tree *tree);
 t_tree	*lexer(char	*line);
 
 //lexer_utils
 int		get_type(char *line);
 char	*str_one_join(char *s1, char c);
 char	*re_str(char *str);
+void	set_variable(t_tree *tree, int space, int pipe, int quote);
 
 //pipe.c
 void	main_pipe(t_tree *tree, t_envnode *envnode);

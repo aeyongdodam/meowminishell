@@ -1,8 +1,6 @@
 
 #include "minishell.h"
 
-void	set_variable(t_tree *tree, int space, int pipe, int quote);
-
 void	save_token(t_node *node, char *str, int flag)
 {
 	t_token	*token;
@@ -45,41 +43,47 @@ t_node	*pipe_token(t_node *node, char *str, t_tree *tree)
 	return (node);
 }
 
-int	redi_token(t_node *node, char *line, char *str, t_tree *tree)
+void	redi_token(t_node *node, char **line, char *str, t_tree *tree)
 {
 	if (tree->space == 0 && str[0] != 0)
 	{
 		save_token(node, str, WORD);
 		str = re_str(str);
 	}
-	if (*line == '<' && *(line + 1) == '<')
+	if (**line == '<' && *(*line + 1) == '<')
 	{
 		save_token(node, "<<", HERE);
-		return (1);
+		(*line)++;
 	}
-	else if (*line == '>' && *(line + 1) == '>')
+	else if (**line == '>' && *(*line + 1) == '>')
 	{
 		save_token(node, ">>", REDI);
-		return (1);
+		(*line)++;
 	}
-	else if (*line == '<')
+	else if (**line == '<')
 		save_token(node, "<", REDI);
-	else if (*line == '>')
+	else if (**line == '>')
 		save_token(node, ">", REDI);
-	return (0);
 }
 
-int	check_quote(t_node *node, char *line, char *str, t_tree *tree)
+void	check_quote(t_node *node, char **line, char *str, t_tree *tree)
 {
-	if (*line == '\"') //double
+	int	flag;
+
+	if (**line == '\"') //double
+		flag = DOUBLE_QUOTES;
+	if (**line == '\'') //single
+		flag = SINGLE_QUOTES;
+	(*line)++;
+	while (**line)
 	{
-			return (DOUBLE_QUOTES);
+		if (get_type(*line) == flag)
+			break;
+		str = str_one_join(str, (*line)[0]);
+		(*line)++;
 	}
-	if (*line == '\'') //single
-	{
-		return (SINGLE_QUOTES);
-	}
-	return (0);
+	save_token(node, str, WORD);
+	str = re_str(str);
 }
 
 t_tree	*lexer(char	*line)
@@ -87,24 +91,21 @@ t_tree	*lexer(char	*line)
 	t_tree	*tree;
 	t_node	*node;
 	char	*str;
-	int		flag;
 
 	str = malloc(1);
 	str[0] = 0;
 	tree = init_tree();
 	node = tree->root;
 	node->token->flag = 0;
-	flag = WORD;
 	while (*line)
 	{
 		if (*line == ' ')
 		{
 			if (tree->space == 0 && str[0] != 0) //연속 space 제거
 			{
-				save_token(node, str, flag);
+				save_token(node, str, WORD);
 				str = re_str(str);
 				set_variable(tree, 1, 0, 0);
-				flag = WORD;
 			}
 		}
 		else if (get_type(line) == PIPE)
@@ -113,12 +114,9 @@ t_tree	*lexer(char	*line)
 			tree->pipe_cnt++;
 		}
 		else if (get_type(line) == REDI || get_type(line) == HERE)
-		{
-			if (redi_token(node, line, str, tree))
-			line++;
-		}
+			redi_token(node, &line, str, tree);
 		else if (get_type(line) == DOUBLE_QUOTES || get_type(line) == SINGLE_QUOTES)
-			flag = check_quote(node, line, str, tree);
+			check_quote(node, &line, str, tree);
 		else
 		{
 			str = str_one_join(str, line[0]);
@@ -129,10 +127,10 @@ t_tree	*lexer(char	*line)
 	}
 	if (str[0] != 0) //마지막 문자열
 	{
-		save_token(node, str, flag);
+		save_token(node, str, WORD);
 		str = re_str(str);
 	}
-	// prt_tree(tree->root, 0, 0);
+	prt_tree(tree->root, 0, 0);
 	free(str);
 	return (tree);
 }
