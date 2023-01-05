@@ -81,4 +81,7 @@ void	main_pipe(t_tree *tree, char *envp[]);
 //utils
 void	prt_tree(t_node *node, int le, int ri);
 
+//builtin
+void builtin_echo(char **command);
+
 #endif

@@ -3,6 +3,7 @@
 CC = cc
 SRC = main.c signal.c init.c lexer.c lexer_utils.c
 SRC += pipe.c
+SRC += builtin/echo.c
 SRC += utils.c
 OBJ = $(SRC:.c=.o)
 HEADER = -include ./minishell.h
