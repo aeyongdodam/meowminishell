@@ -24,13 +24,13 @@ void	save_token(t_node *node, char *str, int flag)
 	}
 }
 
-t_node	*pipe_token(t_node *node, char *str, int *space, int *pipe)
+t_node	*pipe_token(t_node *node, char *str, t_tree *tree)
 {
-	if (*pipe == 1)
+	if (tree->pipe == 1)
 	{
 		exit(1);
 	}
-	if (space == 0 && str[0] != 0)
+	if (tree->space == 0 && str[0] != 0)
 	{
 		save_token(node, str, WORD);
 		str = re_str(str);
@@ -39,14 +39,14 @@ t_node	*pipe_token(t_node *node, char *str, int *space, int *pipe)
 	node->right_child->token->flag = PIPE;
 	node->right_child->token->str = ft_strdup("|");
 	node = node->right_child;
-	*space = 0;
-	*pipe = 1;
+	tree->space = 0;
+	tree->pipe = 1;
 	return (node);
 }
 
-int	redi_token(t_node *node, char *line, char *str, int *space)
+int	redi_token(t_node *node, char *line, char *str, t_tree *tree)
 {
-	if (*space == 0 && str[0] != 0)
+	if (tree->space == 0 && str[0] != 0)
 	{
 		save_token(node, str, WORD);
 		str = re_str(str);
@@ -68,47 +68,70 @@ int	redi_token(t_node *node, char *line, char *str, int *space)
 	return (0);
 }
 
+void	quote_token(t_node *node, char *line, char *str, int *space)
+{
+	if (*space == 0 && str[0] != 0)
+	{
+		save_token(node, str, WORD);
+		str = re_str(str);
+	}
+	if (*line == '\"') //double
+	{
+		save_token(node, "\"", DOUBLE_QUOTES);
+	}
+	if (*line == '\'') //single
+	{
+		
+	}
+	
+}
+
 t_tree	*lexer(char	*line)
 {
 	t_tree	*tree;
 	t_node	*node;
 	char	*str;
-	int		space;
-	int		pipe;
 
 	str = malloc(1);
 	str[0] = 0;
 	tree = init_tree();
 	node = tree->root;
 	node->token->flag = 0;
-	space = 0;
+	tree->space = 0;
+	tree->pipe = 0;
+	tree->double_quote = 0;
+	tree->single_quote = 0;
 	while (*line)
 	{
 		if (*line == ' ')
 		{
-			if (space == 0 && str[0] != 0) //연속 space 제거
+			if (tree->space == 0 && str[0] != 0) //연속 space 제거
 			{
 				save_token(node, str, WORD);
 				str = re_str(str);
-				space = 1;
-				pipe = 0;
+				tree->space = 1;
+				tree->pipe = 0;
 			}
 		}
 		else if (get_type(line) == PIPE)
 		{
-			node = pipe_token(node, str, &space, &pipe);
+			node = pipe_token(node, str, tree);
 			tree->pipe_cnt++;
 		}
 		else if (get_type(line) == REDI || get_type(line) == HERE)
 		{
-			if (redi_token(node, line, str, &space))
+			if (redi_token(node, line, str, tree))
 			line++;
+		}
+		else if (get_type(line) == DOUBLE_QUOTES || get_type(line) == SINGLE_QUOTES)
+		{
+			printf("quote! ");
 		}
 		else
 		{
 			str = str_one_join(str, line[0]);
-			space = 0;
-			pipe = 0;
+			tree->space = 0;
+			tree->pipe = 0;
 		}
 		line++;
 	}

@@ -42,6 +42,10 @@ typedef struct s_tree
 	int				pipe_cnt;
 	int				ridi_cnt;
 	int				heredoc_cnt;
+	int				space;
+	int				pipe;
+	int				double_quote;
+	int				single_quote;
 }	t_tree;
 
 typedef struct s_pipe{
@@ -62,8 +66,8 @@ t_tree	*init_tree(void);
 
 //lexer.c
 void	save_token(t_node *node, char *str, int flag);
-t_node	*pipe_token(t_node *node, char *str, int *space, int *pipe);
-int		redi_token(t_node *node, char *line, char *str, int *space);
+t_node	*pipe_token(t_node *node, char *str, t_tree *tree);
+int		redi_token(t_node *node, char *line, char *str, t_tree *tree);
 t_tree	*lexer(char	*line);
 
 //lexer_utils

@@ -13,6 +13,10 @@ int	get_type(char *line)
 		return (REDI);
 	if (*line == '|')
 		return (PIPE);
+	if (*line == '\"')
+		return (DOUBLE_QUOTES);
+	if (*line == '\'')
+		return (SINGLE_QUOTES);
 	return (WORD);
 }
 
