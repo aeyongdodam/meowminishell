@@ -66,7 +66,7 @@ void	redi_token(t_node *node, char **line, char *str, t_tree *tree)
 		save_token(node, ">", REDI);
 }
 
-void	check_quote(t_node *node, char **line, char *str, t_tree *tree)
+void	check_quote(t_node *node, char **line, char **str, t_tree *tree)
 {
 	int	flag;
 
@@ -79,11 +79,11 @@ void	check_quote(t_node *node, char **line, char *str, t_tree *tree)
 	{
 		if (get_type(*line) == flag)
 			break;
-		str = str_one_join(str, (*line)[0]);
+		*str = str_one_join(*str, (*line)[0]);
 		(*line)++;
 	}
-	save_token(node, str, WORD);
-	str = re_str(str);
+	save_token(node, *str, WORD);
+	*str = re_str(*str);
 }
 
 t_tree	*lexer(char	*line)
@@ -101,6 +101,7 @@ t_tree	*lexer(char	*line)
 	{
 		if (*line == ' ')
 		{
+
 			if (tree->space == 0 && str[0] != 0) //연속 space 제거
 			{
 				save_token(node, str, WORD);
@@ -116,7 +117,7 @@ t_tree	*lexer(char	*line)
 		else if (get_type(line) == REDI || get_type(line) == HERE)
 			redi_token(node, &line, str, tree);
 		else if (get_type(line) == DOUBLE_QUOTES || get_type(line) == SINGLE_QUOTES)
-			check_quote(node, &line, str, tree);
+			check_quote(node, &line, &str, tree);
 		else
 		{
 			str = str_one_join(str, line[0]);
@@ -126,11 +127,8 @@ t_tree	*lexer(char	*line)
 		line++;
 	}
 	if (str[0] != 0) //마지막 문자열
-	{
 		save_token(node, str, WORD);
-		str = re_str(str);
-	}
-	prt_tree(tree->root, 0, 0);
 	free(str);
+	prt_tree(tree->root, 0, 0);
 	return (tree);
 }

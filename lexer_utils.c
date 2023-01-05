@@ -5,17 +5,17 @@ int	get_type(char *line)
 {
 	if (*line == '<' && *(line + 1) == '<')
 		return (HERE);
-	if (*line == '>' && *(line + 1) == '>')
+	else if (*line == '>' && *(line + 1) == '>')
 		return (REDI);
-	if (*line == '<')
+	else if (*line == '<')
 		return (REDI);
-	if (*line == '>')
+	else if (*line == '>')
 		return (REDI);
-	if (*line == '|')
+	else if (*line == '|')
 		return (PIPE);
-	if (*line == '\"')
+	else if (*line == '\"')
 		return (DOUBLE_QUOTES);
-	if (*line == '\'')
+	else if (*line == '\'')
 		return (SINGLE_QUOTES);
 	return (WORD);
 }
