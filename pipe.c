@@ -1,18 +1,6 @@
 
 #include "minishell.h"
 
-void	pipe_count(t_node *tr, t_pipe *pi)
-{
-	pi->pipe_cnt = 0;
-
-	while (tr->right_child)
-	{
-		pi->pipe_cnt++;
-		tr=tr->right_child;
-	}
-
-}
-
 void pipe_malloc_open(t_pipe *pi, int pipe_cnt)
 {
 	int	i;
@@ -209,7 +197,7 @@ void	main_pipe(t_tree *tree, char *envp[])
 			{
 				if (i != 0)
 				{
-					dup2(pi->fd[i-1][0], 0);
+					dup2(pi->fd[i - 1][0], 0);
 					dup2(final, 1);
 					close(pi->fd[i - 1][0]);
 					close(pi->fd[i - 1][1]);
@@ -225,19 +213,25 @@ void	main_pipe(t_tree *tree, char *envp[])
 			}
 			else
 			{
-				dup2(pi->fd[i-1][0], 0);
+				dup2(pi->fd[i - 1][0], 0);
 				dup2(pi->fd[i][1], 1);
-				close(pi->fd[i-1][0]);
-				close(pi->fd[i-1][1]);
+				close(pi->fd[i - 1][0]);
+				close(pi->fd[i - 1][1]);
 				close(pi->fd[i][0]);
 				close(pi->fd[i][1]);
 			}
-			execve(str, command, envp);
+			// printf("첫번째 %s\n",command[0]);
+			if (ft_strncmp(command[0], "echo", 5) == 0)
+				builtin_echo(command);
+			else
+			{
+				execve(str, command, envp);
+			}
 		}
 		if (i != 0)
 		{
-			close(pi->fd[i-1][0]);
-			close(pi->fd[i-1][1]);
+			close(pi->fd[i - 1][0]);
+			close(pi->fd[i - 1][1]);
 		}
 		tr=tr->right_child;
 		i++;
