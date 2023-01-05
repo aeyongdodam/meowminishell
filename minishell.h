@@ -94,5 +94,5 @@ void	prt_tree(t_node *node, int le, int ri);
 
 //builtin
 void builtin_echo(char **command);
-
+void builtin_cd(char **command, t_envnode *envnode);
 #endif

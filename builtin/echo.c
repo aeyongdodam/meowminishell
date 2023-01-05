@@ -31,10 +31,20 @@ void builtin_echo(char **command)
 	while (command[i])
 	{
 		printf("%s", command[i]);
-		if (command[i+1])
+		if (command[i + 1])
 			printf(" ");
 		i++;
 	}
 	if (newline_flag == 0)
 		printf("\n");
+}
+
+void builtin_cd(char **command, t_envnode *envnode)
+{
+	char	buf[255];
+
+    getcwd(buf, 255);
+	t_envnode *tmp;
+	tmp = envnode;
+
 }

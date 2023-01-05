@@ -17,17 +17,19 @@ void pipe_malloc_open(t_pipe *pi, int pipe_cnt)
 
 char	*find_path(t_envnode *envnode, char *s)
 {
+	t_envnode *tmp;
 	int	i;
 	char *save_path;
 	i = 0;
-	while (envnode != 0)
+	tmp = envnode;
+	while (tmp != 0)
 	{
-		if (ft_strncmp("PATH=", envnode->key, 4) == 0)
+		if (ft_strncmp("PATH=", tmp->key, 4) == 0)
 		{
-			save_path = ft_strdup(envnode->value);
+			save_path = ft_strdup(tmp->value);
 			break;
 		}
-		envnode = envnode->next;
+		tmp = tmp->next;
 	}
 	if (!save_path)
 		return (NULL);
@@ -78,9 +80,7 @@ char **get_redi_command(t_node *tr)
 	while (j < i)
 	{
 		if (ft_strncmp(tmp->str, "<", 2) == 0 || ft_strncmp(tmp->str, ">>", 3) == 0 || ft_strncmp(tmp->str, ">", 2) == 0)
-		{
 			tmp = tmp->next->next;
-		}
 		save_command[j] = tmp->str;
 		tmp = tmp->next;
 		j++;
@@ -228,6 +228,11 @@ void	main_pipe(t_tree *tree, t_envnode *envnode)
 			if (ft_strncmp(command[0], "echo", 5) == 0)
 			{
 				builtin_echo(command);
+				exit(0);
+			}
+			else if(ft_strncmp(command[0], "cd", 2) == 0)
+			{
+				builtin_cd(command, envnode);
 				exit(0);
 			}
 			else
