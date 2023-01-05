@@ -53,6 +53,14 @@ typedef struct s_pipe{
 	int	pipe_cnt;
 }	t_pipe;
 
+typedef struct s_envnode
+{
+	struct s_envnode	*prev;
+	struct s_envnode	*next;
+	char				*key;
+	char				*value;
+}	t_envnode;
+
 //signal.c
 void	signal_handler(int sig);
 void	signal_handler2(int sig);
@@ -63,6 +71,8 @@ void	set_terminal(void);
 t_token	*init_token(void);
 t_node	*init_node(void);
 t_tree	*init_tree(void);
+t_envnode	*init_env(char **envp);
+t_envnode	*init_envnode(t_envnode	**head, char	*str);
 
 //lexer.c
 void	save_token(t_node *node, char *str, int flag);

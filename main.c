@@ -1,13 +1,15 @@
 
 #include "minishell.h"
 
-int main(int argc, char **argv, char *envp[])
+int main(int argc, char **argv, char **envp)
 {
 	char	*line;
 	int		ret;
 	t_tree	*tree;
+	t_envnode	*envnode;
 
 	set_terminal();
+	envnode = init_env(envp);
 	while(1)
 	{
 		set_signal_handler(0);

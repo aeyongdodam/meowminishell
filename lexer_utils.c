@@ -49,3 +49,11 @@ char	*re_str(char *str)
 	str[0] = 0;
 	return (str);
 }
+
+void	set_variable(t_tree *tree, int space, int pipe, int quote)
+{
+	tree->space = space;
+	tree->pipe = pipe;
+	tree->double_quote = quote;
+	tree->single_quote = quote;
+}

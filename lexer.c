@@ -1,6 +1,8 @@
 
 #include "minishell.h"
 
+void	set_variable(t_tree *tree, int space, int pipe, int quote);
+
 void	save_token(t_node *node, char *str, int flag)
 {
 	t_token	*token;
@@ -39,8 +41,7 @@ t_node	*pipe_token(t_node *node, char *str, t_tree *tree)
 	node->right_child->token->flag = PIPE;
 	node->right_child->token->str = ft_strdup("|");
 	node = node->right_child;
-	tree->space = 0;
-	tree->pipe = 1;
+	set_variable(tree, 0, 1, 0);
 	return (node);
 }
 
@@ -68,22 +69,17 @@ int	redi_token(t_node *node, char *line, char *str, t_tree *tree)
 	return (0);
 }
 
-void	quote_token(t_node *node, char *line, char *str, int *space)
+int	check_quote(t_node *node, char *line, char *str, t_tree *tree)
 {
-	if (*space == 0 && str[0] != 0)
-	{
-		save_token(node, str, WORD);
-		str = re_str(str);
-	}
 	if (*line == '\"') //double
 	{
-		save_token(node, "\"", DOUBLE_QUOTES);
+			return (DOUBLE_QUOTES);
 	}
 	if (*line == '\'') //single
 	{
-		
+		return (SINGLE_QUOTES);
 	}
-	
+	return (0);
 }
 
 t_tree	*lexer(char	*line)
@@ -91,26 +87,24 @@ t_tree	*lexer(char	*line)
 	t_tree	*tree;
 	t_node	*node;
 	char	*str;
+	int		flag;
 
 	str = malloc(1);
 	str[0] = 0;
 	tree = init_tree();
 	node = tree->root;
 	node->token->flag = 0;
-	tree->space = 0;
-	tree->pipe = 0;
-	tree->double_quote = 0;
-	tree->single_quote = 0;
+	flag = WORD;
 	while (*line)
 	{
 		if (*line == ' ')
 		{
 			if (tree->space == 0 && str[0] != 0) //연속 space 제거
 			{
-				save_token(node, str, WORD);
+				save_token(node, str, flag);
 				str = re_str(str);
-				tree->space = 1;
-				tree->pipe = 0;
+				set_variable(tree, 1, 0, 0);
+				flag = WORD;
 			}
 		}
 		else if (get_type(line) == PIPE)
@@ -124,9 +118,7 @@ t_tree	*lexer(char	*line)
 			line++;
 		}
 		else if (get_type(line) == DOUBLE_QUOTES || get_type(line) == SINGLE_QUOTES)
-		{
-			printf("quote! ");
-		}
+			flag = check_quote(node, line, str, tree);
 		else
 		{
 			str = str_one_join(str, line[0]);
@@ -137,7 +129,7 @@ t_tree	*lexer(char	*line)
 	}
 	if (str[0] != 0) //마지막 문자열
 	{
-		save_token(node, str, WORD);
+		save_token(node, str, flag);
 		str = re_str(str);
 	}
 	// prt_tree(tree->root, 0, 0);
