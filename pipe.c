@@ -69,7 +69,7 @@ char **get_redi_command(t_node *tr)
 	while (tmp)
 	{
 		if (ft_strncmp(tmp->str, "<", 2) == 0 || ft_strncmp(tmp->str, ">>", 3) == 0 || ft_strncmp(tmp->str, ">", 2) == 0)
-			break;
+			i -= 2; //일단은 유효한것만 들어온다고 생각
 		i++;
 		tmp = tmp->next;
 	}
@@ -77,6 +77,10 @@ char **get_redi_command(t_node *tr)
 	save_command = malloc(sizeof(char *) * (i + 1));
 	while (j < i)
 	{
+		if (ft_strncmp(tmp->str, "<", 2) == 0 || ft_strncmp(tmp->str, ">>", 3) == 0 || ft_strncmp(tmp->str, ">", 2) == 0)
+		{
+			tmp = tmp->next->next;
+		}
 		save_command[j] = tmp->str;
 		tmp = tmp->next;
 		j++;
