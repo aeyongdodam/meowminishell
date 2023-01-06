@@ -106,7 +106,7 @@ void	check_quote(t_node *node, char **line, char **str, t_tree *tree)
 		*str = str_one_join(*str, (*line)[0], tree);
 		(*line)++;
 	}
-	if (str[0] != 0 && (*line + 1) != NULL && *(*line + 1) == ' ')
+	if (str[0] != 0 && *(*line + 1) == 0)
 	{
 		save_token(node, *str, WORD);
 		*str = re_str(*str);

@@ -50,7 +50,6 @@ void	check_dallor(t_node *node, char **line, char **str, t_tree *tree)
 	{
 		*str = str_one_join(*str, '$', tree);
 		free(str2);
-		(*line)++;
 		return ;
 	}
 	(*line)++;
@@ -61,6 +60,7 @@ void	check_dallor(t_node *node, char **line, char **str, t_tree *tree)
 		str2 = str_one_join(str2, (*line)[0], tree);
 		(*line)++;
 	}
+	(*line)--;
 	str2 = change_env(str2, tree->env);
 	*str = ft_strjoin(*str, str2);
 }
