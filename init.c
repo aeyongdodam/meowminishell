@@ -60,7 +60,7 @@ t_envnode	*init_envnode(t_envnode	**head, char	*str)
 	return (node);
 }
 
-t_envnode	*init_env(char **envp)
+t_envnode	*init_env(char **envp, t_tree *tree)
 {
 	t_envnode	*head;
 	t_envnode	*node;
@@ -79,7 +79,7 @@ t_envnode	*init_env(char **envp)
 				str = re_str(str);
 			}
 			else
-				str = str_one_join(str, *envp[0]);
+				str = str_one_join(str, *envp[0], tree);
 			(*envp)++;
 		}
 		node->value = ft_strdup(str);
