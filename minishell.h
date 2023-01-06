@@ -17,8 +17,8 @@
 # define WORD 1
 # define PIPE 2
 # define REDI 3
-# define DOUBLE_QUOTES 4
-# define SINGLE_QUOTES 5
+# define QUOTE_D 4
+# define QUOTE_S 5
 # define HERE 6
 
 typedef struct s_token
@@ -39,6 +39,7 @@ typedef struct s_node
 typedef struct s_tree
 {
 	struct s_node	*root;
+	struct s_envnode	*env;
 	int				pipe_cnt;
 	int				ridi_cnt;
 	int				heredoc_cnt;
@@ -71,20 +72,29 @@ void	set_terminal(void);
 t_token	*init_token(void);
 t_node	*init_node(void);
 t_tree	*init_tree(void);
-t_envnode	*init_env(char **envp);
-t_envnode	*init_envnode(t_envnode	**head, char	*str);
+t_envnode	*init_env(char **envp, t_tree *tree);
+t_envnode	*init_envnode(t_envnode	**head, char *str);
 
 //lexer.c
+t_tree	*lexer(char	*line, t_envnode *envnode);
+
+//lexer_token.c
 void	save_token(t_node *node, char *str, int flag);
+void	word_token(t_node *node, char *str, t_tree *tree);
 t_node	*pipe_token(t_node *node, char *str, t_tree *tree);
 void	redi_token(t_node *node, char **line, char *str, t_tree *tree);
-t_tree	*lexer(char	*line);
+void	check_quote(t_node *node, char **line, char **str, t_tree *tree);
+
+//lexer_env.c
+char	*change_env(char *str2, t_envnode *envnode);
+void	check_dallor(t_node *node, char **line, char **str, t_tree *tree);
 
 //lexer_utils
 int		get_type(char *line);
-char	*str_one_join(char *s1, char c);
+char	*str_one_join(char *s1, char c, t_tree *tree);
 char	*re_str(char *str);
 void	set_variable(t_tree *tree, int space, int pipe, int quote);
+void	set_lexer(t_node **node, t_tree **tree, char **stre, t_envnode *envnode);
 
 //pipe.c
 void	main_pipe(t_tree *tree, t_envnode *envnode);

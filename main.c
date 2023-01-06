@@ -9,7 +9,7 @@ int main(int argc, char **argv, char **envp)
 	t_envnode	*envnode;
 
 	set_terminal();
-	envnode = init_env(envp);
+	envnode = init_env(envp, tree);
 	while(1)
 	{
 		set_signal_handler(0);
@@ -17,7 +17,7 @@ int main(int argc, char **argv, char **envp)
 		
 		if (line)
         {
-			tree = lexer(line);
+			tree = lexer(line, envnode);
 			main_pipe(tree, envnode);
 			add_history(line);
 			free(line);
