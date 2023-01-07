@@ -1,7 +1,8 @@
 
 #include "minishell.h"
 
-extern int	g_exit_code;;
+extern int	g_exit_code;
+
 void	signal_handler(int sig)
 {
 	if (sig == SIGINT)

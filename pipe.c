@@ -15,6 +15,18 @@ void pipe_malloc_open(t_pipe *pi, int pipe_cnt)
 	}
 }
 
+void	close_pipe(t_pipe *pi, int pipe_cnt)
+{
+	int	i;
+	i = 0;
+	while (i < pipe_cnt)
+	{
+		close(pi->fd[i][0]);
+		close(pi->fd[i][1]);
+		i++;
+	}
+}
+
 char	*find_path(t_envnode *envnode, char *s)
 {
 	t_envnode *tmp;
@@ -56,6 +68,7 @@ void wait_process(int cnt)
 	i = 0;
 	while (i < cnt + 1)
 	{
+		printf("aaa\n");
 		wait(NULL);
 		i++;
 	}
@@ -145,6 +158,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode)
 	tr = tree->root;
 	int j = 0;
 	pipe_malloc_open(pi, tree->pipe_cnt);
+	printf("tree->pipe_cnt %d\n",tree->pipe_cnt);
 	int	i;
 	pid_t	pid;
 	char *str;
@@ -169,59 +183,58 @@ void	main_pipe(t_tree *tree, t_envnode *envnode)
 			command = get_command(tr);
 	//path 구함
 		if (check_redi(tr) == 1)
+		{
+			tmp = tr->left_child->token;
+			while (tmp)
 			{
-				tmp = tr->left_child->token;
-				while (tmp)
-				{
-					if (ft_strncmp(tmp->str, "<", 2) == 0)
-						{
-							openfd =  open(tmp->next->str, O_RDONLY);
-							if (openfd >= 0)
-								dup2(openfd, 0);
-						}
-					if (ft_strncmp(tmp->str, ">>", 3) == 0)
+				if (ft_strncmp(tmp->str, "<", 2) == 0)
 					{
-						finalfd = open(tmp->next->str, O_WRONLY | O_APPEND | O_CREAT, 0644);
-						if (finalfd >= 0)
-							dup2(finalfd, 1);
+						openfd =  open(tmp->next->str, O_RDONLY);
+						if (openfd >= 0)
+							dup2(openfd, 0);
 					}
-					else if (ft_strncmp(tmp->str, ">", 2) == 0)
-					{
-						finalfd = open(tmp->next->str, O_WRONLY | O_TRUNC | O_CREAT, 0644);
-						if (finalfd >= 0)
-							dup2(finalfd, 1);
-					}
-					tmp = tmp->next;
-				}
-			}
-			else if (i == tree->pipe_cnt)
-			{
-				if (i != 0)
+				if (ft_strncmp(tmp->str, ">>", 3) == 0)
 				{
-					dup2(pi->fd[i - 1][0], 0);
-					dup2(final, 1);
-					close(pi->fd[i - 1][0]);
-					close(pi->fd[i - 1][1]);
-					close(final);
+					finalfd = open(tmp->next->str, O_WRONLY | O_APPEND | O_CREAT, 0644);
+					if (finalfd >= 0)
+						dup2(finalfd, 1);
 				}
+				else if (ft_strncmp(tmp->str, ">", 2) == 0)
+				{
+					finalfd = open(tmp->next->str, O_WRONLY | O_TRUNC | O_CREAT, 0644);
+					if (finalfd >= 0)
+						dup2(finalfd, 1);
+				}
+				tmp = tmp->next;
 			}
-			else if (i == 0)
-			{
-				dup2(pi->fd[i][1], 1);
-				close(pi->fd[i][0]);
-				close(openfd);
-				close(pi->fd[i][1]);
-			}
-			else
+		}
+		else if (i == tree->pipe_cnt)
+		{
+			if (i != 0)
 			{
 				dup2(pi->fd[i - 1][0], 0);
-				dup2(pi->fd[i][1], 1);
+				dup2(final, 1);
 				close(pi->fd[i - 1][0]);
-				close(pi->fd[i - 1][1]);
-				close(pi->fd[i][0]);
-				close(pi->fd[i][1]);
+				// close(pi->fd[i - 1][1]);
 			}
-			//여기까지 파이프연결
+		}
+		else if (i == 0)
+		{
+			dup2(pi->fd[i][1], 1);
+			// close(pi->fd[i][0]);
+			close(pi->fd[i][1]);
+		}
+		else
+		{
+			dup2(pi->fd[i - 1][0], 0);
+			dup2(pi->fd[i][1], 1);
+			close(pi->fd[i - 1][0]);
+			// close(pi->fd[i - 1][1]);
+			// close(pi->fd[i][0]);
+			close(pi->fd[i][1]);
+		}
+
+
 		if (ft_strncmp(command[0], "echo", 5) == 0)
 		{
 			builtin_echo(command);
@@ -234,6 +247,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode)
 		{
 			if (str == NULL && ft_strncmp(command[0], "/", 1) == 0)
 				str = command[0];
+
 			pid = fork();
 			if (pid == 0) //자식 프로세스
 			{
@@ -242,13 +256,11 @@ void	main_pipe(t_tree *tree, t_envnode *envnode)
 				exit (1);
 			}
 		}
-		if (i != 0)
-		{
-			close(pi->fd[i - 1][0]);
-			close(pi->fd[i - 1][1]);
-		}
 		tr=tr->right_child;
-		i++;
+		 i++;
 	}
+
+	close_pipe(pi, tree->pipe_cnt);
 	wait_process(tree->pipe_cnt); //다 끝날때까지 부모 프로세스 기다려야함
+		printf("wait 끝\n");
 }
