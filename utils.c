@@ -1,24 +1,37 @@
 
 #include "minishell.h"
 
+extern int	g_exit_code;
+
 int	input_exit(t_tree *tree)
 {
-	if (ft_strncmp(tree->root->left_child->token->str, "exit", 5) == 0)
+	t_token	*token;
+
+	token = tree->root->left_child->token;
+	if (ft_strncmp(token->str, "exit", 5) == 0)
+	{
+		if (token->next != NULL)
+			g_exit_code = ft_atoi(token->next->str);
 		return (1);
+	}
 	return (0);
 }
 
 void	prt_exit(void)
 {
 	write(2, "exit\n", 5);
-	exit(0);
+	if (g_exit_code > 255)
+		g_exit_code = g_exit_code - 256;
+	if (g_exit_code < 0)
+		g_exit_code += 256;
+	exit(g_exit_code);
 }
 
 void	prt_meows(void)
 {
 	int		fd;
 	int		n;
-	char 	*buf;
+	char	*buf;
 
 	fd = open("meow.txt", O_RDONLY);
 	buf = ft_calloc(2, 1);
