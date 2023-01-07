@@ -168,10 +168,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode)
 		else
 			command = get_command(tr);
 	//path 구함
-		pid = fork();
-		if (pid == 0) //자식 프로세스
-		{
-			if (check_redi(tr) == 1)
+		if (check_redi(tr) == 1)
 			{
 				tmp = tr->left_child->token;
 				while (tmp)
@@ -224,20 +221,25 @@ void	main_pipe(t_tree *tree, t_envnode *envnode)
 				close(pi->fd[i][0]);
 				close(pi->fd[i][1]);
 			}
-			// printf("첫번째 %s\n",command[0]);
-			if (ft_strncmp(command[0], "echo", 5) == 0)
-			{
-				builtin_echo(command);
-				exit(0);
-			}
-			else if(ft_strncmp(command[0], "cd", 2) == 0)
-			{
-				builtin_cd(command, envnode);
-				exit(0);
-			}
-			else
+			//여기까지 파이프연결
+		if (ft_strncmp(command[0], "echo", 5) == 0)
+		{
+			builtin_echo(command);
+		}
+		else if(ft_strncmp(command[0], "cd", 3) == 0)
+		{
+			builtin_cd(command, envnode);
+		}
+		else
+		{
+			if (str == NULL && ft_strncmp(command[0], "/", 1) == 0)
+				str = command[0];
+			pid = fork();
+			if (pid == 0) //자식 프로세스
 			{
 				execve(str, command, NULL);
+				printf("실행에러\n");
+				exit (1);
 			}
 		}
 		if (i != 0)
