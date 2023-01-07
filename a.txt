@@ -1,3 +1,0 @@
-hello
-[34mMinishell>[0m 
-[34mMinishell>[0m 
