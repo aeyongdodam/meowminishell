@@ -21,7 +21,7 @@ int main(int argc, char **argv, char **envp)
 			tree = lexer(line, envnode);
 			main_pipe(tree, envnode);
 			add_history(line);
-			set_signal_handler(1);
+			// set_signal_handler(1);
 			free(line);
         }
         else
