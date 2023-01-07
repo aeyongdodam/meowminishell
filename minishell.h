@@ -97,9 +97,14 @@ void	set_variable(t_tree *tree, int space, int pipe, int quote);
 void	set_lexer(t_node **node, t_tree **tree, char **stre, t_envnode *envnode);
 
 //error.c
-int	error_pipe(t_tree *tree);
-int	error_redi(t_node *node);
-int	find_error(t_tree *tree);
+int		error_pipe(t_node *node);
+int		error_redi(t_node *node);
+int		find_error(t_tree *tree);
+int		check_pipe(t_node *node, int flag);
+void	prt_error(int flag);
+
+int		input_exit(t_tree *tree);
+void	prt_exit(void);
 
 //pipe.c
 void	main_pipe(t_tree *tree, t_envnode *envnode);

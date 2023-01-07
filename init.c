@@ -5,7 +5,7 @@ t_token	*init_token(void)
 {
 	t_token	*token;
 
-	token = malloc(sizeof(t_token));
+	token = ft_calloc(1, sizeof(t_token));
 	token->prev = NULL;
 	token->next = NULL;
 	return (token);
@@ -15,7 +15,7 @@ t_node	*init_node(void)
 {
 	t_node	*node;
 
-	node = malloc(sizeof(t_node));
+	node = ft_calloc(1, sizeof(t_node));
 	node->token = init_token();
 	node->left_child = NULL;
 	node->right_child = NULL;
@@ -26,7 +26,7 @@ t_tree	*init_tree(void)
 {
 	t_tree	*tree;
 
-	tree = malloc(sizeof(t_tree));
+	tree = ft_calloc(1, sizeof(t_tree));
 	tree->root = init_node();
 	tree->pipe_cnt = 0;
 	tree->ridi_cnt = 0;
@@ -43,7 +43,7 @@ t_envnode	*init_envnode(t_envnode	**head, char	*str)
 	t_envnode	*node;
 	t_envnode	*tempnode;
 
-	node = malloc(sizeof(t_envnode));
+	node = ft_calloc(1, sizeof(t_envnode));
 	node->prev = 0;
 	node->next = 0;
 	node->key = ft_strdup(str);
@@ -65,23 +65,27 @@ t_envnode	*init_env(char **envp, t_tree *tree)
 	t_envnode	*head;
 	t_envnode	*node;
 	char		*str;
+	int			i;
+	int			j;
 
 	head = NULL;
-	str = malloc(1);
-	str[0] = 0;
-	while (*envp != 0)
+	str = ft_calloc(1, 1);
+	i = 0;
+	while (envp[i] != 0)
 	{
-		while (**envp != 0)
+		j = 0;
+		while (envp[i][j] != 0)
 		{
-			if (**envp == '=')
+			if (envp[i][j] == '=')
 			{
 				node = init_envnode(&head, str);
 				str = re_str(str);
 			}
 			else
-				str = str_one_join(str, *envp[0], tree);
-			(*envp)++;
+				str = str_one_join(str, envp[i][j], tree);
+			j++;
 		}
+		i++;
 		node->value = ft_strdup(str);
 		str = re_str(str);
 		envp++;

@@ -1,4 +1,18 @@
+
 #include "minishell.h"
+
+int	input_exit(t_tree *tree)
+{
+	if (ft_strncmp(tree->root->left_child->token->str, "exit", 5) == 0)
+		return (1);
+	return (0);
+}
+
+void	prt_exit(void)
+{
+	write(2, "exit!\n", 5);
+	exit(0);
+}
 
 void	prt_tree(t_node *node, int le, int ri)
 {
