@@ -39,7 +39,7 @@ char	*str_one_join(char *s1, char c, t_tree *tree)
 
 	i = 0;
 	len = ft_strlen(s1);
-	str = (char *)malloc(sizeof(char) * (len + 2));
+	str = ft_calloc(len + 2, 1);
 	if (!str)
 		return (0);
 	while (i < len)
@@ -59,6 +59,8 @@ char	*re_str(char *str)
 {
 	free(str);
 	str = ft_calloc(1, 1);
+	if (!str)
+		return (0);
 	return (str);
 }
 

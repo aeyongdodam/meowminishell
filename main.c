@@ -23,14 +23,11 @@ int main(int argc, char **argv, char **envp)
 			add_history(line);
 			if (find_error(tree))
 				continue;
-			// main_pipe(tree, envnode);
+			main_pipe(tree, envnode);
 			free(line);
         }
 		else
-		{
-			write(2, "exit!\n", 5);
-			exit(0);
-		}
+			prt_exit();
 	}
 	return (0);
 }

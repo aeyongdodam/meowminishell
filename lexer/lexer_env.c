@@ -28,7 +28,7 @@ char	*change_env(char *str2, t_envnode *envnode)
 		}
 		node = node->next;
 	}
-	envstr = malloc(1);
+	envstr = ft_calloc(1, 1);
 	envstr[0] = 0;
 	return (envstr);
 }
