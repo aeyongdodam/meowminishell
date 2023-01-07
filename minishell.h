@@ -116,4 +116,5 @@ void	prt_tree(t_node *node, int le, int ri);
 void	builtin_echo(char **command);
 void	builtin_cd(char **command, t_envnode *envnode);
 void    builtin_pwd(char **command);
+void	builtin_env(t_envnode *envnode);
 #endif
