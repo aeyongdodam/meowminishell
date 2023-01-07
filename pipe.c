@@ -17,17 +17,19 @@ void pipe_malloc_open(t_pipe *pi, int pipe_cnt)
 
 char	*find_path(t_envnode *envnode, char *s)
 {
+	t_envnode *tmp;
 	int	i;
 	char *save_path;
 	i = 0;
-	while (envnode != 0)
+	tmp = envnode;
+	while (tmp != 0)
 	{
-		if (ft_strncmp("PATH=", envnode->key, 4) == 0)
+		if (ft_strncmp("PATH=", tmp->key, 4) == 0)
 		{
-			save_path = ft_strdup(envnode->value);
+			save_path = ft_strdup(tmp->value);
 			break;
 		}
-		envnode = envnode->next;
+		tmp = tmp->next;
 	}
 	if (!save_path)
 		return (NULL);
@@ -78,9 +80,7 @@ char **get_redi_command(t_node *tr)
 	while (j < i)
 	{
 		if (ft_strncmp(tmp->str, "<", 2) == 0 || ft_strncmp(tmp->str, ">>", 3) == 0 || ft_strncmp(tmp->str, ">", 2) == 0)
-		{
 			tmp = tmp->next->next;
-		}
 		save_command[j] = tmp->str;
 		tmp = tmp->next;
 		j++;
@@ -168,10 +168,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode)
 		else
 			command = get_command(tr);
 	//path 구함
-		pid = fork();
-		if (pid == 0) //자식 프로세스
-		{
-			if (check_redi(tr) == 1)
+		if (check_redi(tr) == 1)
 			{
 				tmp = tr->left_child->token;
 				while (tmp)
@@ -224,15 +221,25 @@ void	main_pipe(t_tree *tree, t_envnode *envnode)
 				close(pi->fd[i][0]);
 				close(pi->fd[i][1]);
 			}
-			// printf("첫번째 %s\n",command[0]);
-			if (ft_strncmp(command[0], "echo", 5) == 0)
-			{
-				builtin_echo(command);
-				exit(0);
-			}
-			else
+			//여기까지 파이프연결
+		if (ft_strncmp(command[0], "echo", 5) == 0)
+		{
+			builtin_echo(command);
+		}
+		else if(ft_strncmp(command[0], "cd", 3) == 0)
+		{
+			builtin_cd(command, envnode);
+		}
+		else
+		{
+			if (str == NULL && ft_strncmp(command[0], "/", 1) == 0)
+				str = command[0];
+			pid = fork();
+			if (pid == 0) //자식 프로세스
 			{
 				execve(str, command, NULL);
+				printf("실행에러\n");
+				exit (1);
 			}
 		}
 		if (i != 0)
