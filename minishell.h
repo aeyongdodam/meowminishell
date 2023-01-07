@@ -89,12 +89,17 @@ void	check_quote(t_node *node, char **line, char **str, t_tree *tree);
 char	*change_env(char *str2, t_envnode *envnode);
 void	check_dallor(t_node *node, char **line, char **str, t_tree *tree);
 
-//lexer_utils
+//lexer_utils.c
 int		get_type(char *line);
 char	*str_one_join(char *s1, char c, t_tree *tree);
 char	*re_str(char *str);
 void	set_variable(t_tree *tree, int space, int pipe, int quote);
 void	set_lexer(t_node **node, t_tree **tree, char **stre, t_envnode *envnode);
+
+//error.c
+int	error_pipe(t_tree *tree);
+int	error_redi(t_node *node);
+int	find_error(t_tree *tree);
 
 //pipe.c
 void	main_pipe(t_tree *tree, t_envnode *envnode);

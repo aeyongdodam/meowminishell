@@ -1,7 +1,7 @@
 
 
 CC = cc
-SRC = main.c signal.c init.c
+SRC = main.c signal.c init.c error.c
 SRC += lexer/lexer.c lexer/lexer_token.c lexer/lexer_env.c lexer/lexer_utils.c
 SRC += pipe.c
 SRC += builtin/echo.c builtin/cd.c

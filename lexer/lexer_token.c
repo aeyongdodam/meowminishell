@@ -43,13 +43,15 @@ void	word_token(t_node *node, char *str, t_tree *tree)
 		str = re_str(str);
 		set_variable(tree, 1, 0, 0);
 	}
+	set_variable(tree, 1, 0, 0);
 }
 
 t_node	*pipe_token(t_node *node, char *str, t_tree *tree)
 {
 	if (tree->pipe == 1)
 	{
-		exit(1);
+		node->token->str = str_one_join(node->token->str, '|', tree);
+		return (node);
 	}
 	if (tree->space == 0 && str[0] != 0)
 	{

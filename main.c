@@ -3,6 +3,7 @@
 
 int	g_exit_code;
 
+
 int main(int argc, char **argv, char **envp)
 {
 	char	*line;
@@ -19,8 +20,10 @@ int main(int argc, char **argv, char **envp)
 		if (line)
         {
 			tree = lexer(line, envnode);
-			main_pipe(tree, envnode);
 			add_history(line);
+			if (find_error(tree))
+				continue;
+			main_pipe(tree, envnode);
 			// set_signal_handler(1);
 			free(line);
         }
