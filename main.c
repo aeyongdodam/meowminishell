@@ -23,7 +23,7 @@ int main(int argc, char **argv, char **envp)
 			add_history(line);
 			if (find_error(tree))
 				continue;
-			main_pipe(tree, envnode);
+			main_pipe(tree, envnode, envp);
 			free(line);
         }
 		else

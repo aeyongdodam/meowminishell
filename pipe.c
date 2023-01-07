@@ -36,7 +36,7 @@ char	*find_path(t_envnode *envnode, char *s)
 	tmp = envnode;
 	while (tmp != 0)
 	{
-		if (ft_strncmp("PATH=", tmp->key, 4) == 0)
+		if (ft_strncmp("PATH", tmp->key, 4) == 0)
 		{
 			save_path = ft_strdup(tmp->value);
 			break;
@@ -149,7 +149,7 @@ int	check_redi(t_node *tr)
 
 
 
-void	main_pipe(t_tree *tree, t_envnode *envnode)
+void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 {
 	t_pipe *pi;
 	t_node *tr;
@@ -249,12 +249,17 @@ void	main_pipe(t_tree *tree, t_envnode *envnode)
 			builtin_cd(command, envnode);
 			exit (0);
 		}
+		else if(ft_strncmp(command[0], "pwd", 4) == 0)
+		{
+			builtin_pwd(command);
+			exit (0);
+		}
 		else
 		{
-			if (str == NULL && ft_strncmp(command[0], "/", 1) == 0)
+			if (str == NULL && (ft_strncmp(command[0], "/", 1) == 0 || ft_strncmp(command[0], "./", 2) == 0))
 				str = command[0];
-			execve(str, command, NULL);
-			printf("실행에러\n");
+			execve(str, command, envp);
+			write(2, "error\n", 6);
 			exit (1);
 		}
 	}
@@ -272,6 +277,6 @@ void	main_pipe(t_tree *tree, t_envnode *envnode)
 	{
 		str = find_path(envnode, tr->left_child->token->str);
 		command = get_command(tr);
-		builtin_cd(command, envnode);		
+		builtin_cd(command, envnode);
 	}
 }

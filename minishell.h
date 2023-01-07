@@ -107,12 +107,13 @@ int		input_exit(t_tree *tree);
 void	prt_exit(void);
 
 //pipe.c
-void	main_pipe(t_tree *tree, t_envnode *envnode);
+void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp);
 
 //utils
 void	prt_tree(t_node *node, int le, int ri);
 
 //builtin
-void builtin_echo(char **command);
-void builtin_cd(char **command, t_envnode *envnode);
+void	builtin_echo(char **command);
+void	builtin_cd(char **command, t_envnode *envnode);
+void    builtin_pwd(char **command);
 #endif

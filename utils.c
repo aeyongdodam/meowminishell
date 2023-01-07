@@ -10,7 +10,7 @@ int	input_exit(t_tree *tree)
 
 void	prt_exit(void)
 {
-	write(2, "exit!\n", 5);
+	write(2, "exit\n", 5);
 	exit(0);
 }
 
