@@ -58,8 +58,7 @@ char	*str_one_join(char *s1, char c, t_tree *tree)
 char	*re_str(char *str)
 {
 	free(str);
-	str = malloc(1);
-	str[0] = 0;
+	str = ft_calloc(1, 1);
 	return (str);
 }
 
@@ -73,8 +72,7 @@ void	set_variable(t_tree *tree, int space, int pipe, int quote)
 
 void	set_lexer(t_node **node, t_tree **tree, char **str, t_envnode *env)
 {
-	*str = malloc(1);
-	(*str)[0] = 0;
+	*str = ft_calloc(1, 1);
 	*tree = init_tree();
 	(*tree)->env = env;
 	*node = (*tree)->root;

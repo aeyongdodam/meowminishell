@@ -37,8 +37,7 @@ void	check_dallor(t_node *node, char **line, char **str, t_tree *tree)
 {
 	char		*str2;
 
-	str2 = malloc(1);
-	str2[0] = 0;
+	str2 = ft_calloc(1, 1);
 	if (*(*line + 1) == 0)
 	{
 		save_token(node, "$", WORD);
@@ -55,12 +54,11 @@ void	check_dallor(t_node *node, char **line, char **str, t_tree *tree)
 	(*line)++;
 	while (**line)
 	{
-		if (get_type(*line) != WORD || **line == ' ')
-			break ;
 		str2 = str_one_join(str2, (*line)[0], tree);
+		if (get_type(*line + 1) != WORD || *(*line + 1) == ' ')
+			break ;
 		(*line)++;
 	}
-	(*line)--;
 	str2 = change_env(str2, tree->env);
 	*str = ft_strjoin(*str, str2);
 }

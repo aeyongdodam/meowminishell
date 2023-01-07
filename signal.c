@@ -1,6 +1,7 @@
 
 #include "minishell.h"
 
+extern int	g_exit_code;;
 void	signal_handler(int sig)
 {
 	if (sig == SIGINT)
@@ -9,17 +10,17 @@ void	signal_handler(int sig)
 		rl_on_new_line();
 		rl_replace_line("", 1);
 		rl_redisplay();
+		g_exit_code = 1;
 	}
 }
 
 void	signal_handler2(int sig)
 {
 	if (sig == SIGINT)
-	{
-		return ;
-	}
+		g_exit_code = 130;
 	else if (sig == SIGQUIT)
 	{
+		g_exit_code = 131;
 		write(2, "Quit: 3\n", 8);
 	}
 }
@@ -28,13 +29,13 @@ void	set_signal_handler(int flag)
 {
 	if (!flag)
 	{
-		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, signal_handler);
+		signal(SIGQUIT, SIG_IGN);
 	}
 	else
 	{
 		signal(SIGQUIT, signal_handler2);
-		signal(SIGINT, signal_handler);
+		signal(SIGINT, signal_handler2);
 	}
 }
 

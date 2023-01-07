@@ -101,14 +101,15 @@ void	check_quote(t_node *node, char **line, char **str, t_tree *tree)
 	{
 		if (flag == 4 && **line == '$')
 			check_dallor(node, line, str, tree);
-		if (get_type(*line) == flag)
+		else if (get_type(*line) == flag)
 			break ;
-		*str = str_one_join(*str, (*line)[0], tree);
+		else
+			*str = str_one_join(*str, (*line)[0], tree);
 		(*line)++;
 	}
-	if (str[0] != 0 && *(*line + 1) == 0)
-	{
-		save_token(node, *str, WORD);
-		*str = re_str(*str);
-	}
+	// if (str[0] != 0 && *(*line + 1) == 0)
+	// {
+	// 	save_token(node, *str, WORD);
+	// 	*str = re_str(*str);
+	// }
 }
