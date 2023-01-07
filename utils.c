@@ -14,6 +14,22 @@ void	prt_exit(void)
 	exit(0);
 }
 
+void	prt_meows(void)
+{
+	int		fd;
+	int		n;
+	char 	*buf;
+
+	fd = open("meow.txt", O_RDONLY);
+	buf = ft_calloc(2, 1);
+	while (read(fd, buf, 1) > 0)
+	{
+		printf("%s", buf);
+	}
+	printf("\n");
+	free(buf);
+}
+
 void	prt_tree(t_node *node, int le, int ri)
 {
 	t_token	*token;
