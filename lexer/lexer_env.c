@@ -33,24 +33,36 @@ char	*change_env(char *str2, t_envnode *envnode)
 	return (envstr);
 }
 
-void	check_dallor(t_node *node, char **line, char **str, t_tree *tree)
+int	dallor_save(t_node *node, char **line, char **str, t_tree *tree)
 {
-	char		*str2;
-
-	str2 = ft_calloc(1, 1);
 	if (*(*line + 1) == 0)
 	{
 		save_token(node, "$", WORD);
 		*str = re_str(*str);
-		free(str2);
-		return ;
+		return (1);
+	}
+	else if (*(*line + 1) == '?')
+	{
+		save_token(node, "$?", WORD);
+		*str = re_str(*str);
+		(*line)++;
+		return (1);
 	}
 	else if (get_type(*line + 1) != WORD || *(*line + 1) == ' ')
 	{
 		*str = str_one_join(*str, '$', tree);
-		free(str2);
-		return ;
+		return (1);
 	}
+	return (0);
+}
+
+void	check_dallor(t_node *node, char **line, char **str, t_tree *tree)
+{
+	char		*str2;
+
+	if (dallor_save(node, line, str, tree))
+		return ;
+	str2 = ft_calloc(1, 1);
 	(*line)++;
 	while (**line)
 	{

@@ -4,19 +4,35 @@
 int	error_pipe(t_tree *tree)
 {
 	t_node	*node;
-	
+
 	node = tree->root;
-	while (node->right_child)
-		node = node->right_child;
-	if (node->token->flag == PIPE)
+	if (node->right_child == NULL)
+		return (0);
+	node = node->right_child;
+	while (node)
 	{
 		if (ft_strncmp(node->token->str, "||", 3) == 0)
 		{
+			if (node->right_child == NULL || \
+			ft_strncmp(node->right_child->token->str, "||", 3) == 0)
+				write(1, "minishell: syntax error near unexpected token '||'\n", 52);
+			else if (ft_strncmp(node->right_child->token->str, "|", 3) == 0)
+				write(1, "minishell: syntax error near unexpected token '|'\n", 51);
 			return (1);
 		}
-		if (node->left_child == NULL)
-			write(1, "minishell: syntax error near unexpected token '|'\n", 51);
-		return (1);
+		else
+		{
+			if (node->left_child == NULL)
+			{
+				if (node->right_child == NULL || \
+				ft_strncmp(node->right_child->token->str, "|", 3) == 0)
+					write(1, "minishell: syntax error near unexpected token '|'\n", 51);
+				else if (ft_strncmp(node->right_child->token->str, "||", 3) == 0)
+					write(1, "minishell: syntax error near unexpected token '||'\n", 52);
+				return (1);
+			}
+		}
+		node = node->right_child;
 	}
 	return (0);
 }

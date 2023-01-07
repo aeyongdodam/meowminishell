@@ -18,19 +18,19 @@ int main(int argc, char **argv, char **envp)
 		set_signal_handler(0);
 		line = readline("\033[34mMinishell>\033[0m ");
 		if (line)
-        {
+		{
 			tree = lexer(line, envnode);
 			add_history(line);
-			// if (find_error(tree))
-			// 	continue;
-			main_pipe(tree, envnode);
+			if (find_error(tree))
+				continue;
+			// main_pipe(tree, envnode);
 			free(line);
         }
-        else
-        {
-            write(2, "exit\n", 5);
+		else
+		{
+			write(2, "exit!\n", 5);
 			exit(0);
-        }
+		}
 	}
 	return (0);
 }
