@@ -13,7 +13,6 @@ void pipe_malloc_open(t_pipe *pi, int pipe_cnt)
 		pipe(pi->fd[i]);
 		i++;
 	}
-
 }
 
 void	close_pipe(t_pipe *pi, int pipe_cnt)
@@ -156,11 +155,9 @@ void	main_pipe(t_tree *tree, t_envnode *envnode)
 	t_node *tr;
 
 	tr = tree->root;
-	int j = 0;
 	pi = malloc(sizeof(t_pipe));
-
+	int j = 0;
 	pipe_malloc_open(pi, tree->pipe_cnt);
-	// printf("tree->pipe_cnt %d\n",tree->pipe_cnt);
 	int	i;
 	pid_t	pid;
 	char *str;
@@ -169,6 +166,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode)
 	char **command;
 	int redi_flag;
 	t_token	*tmp;
+	pi->cd_cnt = 0;
 	int final = dup(1);
 
 	if (!tr->left_child)
@@ -184,6 +182,9 @@ void	main_pipe(t_tree *tree, t_envnode *envnode)
 		else
 			command = get_command(tr);
 	//path 구함
+	pid = fork();
+	if (pid == 0)
+	{
 		if (check_redi(tr) == 1)
 		{
 			tmp = tr->left_child->token;
@@ -208,6 +209,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode)
 						dup2(finalfd, 1);
 				}
 				tmp = tmp->next;
+
 			}
 		}
 		else if (i == tree->pipe_cnt)
@@ -217,13 +219,13 @@ void	main_pipe(t_tree *tree, t_envnode *envnode)
 				dup2(pi->fd[i - 1][0], 0);
 				dup2(final, 1);
 				close(pi->fd[i - 1][0]);
-				// close(pi->fd[i - 1][1]);
+				close(pi->fd[i - 1][1]);
 			}
 		}
 		else if (i == 0)
 		{
 			dup2(pi->fd[i][1], 1);
-			// close(pi->fd[i][0]);
+			close(pi->fd[i][0]);
 			close(pi->fd[i][1]);
 		}
 		else
@@ -231,37 +233,45 @@ void	main_pipe(t_tree *tree, t_envnode *envnode)
 			dup2(pi->fd[i - 1][0], 0);
 			dup2(pi->fd[i][1], 1);
 			close(pi->fd[i - 1][0]);
-			// close(pi->fd[i - 1][1]);
-			// close(pi->fd[i][0]);
+			close(pi->fd[i - 1][1]);
+			close(pi->fd[i][0]);
 			close(pi->fd[i][1]);
 		}
-
 
 		if (ft_strncmp(command[0], "echo", 5) == 0)
 		{
 			builtin_echo(command);
+			exit (0);
 		}
 		else if(ft_strncmp(command[0], "cd", 3) == 0)
 		{
+			pi->cd_cnt += 1;
 			builtin_cd(command, envnode);
+			exit (0);
 		}
 		else
 		{
 			if (str == NULL && ft_strncmp(command[0], "/", 1) == 0)
 				str = command[0];
-
-			pid = fork();
-			if (pid == 0) //자식 프로세스
-			{
-				execve(str, command, NULL);
-				printf("실행에러\n");
-				exit (1);
-			}
+			execve(str, command, NULL);
+			printf("실행에러\n");
+			exit (1);
 		}
+	}
+	if (i != 0)
+	{
+		close(pi->fd[i-1][0]);
+		close(pi->fd[i-1][1]);
+	}
 		tr=tr->right_child;
 		 i++;
 	}
-
-	close_pipe(pi, tree->pipe_cnt);
 	wait_process(tree->pipe_cnt); //다 끝날때까지 부모 프로세스 기다려야함
+	tr = tree->root;
+	if (tree->pipe_cnt == 0 && ft_strncmp(tr->left_child->token->str, "cd", 3) == 0)
+	{
+		str = find_path(envnode, tr->left_child->token->str);
+		command = get_command(tr);
+		builtin_cd(command, envnode);		
+	}
 }
