@@ -13,6 +13,7 @@ void pipe_malloc_open(t_pipe *pi, int pipe_cnt)
 		pipe(pi->fd[i]);
 		i++;
 	}
+
 }
 
 void	close_pipe(t_pipe *pi, int pipe_cnt)
@@ -68,7 +69,6 @@ void wait_process(int cnt)
 	i = 0;
 	while (i < cnt + 1)
 	{
-		printf("aaa\n");
 		wait(NULL);
 		i++;
 	}
@@ -157,8 +157,10 @@ void	main_pipe(t_tree *tree, t_envnode *envnode)
 
 	tr = tree->root;
 	int j = 0;
+	pi = malloc(sizeof(t_pipe));
+
 	pipe_malloc_open(pi, tree->pipe_cnt);
-	printf("tree->pipe_cnt %d\n",tree->pipe_cnt);
+	// printf("tree->pipe_cnt %d\n",tree->pipe_cnt);
 	int	i;
 	pid_t	pid;
 	char *str;
@@ -262,5 +264,4 @@ void	main_pipe(t_tree *tree, t_envnode *envnode)
 
 	close_pipe(pi, tree->pipe_cnt);
 	wait_process(tree->pipe_cnt); //다 끝날때까지 부모 프로세스 기다려야함
-		printf("wait 끝\n");
 }
