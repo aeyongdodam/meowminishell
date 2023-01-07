@@ -103,14 +103,14 @@ int		find_error(t_tree *tree);
 int		check_pipe(t_node *node, int flag);
 void	prt_error(int flag);
 
-int		input_exit(t_tree *tree);
-void	prt_exit(void);
-
 //pipe.c
 void	main_pipe(t_tree *tree, t_envnode *envnode);
 
 //utils
 void	prt_tree(t_node *node, int le, int ri);
+int		input_exit(t_tree *tree);
+void	prt_exit(void);
+void	prt_meows(void);
 
 //builtin
 void builtin_echo(char **command);
