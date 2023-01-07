@@ -259,11 +259,11 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 			builtin_env(envnode);
 			exit (0);
 		}
-		// else if(ft_strncmp(command[0], "export", 7) == 0)
-		// {
-		// 	builtin_export(envnode, command);
-		// 	exit (0);
-		// }
+		else if(ft_strncmp(command[0], "export", 7) == 0)
+		{
+			builtin_export(envnode, command);
+			exit (0);
+		}
 		else
 		{
 			if (str == NULL && (ft_strncmp(command[0], "/", 1) == 0 || ft_strncmp(command[0], "./", 2) == 0))

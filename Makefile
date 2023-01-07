@@ -4,7 +4,7 @@ CC = cc
 SRC = main.c signal.c init.c error.c
 SRC += lexer/lexer.c lexer/lexer_token.c lexer/lexer_env.c lexer/lexer_utils.c
 SRC += pipe.c
-SRC += builtin/echo.c builtin/cd.c builtin/pwd.c builtin/env.c
+SRC += builtin/echo.c builtin/cd.c builtin/pwd.c builtin/env.c builtin/export.c
 SRC += utils.c
 OBJ = $(SRC:.c=.o)
 HEADER = -include ./minishell.h
