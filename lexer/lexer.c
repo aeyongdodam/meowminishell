@@ -38,6 +38,5 @@ t_tree	*lexer(char	*line, t_envnode *envnode)
 	if (str[0] != 0)
 		save_token(node, str, WORD);
 	free(str);
-	//prt_tree(tree->root, 0, 0);
 	return (tree);
 }
