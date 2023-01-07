@@ -51,7 +51,7 @@ typedef struct s_tree
 
 typedef struct s_pipe{
 	int	**fd;
-	int	pipe_cnt;
+	int	cd_cnt;
 }	t_pipe;
 
 typedef struct s_envnode

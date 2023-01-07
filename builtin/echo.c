@@ -23,6 +23,12 @@ void builtin_echo(char **command)
 	newline_flag = 0;
 	int i = 1;
 
+	if (!command[1])
+	{
+		printf("\n");
+		return ;
+	}
+
 	if (ft_newlinecmp(command[i]) == 1)
 		newline_flag = 1;
 
