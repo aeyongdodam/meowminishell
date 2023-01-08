@@ -116,6 +116,7 @@ void	prt_meows(void);
 void	builtin_echo(char **command);
 void	builtin_cd(char **command, t_envnode *envnode);
 void    builtin_pwd(char **command);
-void	builtin_env(t_envnode *envnode);
-void	builtin_export(t_envnode *envnode, char **command);
+void	builtin_env(t_envnode *envnode, char **command, int last_flag);
+void	builtin_export(t_envnode *envnode, char **command, int last_flag);
+void    builtin_unset(t_envnode *envnode, char **command);
 #endif
