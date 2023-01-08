@@ -99,6 +99,8 @@ int	find_error(t_tree *tree)
 	t_node	*node;
 
 	node = tree->root;
+	if (tree->root->left_child == NULL && tree->root->right_child == NULL)
+		return (1);
 	if (tree->root->right_child != NULL && error_pipe(tree->root))
 		return (1);
 	if (error_redi(tree->root))

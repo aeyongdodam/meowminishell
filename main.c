@@ -20,9 +20,8 @@ int	main(int argc, char **argv, char **envp)
 		if (!line)
 			prt_exit();
 		tree = lexer(line, envnode);
-		if (tree->root->left_child == NULL && tree->root->right_child == NULL)
-			continue ;
-		add_history(line);
+		if (tree->root->left_child != NULL || tree->root->right_child != NULL)
+			add_history(line);
 		if (find_error(tree))
 			continue ;
 		main_pipe(tree, envnode, envp);
