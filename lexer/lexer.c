@@ -24,11 +24,11 @@ t_tree	*lexer(char	*line, t_envnode *envnode)
 		if (*line == '$')
 			check_dallor(node, &line, &str, tree);
 		else if (*line == ' ')
-			word_token(node, str, tree);
+			word_token(node, &str, tree);
 		else if (get_type(line) == PIPE)
-			node = pipe_token(node, str, tree);
+			node = pipe_token(node, &str, tree);
 		else if (get_type(line) == REDI || get_type(line) == HERE)
-			redi_token(node, &line, str, tree);
+			redi_token(node, &line, &str, tree);
 		else if (get_type(line) == QUOTE_D || get_type(line) == QUOTE_S)
 			check_quote(node, &line, &str, tree);
 		else

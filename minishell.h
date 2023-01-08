@@ -80,9 +80,9 @@ t_tree	*lexer(char	*line, t_envnode *envnode);
 
 //lexer_token.c
 void	save_token(t_node *node, char *str, int flag);
-void	word_token(t_node *node, char *str, t_tree *tree);
-t_node	*pipe_token(t_node *node, char *str, t_tree *tree);
-void	redi_token(t_node *node, char **line, char *str, t_tree *tree);
+void	word_token(t_node *node, char **str, t_tree *tree);
+t_node	*pipe_token(t_node *node, char **str, t_tree *tree);
+void	redi_token(t_node *node, char **line, char **str, t_tree *tree);
 void	check_quote(t_node *node, char **line, char **str, t_tree *tree);
 
 //lexer_env.c

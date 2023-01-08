@@ -35,18 +35,18 @@ void	save_token(t_node *node, char *str, int flag)
 	}
 }
 
-void	word_token(t_node *node, char *str, t_tree *tree)
+void	word_token(t_node *node, char **str, t_tree *tree)
 {
 	if (tree->space == 0 && str[0] != 0)
 	{
-		save_token(node, str, WORD);
-		str = re_str(str);
+		save_token(node, *str, WORD);
+		*str = re_str(*str);
 		set_variable(tree, 1, 0, 0);
 	}
 	set_variable(tree, 1, 0, 0);
 }
 
-t_node	*pipe_token(t_node *node, char *str, t_tree *tree)
+t_node	*pipe_token(t_node *node, char **str, t_tree *tree)
 {
 	if (tree->pipe == 1)
 	{
@@ -55,8 +55,8 @@ t_node	*pipe_token(t_node *node, char *str, t_tree *tree)
 	}
 	if (tree->space == 0 && str[0] != 0)
 	{
-		save_token(node, str, WORD);
-		str = re_str(str);
+		save_token(node, *str, WORD);
+		*str = re_str(*str);
 	}
 	node->right_child = init_node();
 	node->right_child->token->flag = PIPE;
@@ -67,12 +67,12 @@ t_node	*pipe_token(t_node *node, char *str, t_tree *tree)
 	return (node);
 }
 
-void	redi_token(t_node *node, char **line, char *str, t_tree *tree)
+void	redi_token(t_node *node, char **line, char **str, t_tree *tree)
 {
 	if (tree->space == 0 && str[0] != 0)
 	{
-		save_token(node, str, WORD);
-		str = re_str(str);
+		save_token(node, *str, WORD);
+		*str = re_str(*str);
 	}
 	if (**line == '<' && *(*line + 1) == '<')
 	{

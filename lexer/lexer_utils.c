@@ -40,8 +40,6 @@ char	*str_one_join(char *s1, char c, t_tree *tree, int flag)
 	i = 0;
 	len = ft_strlen(s1);
 	str = ft_calloc(len + 2, 1);
-	if (!str)
-		return (0);
 	while (i < len)
 	{
 		str[i] = s1[i];
