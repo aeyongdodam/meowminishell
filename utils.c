@@ -61,7 +61,7 @@ void	prt_tree(t_node *node, int le, int ri)
 		token = node->token;
 		while (token)
 		{
-			printf("flag : %d, str : %s / ", token->flag, token->str);
+			printf("flag : '%d', str : '%s' / ", token->flag, token->str);
 			token = token->next;
 		}
 	}

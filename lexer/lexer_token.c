@@ -37,7 +37,7 @@ void	save_token(t_node *node, char *str, int flag)
 
 void	word_token(t_node *node, char **str, t_tree *tree)
 {
-	if (tree->space == 0 && str[0] != 0)
+	if (tree->space == 0 && *str[0] != 0)
 	{
 		save_token(node, *str, WORD);
 		*str = re_str(*str);
