@@ -11,7 +11,19 @@ int	input_exit(t_tree *tree)
 	if (ft_strncmp(token->str, "exit", 5) == 0)
 	{
 		if (token->next != NULL)
-			g_exit_code = ft_atoi(token->next->str);
+		{
+			if (token->next->str[0] != '-' && \
+			(token->next->str[0] < '0' || token->next->str[0] > '9'))
+			{
+				write(1, "exit\n", 5);
+				printf("meowshell: exit: %s: numeric argument required\n", \
+				token->next->str);
+				g_exit_code = 255;
+				exit (255);
+			}
+			else
+				g_exit_code = ft_atoi(token->next->str);
+		}
 		return (1);
 	}
 	return (0);
@@ -20,10 +32,6 @@ int	input_exit(t_tree *tree)
 void	prt_exit(void)
 {
 	write(2, "exit\n", 5);
-	if (g_exit_code > 255)
-		g_exit_code = g_exit_code - 256;
-	if (g_exit_code < 0)
-		g_exit_code += 256;
 	exit(g_exit_code);
 }
 

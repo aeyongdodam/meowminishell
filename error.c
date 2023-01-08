@@ -12,14 +12,17 @@
 
 #include "minishell.h"
 
+extern int	g_exit_code;
+
 void	prt_error(int flag)
 {
 	if (flag == 1)
-		printf("minishell: syntax error near unexpected token '|'\n");
+		printf("meowshell: syntax error near unexpected token '|'\n");
 	else if (flag == 2)
-		printf("minishell: syntax error near unexpected token '||'\n");
+		printf("meowshell: syntax error near unexpected token '||'\n");
 	else if (flag == 3)
-		printf("minishell: syntax error near unexpected token `newline'\n");
+		printf("meowshell: syntax error near unexpected token `newline'\n");
+	g_exit_code = 258;
 }
 
 int	check_pipe(t_node *node, int flag)
@@ -96,13 +99,11 @@ int	find_error(t_tree *tree)
 	t_node	*node;
 
 	node = tree->root;
-	if (node->left_child == NULL && node->right_child == NULL)
-		return (0);
-	if (input_exit(tree))
-		prt_exit();
 	if (tree->root->right_child != NULL && error_pipe(tree->root))
 		return (1);
 	if (error_redi(tree->root))
 		return (1);
+	if (input_exit(tree))
+		prt_exit();
 	return (0);
 }
