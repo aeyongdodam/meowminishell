@@ -238,6 +238,8 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 			close(pi->fd[i][1]);
 		}
 
+//파이프연결 끝
+		// printf("들어가기전 command 0 %s 1 %s\n",command[0],command[1]);		
 		if (ft_strncmp(command[0], "echo", 5) == 0)
 		{
 			builtin_echo(command);
@@ -256,12 +258,17 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 		}
 		else if(ft_strncmp(command[0], "env", 4) == 0)
 		{
-			builtin_env(envnode);
+			builtin_env(envnode, command, 0);
 			exit (0);
 		}
 		else if(ft_strncmp(command[0], "export", 7) == 0)
 		{
-			builtin_export(envnode, command);
+			builtin_export(envnode, command, 0);
+			exit (0);
+		}
+		else if (ft_strncmp(command[0], "unset", 6) == 0)
+		{
+			builtin_unset(envnode, command);
 			exit (0);
 		}
 		else
@@ -283,10 +290,23 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 	}
 	wait_process(tree->pipe_cnt); //다 끝날때까지 부모 프로세스 기다려야함
 	tr = tree->root;
-	if (tree->pipe_cnt == 0 && ft_strncmp(tr->left_child->token->str, "cd", 3) == 0)
+	printf("envnode root %p\n",envnode);
+	if (tree->pipe_cnt == 0 && (ft_strncmp(tr->left_child->token->str, "cd", 3) == 0 || \
+	ft_strncmp(tr->left_child->token->str, "export", 7) == 0) || ft_strncmp(tr->left_child->token->str, "unset", 5) == 0)
 	{
 		str = find_path(envnode, tr->left_child->token->str);
-		command = get_command(tr);
-		builtin_cd(command, envnode);
+		if (check_redi(tr))
+			command = get_redi_command(tr);
+		else
+			command = get_command(tr);
+		if (ft_strncmp(tr->left_child->token->str, "cd", 3) == 0)
+			builtin_cd(command, envnode);
+		else if (ft_strncmp(tr->left_child->token->str, "export", 7) == 0)
+			builtin_export(envnode, command, 1);
+		else
+		{
+			builtin_unset(envnode, command);
+			printf("env root %p\n",envnode);
+		}
 	}
 }
