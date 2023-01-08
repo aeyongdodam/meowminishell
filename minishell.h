@@ -91,7 +91,7 @@ void	check_dallor(t_node *node, char **line, char **str, t_tree *tree);
 
 //lexer_utils.c
 int		get_type(char *line);
-char	*str_one_join(char *s1, char c, t_tree *tree);
+char	*str_one_join(char *s1, char c, t_tree *tree, int flag);
 char	*re_str(char *str);
 void	set_variable(t_tree *tree, int space, int pipe, int quote);
 void	set_lexer(t_node **node, t_tree **tree, char **stre, t_envnode *envnode);

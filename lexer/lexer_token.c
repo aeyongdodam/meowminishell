@@ -50,7 +50,7 @@ t_node	*pipe_token(t_node *node, char *str, t_tree *tree)
 {
 	if (tree->pipe == 1)
 	{
-		node->token->str = str_one_join(node->token->str, '|', tree);
+		node->token->str = str_one_join(node->token->str, '|', tree, 1);
 		return (node);
 	}
 	if (tree->space == 0 && str[0] != 0)
@@ -106,7 +106,7 @@ void	check_quote(t_node *node, char **line, char **str, t_tree *tree)
 		else if (get_type(*line) == flag)
 			break ;
 		else
-			*str = str_one_join(*str, (*line)[0], tree);
+			*str = str_one_join(*str, (*line)[0], tree, 1);
 		(*line)++;
 	}
 }

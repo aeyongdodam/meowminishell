@@ -83,7 +83,7 @@ t_envnode	*init_env(char **envp, t_tree *tree)
 				str = re_str(str);
 			}
 			else
-				str = str_one_join(str, envp[i][j], tree);
+				str = str_one_join(str, envp[i][j], tree, 0);
 			j++;
 		}
 		i++;

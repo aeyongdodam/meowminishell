@@ -50,7 +50,7 @@ int	dallor_save(t_node *node, char **line, char **str, t_tree *tree)
 	}
 	else if (get_type(*line + 1) != WORD || *(*line + 1) == ' ')
 	{
-		*str = str_one_join(*str, '$', tree);
+		*str = str_one_join(*str, '$', tree, 1);
 		return (1);
 	}
 	return (0);
@@ -66,7 +66,7 @@ void	check_dallor(t_node *node, char **line, char **str, t_tree *tree)
 	(*line)++;
 	while (**line)
 	{
-		str2 = str_one_join(str2, (*line)[0], tree);
+		str2 = str_one_join(str2, (*line)[0], tree, 1);
 		if (get_type(*line + 1) != WORD || *(*line + 1) == ' ')
 			break ;
 		(*line)++;

@@ -31,7 +31,7 @@ int	get_type(char *line)
 	return (WORD);
 }
 
-char	*str_one_join(char *s1, char c, t_tree *tree)
+char	*str_one_join(char *s1, char c, t_tree *tree, int flag)
 {
 	int		i;
 	int		len;
@@ -50,7 +50,7 @@ char	*str_one_join(char *s1, char c, t_tree *tree)
 	str[i] = c;
 	str[i + 1] = 0;
 	free(s1);
-	if (tree != 0)
+	if (flag == 1)
 		set_variable(tree, 0, 0, 0);
 	return (str);
 }

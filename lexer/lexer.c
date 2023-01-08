@@ -32,7 +32,7 @@ t_tree	*lexer(char	*line, t_envnode *envnode)
 		else if (get_type(line) == QUOTE_D || get_type(line) == QUOTE_S)
 			check_quote(node, &line, &str, tree);
 		else
-			str = str_one_join(str, line[0], tree);
+			str = str_one_join(str, line[0], tree, 1);
 		line++;
 	}
 	if (str[0] != 0)
