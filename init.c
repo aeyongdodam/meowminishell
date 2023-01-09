@@ -48,7 +48,12 @@ t_envnode	*init_envnode(t_envnode	**head, char	*str)
 	node->next = 0;
 	node->key = ft_strdup(str);
 	if (*head == NULL)
+	{
 		*head = node;
+		node = ft_calloc(1, sizeof(t_envnode));
+		node->next = node;
+		node->prev = *head;
+	}
 	else
 	{
 		tempnode = *head;
