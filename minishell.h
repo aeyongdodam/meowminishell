@@ -119,4 +119,7 @@ void    builtin_pwd(char **command);
 void	builtin_env(t_envnode *envnode, char **command, int last_flag);
 void	builtin_export(t_envnode *envnode, char **command, int last_flag);
 void    builtin_unset(t_envnode *envnode, char **command);
+
+void    create_heredoc_file(t_tree *tree);
+void    delete_heredoc_file(t_tree *tree);
 #endif

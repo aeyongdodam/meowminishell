@@ -64,6 +64,10 @@ void    builtin_export(t_envnode *envnode, char **command, int last_flag)
 			while (tmp->next)
 				tmp = tmp->next;
 			new_node = malloc(sizeof(t_envnode));
+			new_node->next = NULL;
+			new_node->prev = NULL;
+			new_node->key = NULL;
+			new_node->value = NULL;
 			if (ft_strrchr(command[i], '=') != 0)
 			{
 				j = 0;
