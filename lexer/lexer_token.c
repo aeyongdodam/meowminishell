@@ -69,6 +69,10 @@ t_node	*pipe_token(t_node *node, char **str, t_tree *tree)
 
 void	redi_token(t_node *node, char **line, char **str, t_tree *tree)
 {
+	if (tree->redi == 1)
+	{
+		redi_token(node, line, str, tree);
+	}
 	if (tree->space == 0 && str[0] != 0)
 	{
 		save_token(node, *str, WORD);
@@ -88,6 +92,7 @@ void	redi_token(t_node *node, char **line, char **str, t_tree *tree)
 		save_token(node, "<", REDI);
 	else if (**line == '>')
 		save_token(node, ">", REDI);
+	set_variable(tree, 0, 0, 1);
 }
 
 void	check_quote(t_node *node, char **line, char **str, t_tree *tree)

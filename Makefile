@@ -1,14 +1,19 @@
 
 
 CC = cc
+
 SRC = main.c signal.c init.c error.c
 SRC += lexer/lexer.c lexer/lexer_token.c lexer/lexer_env.c lexer/lexer_utils.c
 SRC += pipe.c heredoc.c
 SRC += builtin/echo.c builtin/cd.c builtin/pwd.c builtin/env.c builtin/export.c builtin/unset.c
 SRC += utils.c
-OBJ = $(SRC:.c=.o)
-HEADER = -include ./minishell.h
 
+OBJ = $(SRC:.c=.o)
+
+LIBFT_DIR	= ./libft
+LIBFT_LIB	= -L $(LIBFT_DIR) -lft
+
+HEADER = -include ./minishell.h
 # CFLAGS = #-Wall -Wextra -Werror
 CFLAGS = -g3 -fsanitize=address
 COMFILE_FLAGS = -lreadline -L /$(shell brew --prefix readline)/lib
@@ -19,15 +24,18 @@ NAME = minishell
 all: $(NAME)
 
 $(NAME): $(OBJ)
-		$(CC) $(CFLAGS) $(HEADER) $(COMFILE_FLAGS)  -o $@ $^ ./libft/libft.a
+		make -C $(LIBFT_DIR)
+		$(CC) $(CFLAGS) $(HEADER) $(COMFILE_FLAGS) $(LIBFT_LIB) -o $@ $^ 
 
 %.o: %.c
 		$(CC) $(CFLAGS) $(OBJ_FLAGS) -c $< -o $@
 
 clean:
+		make -C ${LIBFT_DIR} clean
 		rm -f $(OBJ)
 
 fclean:	clean
+		make -C ${LIBFT_DIR} fclean
 		rm -f $(NAME)
 
 re : fclean all

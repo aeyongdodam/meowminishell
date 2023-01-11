@@ -33,8 +33,7 @@ t_tree	*init_tree(void)
 	tree->heredoc_cnt = 0;
 	tree->space = 0;
 	tree->pipe = 0;
-	tree->double_quote = 0;
-	tree->single_quote = 0;
+	tree->redi = 0;
 	return (tree);
 }
 
@@ -49,10 +48,11 @@ t_envnode	*init_envnode(t_envnode	**head, char	*str)
 	node->key = ft_strdup(str);
 	if (*head == NULL)
 	{
-		*head = node;
-		node = ft_calloc(1, sizeof(t_envnode));
-		node->next = node;
-		node->prev = *head;
+		*head = ft_calloc(1, sizeof(t_envnode));
+		(*head)->key = ft_strdup("HEAD");
+		(*head)->prev = 0;
+		(*head)->next = node;
+		node->prev = (*head);
 	}
 	else
 	{

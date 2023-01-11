@@ -62,12 +62,11 @@ char	*re_str(char *str)
 	return (str);
 }
 
-void	set_variable(t_tree *tree, int space, int pipe, int quote)
+void	set_variable(t_tree *tree, int space, int pipe, int redi)
 {
 	tree->space = space;
 	tree->pipe = pipe;
-	tree->double_quote = quote;
-	tree->single_quote = quote;
+	tree->redi = redi;
 }
 
 void	set_lexer(t_node **node, t_tree **tree, char **str, t_envnode *env)

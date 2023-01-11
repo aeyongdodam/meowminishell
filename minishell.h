@@ -45,8 +45,7 @@ typedef struct s_tree
 	int				heredoc_cnt;
 	int				space;
 	int				pipe;
-	int				double_quote;
-	int				single_quote;
+	int				redi;
 }	t_tree;
 
 typedef struct s_pipe{
@@ -93,7 +92,7 @@ void	check_dallor(t_node *node, char **line, char **str, t_tree *tree);
 int		get_type(char *line);
 char	*str_one_join(char *s1, char c, t_tree *tree, int flag);
 char	*re_str(char *str);
-void	set_variable(t_tree *tree, int space, int pipe, int quote);
+void	set_variable(t_tree *tree, int space, int pipe, int redi);
 void	set_lexer(t_node **node, t_tree **tree, char **stre, t_envnode *envnode);
 
 //error.c
