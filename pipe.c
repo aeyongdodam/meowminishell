@@ -149,6 +149,18 @@ int	check_redi(t_node *tr)
 
 
 
+void	pipe_prt_error(int	error_code, char *s)
+{
+	if (error_code == 1)
+	{
+		write(2, "meowminishell: ", 16);
+		write(2, s, ft_strlen(s));
+		write(2, ": No such file or directory\n", 29);
+		exit (1);
+	}
+}
+
+
 void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 {
 	t_pipe *pi;
@@ -175,14 +187,12 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 	i = 0;
 	while (i < tree->pipe_cnt + 1)
 	{
-	//path 구하기 시작
-
 		if (check_redi(tr) == 1)
 			command = get_redi_command(tr);
 		else
 			command = get_command(tr); // command를 쪼개서 넣어주는거
 	str = find_path(envnode, command[0]);
-	//path 구함
+	set_signal_handler(1);
 	pid = fork();
 	if (pid == 0)
 	{
@@ -196,6 +206,8 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 					openfd =  open(tmp->next->str, O_RDONLY);
 					if (openfd >= 0)
 						dup2(openfd, 0);
+					else
+						pipe_prt_error(1, tmp->next->str);
 					if (i == tree->pipe_cnt)
 					{
 						if (i != 0)
@@ -226,6 +238,8 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 					finalfd = open(tmp->next->str, O_WRONLY | O_APPEND | O_CREAT, 0644);
 					if (finalfd >= 0)
 						dup2(finalfd, 1);
+					else
+						pipe_prt_error(1, tmp->next->str);
 					if (i == tree->pipe_cnt)
 					{
 						if (i != 0)
@@ -254,6 +268,8 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 					finalfd = open(tmp->next->str, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 					if (finalfd >= 0)
 						dup2(finalfd, 1);
+					else
+						pipe_prt_error(1, tmp->next->str);
 					if (i == tree->pipe_cnt)
 					{
 						if (i != 0)
@@ -281,7 +297,10 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 				{
 					file_name = ft_strjoin("tmp_file", ft_itoa(index));
 					heredoc_fd = open(file_name, O_RDONLY);
-					dup2(heredoc_fd, 0);
+					if (heredoc_fd >= 0)
+						dup2(heredoc_fd, 0);
+					else
+						pipe_prt_error(1, tmp->next->str);
 					index++;
 					if (i == tree->pipe_cnt)
 					{
