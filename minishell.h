@@ -97,7 +97,7 @@ void	set_lexer(t_node **node, t_tree **tree, char **stre, t_envnode *envnode);
 void	double_redi(t_node *node, char **line, char **str, t_tree *tree);
 
 //error.c
-void	prt_error(int flag);
+void	prt_error(int flag, char *str);
 int		check_pipe(t_node *node, int flag);
 int		error_pipe(t_node *node);
 int		error_redi(t_node *node);
