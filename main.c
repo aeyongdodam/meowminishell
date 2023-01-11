@@ -20,9 +20,7 @@ int	main(int argc, char **argv, char **envp)
 		if (!line)
 			prt_exit();
 		tree = lexer(line, envnode);
-		if (tree->root->left_child != NULL || tree->root->right_child != NULL)
-			add_history(line);
-		if (find_error(tree))
+		if (find_error(tree, line))
 			continue ;
 		create_heredoc_file(tree);
 		main_pipe(tree, envnode, envp);

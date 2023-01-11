@@ -12,6 +12,25 @@
 
 #include "../minishell.h"
 
+int	get_type(char *line)
+{
+	if (*line == '<' && *(line + 1) == '<')
+		return (HERE);
+	else if (*line == '>' && *(line + 1) == '>')
+		return (REDI);
+	else if (*line == '<')
+		return (REDI);
+	else if (*line == '>')
+		return (REDI);
+	else if (*line == '|')
+		return (PIPE);
+	else if (*line == '\"')
+		return (QUOTE_D);
+	else if (*line == '\'')
+		return (QUOTE_S);
+	return (WORD);
+}
+
 t_tree	*lexer(char	*line, t_envnode *envnode)
 {
 	t_tree	*tree;

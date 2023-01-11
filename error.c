@@ -73,16 +73,21 @@ int	error_pipe(t_node *root)
 int	error_redi(t_node *node)
 {
 	t_token	*token;
+	int		flag;
 
-	if (node->token->flag == WORD || node->token->flag == REDI)
+	flag = node->token->flag;
+	if (flag == WORD || flag == REDI || flag == HERE)
 	{
 		token = node->token;
 		while (token)
 		{
 			if (token->flag == REDI && token->next == NULL)
 			{
-				prt_error(3);
-				return (1);
+				if (token->next == NULL)
+				{
+					prt_error(3);
+					return (1);
+				}
 			}
 			token = token->next;
 		}
@@ -94,13 +99,14 @@ int	error_redi(t_node *node)
 	return (0);
 }
 
-int	find_error(t_tree *tree)
+int	find_error(t_tree *tree, char *line)
 {
 	t_node	*node;
 
 	node = tree->root;
 	if (tree->root->left_child == NULL && tree->root->right_child == NULL)
 		return (1);
+	add_history(line);
 	if (tree->root->right_child != NULL && error_pipe(tree->root))
 		return (1);
 	if (error_redi(tree->root))

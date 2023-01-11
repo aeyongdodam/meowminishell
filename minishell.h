@@ -75,6 +75,7 @@ t_envnode	*init_env(char **envp, t_tree *tree);
 t_envnode	*init_envnode(t_envnode	**head, char *str);
 
 //lexer.c
+int		get_type(char *line);
 t_tree	*lexer(char	*line, t_envnode *envnode);
 
 //lexer_token.c
@@ -89,18 +90,18 @@ char	*change_env(char *str2, t_envnode *envnode);
 void	check_dallor(t_node *node, char **line, char **str, t_tree *tree);
 
 //lexer_utils.c
-int		get_type(char *line);
 char	*str_one_join(char *s1, char c, t_tree *tree, int flag);
 char	*re_str(char *str);
 void	set_variable(t_tree *tree, int space, int pipe, int redi);
 void	set_lexer(t_node **node, t_tree **tree, char **stre, t_envnode *envnode);
+void	double_redi(t_node *node, char **line, char **str, t_tree *tree);
 
 //error.c
+void	prt_error(int flag);
+int		check_pipe(t_node *node, int flag);
 int		error_pipe(t_node *node);
 int		error_redi(t_node *node);
-int		find_error(t_tree *tree);
-int		check_pipe(t_node *node, int flag);
-void	prt_error(int flag);
+int		find_error(t_tree *tree, char *line);
 
 //pipe.c
 void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp);

@@ -71,7 +71,8 @@ void	redi_token(t_node *node, char **line, char **str, t_tree *tree)
 {
 	if (tree->redi == 1)
 	{
-		redi_token(node, line, str, tree);
+		double_redi(node, line, str, tree);
+		return ;
 	}
 	if (tree->space == 0 && str[0] != 0)
 	{

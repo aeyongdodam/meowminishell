@@ -12,25 +12,6 @@
 
 #include "../minishell.h"
 
-int	get_type(char *line)
-{
-	if (*line == '<' && *(line + 1) == '<')
-		return (HERE);
-	else if (*line == '>' && *(line + 1) == '>')
-		return (REDI);
-	else if (*line == '<')
-		return (REDI);
-	else if (*line == '>')
-		return (REDI);
-	else if (*line == '|')
-		return (PIPE);
-	else if (*line == '\"')
-		return (QUOTE_D);
-	else if (*line == '\'')
-		return (QUOTE_S);
-	return (WORD);
-}
-
 char	*str_one_join(char *s1, char c, t_tree *tree, int flag)
 {
 	int		i;
@@ -76,4 +57,10 @@ void	set_lexer(t_node **node, t_tree **tree, char **str, t_envnode *env)
 	(*tree)->env = env;
 	*node = (*tree)->root;
 	(*node)->token->flag = 0;
+}
+
+void	double_redi(t_node *node, char **line, char **str, t_tree *tree)
+{
+	set_variable(tree, 0, 0, 0);
+	redi_token(node, line, str, tree);
 }

@@ -22,7 +22,7 @@ void	signal_handler2(int sig)
 	else if (sig == SIGQUIT)
 	{
 		g_exit_code = 131;
-		write(2, "Quit: 3\n", 8);
+		write(2, "^\\Quit: 3\n", 10);
 	}
 }
 
@@ -30,8 +30,8 @@ void	set_signal_handler(int flag)
 {
 	if (!flag)
 	{
-		signal(SIGINT, signal_handler);
 		signal(SIGQUIT, SIG_IGN);
+		signal(SIGINT, signal_handler);
 	}
 	else
 	{
