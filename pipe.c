@@ -129,6 +129,18 @@ char **get_command(t_node *tr)
 	return (save_command);
 }
 
+
+void	close_fd(t_pipe *pi, int cnt)
+{
+	int	i = 0;
+	while (i < cnt)
+	{
+		close(pi->fd[i][0]);
+		close(pi->fd[i][1]);
+		i++;
+	}
+}
+
 int	check_redi(t_node *tr)
 {
 	int	flag;
@@ -180,6 +192,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 	t_token	*tmp;
 	pi->cd_cnt = 0;
 	int final = dup(1);
+	int first = dup(0);
 	int	index = 0;
 	char *file_name;
 	if (!tr->left_child)
@@ -205,7 +218,10 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 				{
 					openfd =  open(tmp->next->str, O_RDONLY);
 					if (openfd >= 0)
+					{
 						dup2(openfd, 0);
+						close(openfd);
+					}
 					else
 						pipe_prt_error(1, tmp->next->str);
 					if (i == tree->pipe_cnt)
@@ -213,6 +229,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 						if (i != 0)
 						{
 							dup2(final, 1);
+							close(final);
 							close(pi->fd[i - 1][0]);
 							close(pi->fd[i - 1][1]);
 						}
@@ -233,11 +250,15 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 					}
 
 				}
+
 				if (ft_strncmp(tmp->str, ">>", 3) == 0)
 				{
 					finalfd = open(tmp->next->str, O_WRONLY | O_APPEND | O_CREAT, 0644);
 					if (finalfd >= 0)
+					{
 						dup2(finalfd, 1);
+						close(finalfd);
+					}
 					else
 						pipe_prt_error(1, tmp->next->str);
 					if (i == tree->pipe_cnt)
@@ -263,11 +284,15 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 						close(pi->fd[i][1]);
 					}
 				}
+
 				else if (ft_strncmp(tmp->str, ">", 2) == 0)
 				{
 					finalfd = open(tmp->next->str, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 					if (finalfd >= 0)
+					{
 						dup2(finalfd, 1);
+						close(finalfd);
+					}
 					else
 						pipe_prt_error(1, tmp->next->str);
 					if (i == tree->pipe_cnt)
@@ -298,7 +323,10 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 					file_name = ft_strjoin("tmp_file", ft_itoa(index));
 					heredoc_fd = open(file_name, O_RDONLY);
 					if (heredoc_fd >= 0)
+					{					
 						dup2(heredoc_fd, 0);
+						close(heredoc_fd);
+					}
 					else
 						pipe_prt_error(1, tmp->next->str);
 					index++;
@@ -327,7 +355,6 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 					}
 				}
 				tmp = tmp->next;
-
 			}
 		}
 		else if (i == tree->pipe_cnt)
@@ -355,7 +382,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 			close(pi->fd[i][0]);
 			close(pi->fd[i][1]);
 		}
-
+		close_fd(pi, tree->pipe_cnt);
 //파이프연결 끝
 		// printf("들어가기전 command 0 %s 1 %s\n",command[0],command[1]);
 		if (!command[0][0] && index > 0)
@@ -398,8 +425,10 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 			if (str == NULL && (ft_strncmp(command[0], "/", 1) == 0 || ft_strncmp(command[0], "./", 2) == 0))
 				str = command[0];
 			execve(str, command, envp);
-			write(2, "error\n", 6);
-			exit (1);
+			write(2, "meowminishell: ", 16);
+			write(2, command[0], ft_strlen(command[0]));
+			write(2, ": command not found\n", 21);
+			exit (127);
 		}
 	}
 	if (i != 0)
@@ -408,7 +437,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 		close(pi->fd[i-1][1]);
 	}
 		tr=tr->right_child;
-		 i++;
+		i++;
 	}
 	wait_process(tree->pipe_cnt); //다 끝날때까지 부모 프로세스 기다려야함
 	tr = tree->root;

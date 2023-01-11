@@ -41,6 +41,7 @@ void    builtin_export(t_envnode *envnode, char **command, int last_flag)
 	int j;
 	if (!command[1])
 	{
+		tmp = tmp->next;
 		if (last_flag != 1)
 		{
 		while (tmp)
