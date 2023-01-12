@@ -40,8 +40,11 @@ int	check_export_err(char *s)
 	{
 		if (i == 0 && s[i] == '=')
 			return (-1);
-		if ((s[i] >= 'A' && s[i] < 'Z') || (s[i] >= 'a' && s[i] <= 'z') || s[i] == '_')
+		if ((s[i] >= 'A' && s[i] < 'Z') || (s[i] >= 'a' && s[i] <= 'z') || s[i] == '_' || s[i] == '=')
+		{
+			i++;
 			continue;
+		}
 		else
 			return (-1);
 		i++;
@@ -122,7 +125,7 @@ void    builtin_export(t_envnode *envnode, char **command, int last_flag)
 				}
 			}
 			i++;
-		}
+	}
 	}
 
 }
