@@ -397,7 +397,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 		else if(ft_strncmp(command[0], "cd", 3) == 0)
 		{
 			pi->cd_cnt += 1;
-			builtin_cd(command, envnode);
+			builtin_cd(command, envnode, 0);
 			exit (0);
 		}
 		else if(ft_strncmp(command[0], "pwd", 4) == 0)
@@ -451,7 +451,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 		else
 			command = get_command(tr);
 		if (ft_strncmp(tr->left_child->token->str, "cd", 3) == 0)
-			builtin_cd(command, envnode);
+			builtin_cd(command, envnode, 1);
 		else if (ft_strncmp(tr->left_child->token->str, "export", 7) == 0)
 			builtin_export(envnode, command, 1);
 		else

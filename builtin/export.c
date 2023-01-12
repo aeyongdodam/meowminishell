@@ -31,6 +31,24 @@ int 	find_key(char *key_tmp, char *value_tmp, t_envnode *envnode)
 	return (0);
 }
 
+int	check_export_err(char *s)
+{
+	int	i;
+
+	i = 0;
+	while (s[i])
+	{
+		if (i == 0 && s[i] == '=')
+			return (-1);
+		if ((s[i] >= 'A' && s[i] < 'Z') || (s[i] >= 'a' && s[i] <= 'z') || s[i] == '_')
+			continue;
+		else
+			return (-1);
+		i++;
+	}
+	return (0);
+}
+
 void    builtin_export(t_envnode *envnode, char **command, int last_flag)
 {
 	t_envnode *tmp;
@@ -60,8 +78,15 @@ void    builtin_export(t_envnode *envnode, char **command, int last_flag)
 	else if (last_flag == 1)
 	{
 		int	i = 1;
+		int err;
 		while (command[i])
 		{
+			err =check_export_err(command[i]);
+			if (err == -1)
+			{
+				write(2, "meowshell: not a valid identifier\n", 35);
+				return ;
+			}
 			while (tmp->next)
 				tmp = tmp->next;
 			new_node = malloc(sizeof(t_envnode));
@@ -100,5 +125,4 @@ void    builtin_export(t_envnode *envnode, char **command, int last_flag)
 		}
 	}
 
-	// prt_env(envnode);
 }

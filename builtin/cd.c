@@ -57,7 +57,7 @@ int	find_cd_path(char *s, char *buf, t_envnode *envnode)
 
 
 
-void builtin_cd(char **command, t_envnode *envnode)
+void builtin_cd(char **command, t_envnode *envnode , int last_flag)
 {
 	char	buf[255];
 	char	next[255];
@@ -113,7 +113,8 @@ void builtin_cd(char **command, t_envnode *envnode)
 
 					ch = chdir(oldpwd);
 					getcwd(buf, 255);
-					printf("이전 경로 %s\n",buf);
+					if (last_flag == 1)
+						printf("%s\n",buf);
 					update_oldpwd(envnode, buf);
 					if (ch == -1)
 						printf("경로가 없는 error\n");
@@ -137,9 +138,9 @@ void builtin_cd(char **command, t_envnode *envnode)
 		{
 			flag = -1;
 
-			while (ft_strncmp(command[i], "-", 2) == 0)
+			while (ft_strncmp(command[i], "-", 2) == 0 && command[i + 1])
 				i++;
-			if (ft_strncmp(command[i], "--", 3) == 0)
+			if (ft_strncmp(command[i], "--", 3) == 0 && command[i + 1])
 			{
 				home = find_home(envnode);
 				if (home == NULL)
@@ -148,9 +149,7 @@ void builtin_cd(char **command, t_envnode *envnode)
 					while ((ft_strncmp(command[i], "--", 2) == 0 || ft_strncmp(command[i], "-", 1) == 0) && command[i])
 						i++;
 					if (command[i])
-					{
 						find_cd_path(command[i], buf, envnode);
-					}
 				}
 				else
 				{
@@ -168,7 +167,8 @@ void builtin_cd(char **command, t_envnode *envnode)
 				ch = chdir(oldpwd);
 				update_oldpwd(envnode, buf);
 				getcwd(buf, 255);	
-				printf("이전 경로 %s\n",buf);
+				if (last_flag == 1)
+					printf("%s\n",buf);
 			if (ch == -1)
 				printf("경로가 없는 error\n");
 		}
@@ -178,7 +178,6 @@ void builtin_cd(char **command, t_envnode *envnode)
 	}
 	else
 	{
-		printf("특수문자 아닐때\n");
 		error = find_cd_path(command[1], buf, envnode);
 	}
 }
