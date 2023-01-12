@@ -43,8 +43,8 @@ int	dallor_save(t_node *node, char **line, char **str, t_tree *tree)
 	}
 	else if (*(*line + 1) == '?')
 	{
-		save_token(node, "$?", WORD);
-		*str = re_str(*str);
+		*str = str_one_join(*str, '$', tree, 1);
+		*str = str_one_join(*str, '?', tree, 1);
 		(*line)++;
 		return (1);
 	}
