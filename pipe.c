@@ -1,6 +1,6 @@
 
 #include "minishell.h"
-
+extern int	g_exit_code;
 void pipe_malloc_open(t_pipe *pi, int pipe_cnt)
 {
 	int	i;
@@ -385,7 +385,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 		close_fd(pi, tree->pipe_cnt);
 //파이프연결 끝
 		// printf("들어가기전 command 0 %s 1 %s\n",command[0],command[1]);
-		if (!command[0][0] && index > 0)
+		if (!command[0] && index > 0)
 		{
 			exit (0);
 		}	
@@ -419,6 +419,13 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 		{
 			builtin_unset(envnode, command);
 			exit (0);
+		}
+		else if (ft_strncmp(command[0], "$?", 3) == 0)
+		{
+			write(2, "meowminishell: ", 16);
+			write(2, ft_itoa(g_exit_code), ft_strlen(ft_itoa(g_exit_code)));
+			write(2, ": command not found\n", 21);
+			exit (127);			
 		}
 		else
 		{

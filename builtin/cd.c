@@ -40,22 +40,22 @@ void update_oldpwd(t_envnode *envnode, char *s)
 		tmp = tmp->next;
 	}
 }
-int	find_cd_path(char *s, char *buf, t_envnode *envnode)
+int	find_cd_path(char *s, char *buf, t_envnode *envnode, int last_flag)
 {
 	int	ch;
 	getcwd(buf, 255);
 	ch = chdir(s);
 	update_oldpwd(envnode, buf);
-	if (ch == -1)
+	if (ch == -1 && last_flag != 1)
 	{
-		write(2, "meowshell: cd: OLDPWD not set\n", 31);
+		update_oldpwd(envnode, "");
+		write(2, "meowshell: cd: ", 15);
+		write(2, s, ft_strlen(s));
+		write(2, ": No such file or directory\n", 29);
 		return (-1);
 	}
 	return (0);
 }
-
-
-
 
 void builtin_cd(char **command, t_envnode *envnode , int last_flag)
 {
@@ -77,107 +77,65 @@ void builtin_cd(char **command, t_envnode *envnode , int last_flag)
 		home = find_home(envnode); // HOME 값 받아옴
 		getcwd(buf, 255);
 		ch = chdir(home);
-		// printf("이전 경로 %s\n",buf);
 		update_oldpwd(envnode, buf);
-
-
-
-		if (ch == -1)
-			printf("에러 이동못함\n");
+		if (ch == -1 && last_flag == 1)
+		{
+			update_oldpwd(envnode, "");
+			write(2, "meowshell: cd: HOME not set\n", 29);
+		}
 	}
 	else if (ft_strncmp(command[1], "--", 3) == 0) //특수문자 오는경우
 	{
 		i = 1;
 		home = find_home(envnode);
-		if (home == NULL)
+		if (command[2])
 		{
-			flag = -1;
-			while (ft_strncmp(command[i], "--", 3) == 0)
-				i++;
-			if (ft_strncmp(command[i], "-", 2) == 0)
+			if (ft_strncmp(command[2], "-", 2) == 0)
 			{
 				oldpwd = find_oldpwd(envnode);
-				if (oldpwd == NULL)
+				getcwd(buf, 255);
+				ch = chdir(oldpwd);
+				if (ch == -1)
 				{
-					flag = -1; // "--" "-" 둘 다 없는 경우니까이게
-					while ((ft_strncmp(command[i], "--", 3) == 0 || ft_strncmp(command[i], "-", 2) == 0) && command[i])
-						i++;
-					if (command[i])
-					{
-						find_cd_path(command[i], buf, envnode);
-					}
+					update_oldpwd(envnode, "");
+					write(2, "meowshell: cd: OLDPWD not set\n", 31);
 				}
 				else
 				{
-					getcwd(buf, 255);
-
-					ch = chdir(oldpwd);
-					getcwd(buf, 255);
+					update_oldpwd(envnode, buf);
 					if (last_flag == 1)
 						printf("%s\n",buf);
-					update_oldpwd(envnode, buf);
-					if (ch == -1)
-						printf("경로가 없는 error\n");
-				}	
-			}
+				}
+			}					
+			else
+				find_cd_path(command[2], buf, envnode, last_flag);
 		}
 		else
 		{
-				getcwd(buf, 255);
-				ch = chdir(home);
-				update_oldpwd(envnode, buf);
-			if (ch == -1)
-				printf("경로가 없는 error\n");
+			getcwd(buf, 255);
+			ch = chdir(home);
+			update_oldpwd(envnode, buf);
+			if (ch == -1 && last_flag != 1)
+			{
+				update_oldpwd(envnode, "");
+				write(2, "meowshell: cd: HOME not set\n", 29);				
+			}
 		}
 	}
 	else if (ft_strncmp(command[1], "-", 2) == 0) //특수문자 오는경우
 	{
-		i = 1;
 		oldpwd = find_oldpwd(envnode);
-		if (oldpwd == NULL)
+		getcwd(buf, 255);
+		ch = chdir(oldpwd);
+		update_oldpwd(envnode, buf);
+		if (last_flag == 1)
+			printf("%s\n",buf);
+		if (ch == -1 && last_flag == 1)
 		{
-			flag = -1;
-
-			while (ft_strncmp(command[i], "-", 2) == 0 && command[i + 1])
-				i++;
-			if (ft_strncmp(command[i], "--", 3) == 0 && command[i + 1])
-			{
-				home = find_home(envnode);
-				if (home == NULL)
-				{
-					flag = -1; // "--" "-" 둘 다 없는 경우니까이게
-					while ((ft_strncmp(command[i], "--", 2) == 0 || ft_strncmp(command[i], "-", 1) == 0) && command[i])
-						i++;
-					if (command[i])
-						find_cd_path(command[i], buf, envnode);
-				}
-				else
-				{
-					getcwd(buf, 255);
-					ch = chdir(home);
-					update_oldpwd(envnode, buf);
-						if (ch == -1)
-							printf("경로가 없는 error\n");
-				}	
-			}
+			update_oldpwd(envnode, "");
+			write(2, "meowshell: cd: OLDPWD not set\n", 31);
 		}
-		else
-		{
-				getcwd(buf, 255);
-				ch = chdir(oldpwd);
-				update_oldpwd(envnode, buf);
-				getcwd(buf, 255);	
-				if (last_flag == 1)
-					printf("%s\n",buf);
-			if (ch == -1)
-				printf("경로가 없는 error\n");
-		}
-
-		if (flag == -1)
-			printf("변수가 없어서 생기는 에러 메세지\n");
 	}
 	else
-	{
-		error = find_cd_path(command[1], buf, envnode);
-	}
+		error = find_cd_path(command[1], buf, envnode, last_flag);
 }

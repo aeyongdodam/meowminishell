@@ -1,6 +1,8 @@
 
 #include "../minishell.h"
 
+extern int	g_exit_code;
+
 int	ft_newlinecmp(char *s)
 {
 	int	i = 2;
@@ -31,7 +33,6 @@ void builtin_echo(char **command)
 
 	if (ft_newlinecmp(command[i]) == 1)
 		newline_flag = 1;
-
 	while (ft_newlinecmp(command[i]) == 1)
 		i++;
 	while (command[i])
