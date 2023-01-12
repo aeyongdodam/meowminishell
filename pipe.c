@@ -255,10 +255,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 				{
 					finalfd = open(tmp->next->str, O_WRONLY | O_APPEND | O_CREAT, 0644);
 					if (finalfd >= 0)
-					{
 						dup2(finalfd, 1);
-						close(finalfd);
-					}
 					else
 						pipe_prt_error(1, tmp->next->str);
 					if (i == tree->pipe_cnt)
@@ -289,10 +286,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 				{
 					finalfd = open(tmp->next->str, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 					if (finalfd >= 0)
-					{
 						dup2(finalfd, 1);
-						close(finalfd);
-					}
 					else
 						pipe_prt_error(1, tmp->next->str);
 					if (i == tree->pipe_cnt)
