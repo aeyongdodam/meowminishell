@@ -20,15 +20,25 @@ int	ft_newlinecmp(char *s)
 int		find_err_code(char *s)
 {
 	char *tmp;
+	int	i;
+
+	i = 0;
 	if (ft_strnstr(s, "$?", ft_strlen(s)))
 	{
 		while (s[i + 1])
 		{
 			if (s[i] == '$' && s[i + 1] == '?')
 			{
-				printf("")
+				printf("%d", g_exit_code);
+				i++;
 			}
+			else
+				printf("%c", s[i]);
+			i++;
 		}
+		if (s[i])
+			printf("%c", s[i]);
+		return (1);
 	}
 	return (0);
 }
