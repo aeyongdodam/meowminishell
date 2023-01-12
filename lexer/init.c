@@ -37,7 +37,7 @@ t_tree	*init_tree(void)
 	return (tree);
 }
 
-t_envnode	*init_envnode(t_envnode	**head, char	*str)
+t_envnode	*init_envnode(t_envnode	**head, char *str)
 {
 	t_envnode	*node;
 	t_envnode	*tempnode;
