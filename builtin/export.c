@@ -52,6 +52,82 @@ int	check_export_err(char *s)
 	return (0);
 }
 
+t_envnode	*init_temp_env(t_envnode *envnode)
+{
+	t_envnode	*start;
+	t_envnode	*origin;
+	t_envnode	*node;
+	t_envnode	*temp;
+
+	origin = envnode;
+	start = 0;
+	while (origin)
+	{
+		node = ft_calloc(1, sizeof(t_envnode));
+		node->prev = 0;
+		node->next = 0;
+		node->key = ft_strdup(origin->key);
+		node->value = ft_strdup(origin->value);
+		if (!start)
+			start = node;
+		else
+		{
+			temp->next = node;
+			node->prev = temp;
+		}
+		temp = node;
+		origin = origin->next;
+	}
+	return (start);
+}
+
+void	sort_env(t_envnode **envnode)
+{
+	t_envnode	*i;
+	t_envnode	*j;
+	char		*temp;
+
+	i = *envnode;
+	while (i)
+	{
+		j = i->next;
+		while (j)
+		{
+			if (ft_strncmp(i->key, j->key, ft_strlen(i->key)) > 0)
+			{
+				temp = i->key;
+				i->key = j->key;
+				j->key = temp;
+				temp = i->value;
+				i->value = j->value;
+				j->value = temp;
+			}
+			j = j->next;
+		}
+		i = i->next;
+	}
+}
+
+void	prt_export(t_envnode *envnode, int last_flag)
+{
+	t_envnode	*node;
+
+	node = init_temp_env(envnode);
+	sort_env(&node);
+	if (last_flag != 1)
+	{
+		while (node)
+		{
+			printf("declare -x %s", node->key);
+			if (node->value)
+				printf("=\"%s\"\n", node->value);
+			else
+				printf("\n");
+			node = node->next;
+		}
+	}
+}
+
 void    builtin_export(t_envnode *envnode, char **command, int last_flag)
 {
 	t_envnode *tmp;
@@ -61,23 +137,7 @@ void    builtin_export(t_envnode *envnode, char **command, int last_flag)
 	char *value_tmp;
 	int j;
 	if (!command[1])
-	{
-		tmp = tmp->next;
-		if (last_flag != 1)
-		{
-		while (tmp)
-		{
-			printf("declare -x %s", tmp->key);
-			if (tmp->value)
-			{
-				printf("=\"%s\"\n", tmp->value);
-			}
-			else
-				printf("\n");
-			tmp = tmp->next;
-		}
-		}
-	}
+		prt_export(envnode->next, last_flag);
 	else if (last_flag == 1)
 	{
 		int	i = 1;
