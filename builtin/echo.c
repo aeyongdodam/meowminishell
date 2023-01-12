@@ -17,6 +17,22 @@ int	ft_newlinecmp(char *s)
 	return (0);
 }
 
+int		find_err_code(char *s)
+{
+	char *tmp;
+	if (ft_strnstr(s, "$?", ft_strlen(s)))
+	{
+		while (s[i + 1])
+		{
+			if (s[i] == '$' && s[i + 1] == '?')
+			{
+				printf("")
+			}
+		}
+	}
+	return (0);
+}
+
 void builtin_echo(char **command)
 {
 	t_token *tmp;
@@ -24,20 +40,19 @@ void builtin_echo(char **command)
 
 	newline_flag = 0;
 	int i = 1;
-
 	if (!command[1])
 	{
 		printf("\n");
 		return ;
 	}
-
 	if (ft_newlinecmp(command[i]) == 1)
 		newline_flag = 1;
 	while (ft_newlinecmp(command[i]) == 1)
 		i++;
 	while (command[i])
 	{
-		printf("%s", command[i]);
+		if (find_err_code(command[i]) == 0)
+			printf("%s", command[i]);
 		if (command[i + 1])
 			printf(" ");
 		i++;

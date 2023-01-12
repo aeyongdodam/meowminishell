@@ -382,7 +382,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 		if (!command[0] && index > 0)
 		{
 			exit (0);
-		}	
+		}
 		else if (ft_strncmp(command[0], "echo", 5) == 0)
 		{
 			builtin_echo(command);
