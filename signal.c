@@ -18,7 +18,10 @@ void	signal_handler(int sig)
 void	signal_handler2(int sig)
 {
 	if (sig == SIGINT)
+	{
 		g_exit_code = 130;
+		write(2, "^C\n", 3);
+	}
 	else if (sig == SIGQUIT)
 	{
 		g_exit_code = 131;
@@ -28,15 +31,20 @@ void	signal_handler2(int sig)
 
 void	set_signal_handler(int flag)
 {
-	if (!flag)
+	if (flag == 0)
 	{
 		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, signal_handler);
 	}
-	else
+	else if (flag == 1)
 	{
 		signal(SIGQUIT, signal_handler2);
 		signal(SIGINT, signal_handler2);
+	}
+	else if (flag == 3)
+	{
+		signal(SIGQUIT, SIG_IGN);
+		signal(SIGINT, SIG_IGN);
 	}
 }
 

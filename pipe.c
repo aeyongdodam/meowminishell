@@ -62,14 +62,24 @@ char	*find_path(t_envnode *envnode, char *s)
 
 void wait_process(int cnt)
 {
-	int	i;
-	int	status;
+	int		status;
+	int		signo;
+	int		i;
 
 	i = 0;
-	while (i < cnt + 1)
+	while (wait(&status) != -1)
 	{
-		wait(NULL);
-		i++;
+		if (WIFSIGNALED(status))
+		{
+			signo = WTERMSIG(status);
+			if (signo == SIGINT && i++ == 0)
+				ft_putstr_fd("^C\n", STDERR_FILENO);
+			else if (signo == SIGQUIT && i++ == 0)
+				ft_putstr_fd("^\\Quit: 3\n", STDERR_FILENO);
+			g_exit_code = 128 + signo;
+		}
+		else
+			g_exit_code = WEXITSTATUS(status);
 	}
 }
 
@@ -432,6 +442,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 			exit (127);
 		}
 	}
+	set_signal_handler(3);
 	if (i != 0)
 	{
 		close(pi->fd[i-1][0]);
