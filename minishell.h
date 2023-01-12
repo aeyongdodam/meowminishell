@@ -112,7 +112,6 @@ int		find_error(t_tree *tree, char *line);
 void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp);
 
 //utils
-void	prt_tree(t_node *node, int le, int ri);
 int		input_exit(t_tree *tree);
 void	prt_exit(void);
 void	prt_meows(void);

@@ -2,12 +2,11 @@
 
 CC = cc
 
-SRC = main.c signal.c error.c
-SRC += lexer/lexer.c lexer/lexer_token.c lexer/lexer_env.c lexer/lexer_utils.c \
-		lexer/init.c lexer/free.c
+SRC = main.c
+SRC += lexer/lexer.c lexer/lexer_token.c lexer/lexer_env.c lexer/lexer_utils.c
+SRC += utils/error.c utils/free.c utils/init.c utils/signal.c utils/utils.c
 SRC += pipe.c heredoc.c
 SRC += builtin/echo.c builtin/cd.c builtin/pwd.c builtin/env.c builtin/export.c builtin/unset.c
-SRC += utils.c
 
 OBJ = $(SRC:.c=.o)
 

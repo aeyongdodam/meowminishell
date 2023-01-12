@@ -10,14 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 extern int	g_exit_code;
 
 void	prt_error(int flag, char *str)
 {
 	if (flag == 1)
-		printf("meowshell: syntax error near unexpected token '%s'\n",str);
+		printf("meowshell: syntax error near unexpected token '%s'\n", str);
 	else if (flag == 2)
 		printf("meowshell: syntax error near unexpected token 'newline'\n");
 	g_exit_code = 258;
