@@ -25,7 +25,7 @@ int	main(int argc, char **argv, char **envp)
 		create_heredoc_file(tree);
 		main_pipe(tree, envnode, envp);
 		delete_heredoc_file(tree);
-		free(line);
+		all_free(&tree, line);
 	}
 	return (0);
 }
