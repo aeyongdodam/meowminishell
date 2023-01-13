@@ -67,7 +67,8 @@ t_envnode	*init_temp_env(t_envnode *envnode)
 		node->prev = 0;
 		node->next = 0;
 		node->key = ft_strdup(origin->key);
-		node->value = ft_strdup(origin->value);
+		if (origin->value)
+			node->value = ft_strdup(origin->value);
 		if (!start)
 			start = node;
 		else

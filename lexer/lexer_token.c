@@ -53,7 +53,7 @@ t_node	*pipe_token(t_node *node, char **str, t_tree *tree)
 		node->token->str = str_one_join(node->token->str, '|', tree, 1);
 		return (node);
 	}
-	if (tree->space == 0 && str[0] != 0)
+	if (tree->space == 0 && (*str)[0] != 0)
 	{
 		save_token(node, *str, WORD);
 		*str = re_str(*str);

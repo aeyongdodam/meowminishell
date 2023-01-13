@@ -36,6 +36,16 @@ int	check_tree(t_node *node)
 {
 	t_token	*token;
 
+	if (node->token->flag == ROOT)
+	{
+		if (node->right_child != NULL && \
+		node->right_child->token->flag == PIPE && \
+		node->left_child == NULL)
+		{
+			prt_error(1, node->right_child->token->str);
+			return (1);
+		}
+	}
 	if (node->left_child != NULL && check_tree(node->left_child))
 		return (1);
 	if (node->right_child != NULL && check_tree(node->right_child))
@@ -58,9 +68,9 @@ int	find_error(t_tree *tree, char *line)
 	if (tree->root->left_child == NULL && tree->root->right_child == NULL)
 		return (1);
 	add_history(line);
-	if (input_exit(tree))
-		prt_exit();
 	if (check_tree(node))
 		return (1);
+	if (input_exit(tree))
+		prt_exit();
 	return (0);
 }
