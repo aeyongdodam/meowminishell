@@ -99,35 +99,22 @@ void	redi_token(t_node *node, char **line, char **str, t_tree *tree)
 void	check_quote(t_node *node, char **line, char **str, t_tree *tree)
 {
 	int		flag;
-	int		pair;
 	int		cash;
 	char	*s;
 
-	cash = 0;
-	set_quote(&pair, &flag, &s, line);
+	set_quote(&cash, &flag, &s, line);
 	while (**line)
 	{
 		if (flag == 4 && **line == '$')
-		{
-			check_dallor(node, line, &s, tree);
-			cash = 1;
-		}
+			cash = check_dallor(node, line, &s, tree);
 		else if (get_type(*line) == flag)
-		{
-			pair = 1;
 			break ;
-		}
 		else
 			s = str_one_join(s, (*line)[0], tree, 1);
 		(*line)++;
 	}
-	if (pair == 0)
+	if (get_type(*line) != flag)
 		save_quote(node, str, tree, flag);
-	else if (*(*line + 1) == ' ')
-	{
-		save_token(node, *str, WORD);
-		*str = re_str(*str);
-	}
 	else
 		empty_quote(node, str, &s, cash);
 	empty_line(line);

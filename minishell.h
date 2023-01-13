@@ -38,14 +38,14 @@ typedef struct s_node
 
 typedef struct s_tree
 {
-	struct s_node	*root;
+	struct s_node		*root;
 	struct s_envnode	*env;
-	int				pipe_cnt;
-	int				ridi_cnt;
-	int				heredoc_cnt;
-	int				space;
-	int				pipe;
-	int				redi;
+	int					pipe_cnt;
+	int					ridi_cnt;
+	int					heredoc_cnt;
+	int					space;
+	int					pipe;
+	int					redi;
 }	t_tree;
 
 typedef struct s_pipe{
@@ -62,76 +62,77 @@ typedef struct s_envnode
 }	t_envnode;
 
 //signal.c
-void	signal_handler(int sig);
-void	signal_handler2(int sig);
-void	set_signal_handler(int flag);
-void	set_terminal(void);
+void		signal_handler(int sig);
+void		signal_handler2(int sig);
+void		set_signal_handler(int flag);
+void		set_terminal(void);
 
 //init.c
-t_token	*init_token(void);
-t_node	*init_node(void);
-t_tree	*init_tree(void);
+t_token		*init_token(void);
+t_node		*init_node(void);
+t_tree		*init_tree(void);
 t_envnode	*init_env(char **envp, t_tree *tree);
 t_envnode	*init_envnode(t_envnode	**head, char *str);
 
 //lexer.c
-int		get_type(char *line);
-t_tree	*lexer(char	*line, t_envnode *envnode);
+int			get_type(char *line);
+t_tree		*lexer(char	*line, t_envnode *envnode);
 
 //lexer_token.c
-void	save_token(t_node *node, char *str, int flag);
-void	word_token(t_node *node, char **str, t_tree *tree);
-t_node	*pipe_token(t_node *node, char **str, t_tree *tree);
-void	redi_token(t_node *node, char **line, char **str, t_tree *tree);
-void	check_quote(t_node *node, char **line, char **str, t_tree *tree);
+void		save_token(t_node *node, char *str, int flag);
+void		word_token(t_node *node, char **str, t_tree *tree);
+t_node		*pipe_token(t_node *node, char **str, t_tree *tree);
+void		redi_token(t_node *node, char **line, char **str, t_tree *tree);
+void		check_quote(t_node *node, char **line, char **str, t_tree *tree);
 
 //lexer_env.c
-char	*change_env(char *str2, t_envnode *envnode);
-void	check_dallor(t_node *node, char **line, char **str, t_tree *tree);
+char		*change_env(char *str2, t_envnode *envnode);
+int			check_dallor(t_node *node, char **line, char **str, t_tree *tree);
 
 //lexer_utils.c
-void	set_variable(t_tree *tree, int space, int pipe, int redi);
-void	set_lexer(t_node **node, t_tree **tree, char **stre, t_envnode *envnode);
-void	set_quote(int *pair, int *flag, char **s, char **line);
-void	double_redi(t_node *node, char **line, char **str, t_tree *tree);
-void	save_quote(t_node *node, char **str, t_tree *tree, int flag);
+void		set_variable(t_tree *tree, int space, int pipe, int redi);
+void		set_lexer(t_node **node, t_tree **tree, char **str, t_envnode *env);
+void		set_quote(int *cash, int *flag, char **s, char **line);
+void		double_redi(t_node *node, char **line, char **str, t_tree *tree);
+void		save_quote(t_node *node, char **str, t_tree *tree, int flag);
 
 //lexer_utils2.c
-char	*str_one_join(char *s1, char c, t_tree *tree, int flag);
-char	*re_str(char *str);
-char	*re_str_join(char **str, char **s);
-void	empty_line(char **line);
-void	empty_quote(t_node *node, char **str, char **s, int cash);
+char		*str_one_join(char *s1, char c, t_tree *tree, int flag);
+char		*re_str(char *str);
+char		*re_str_join(char **str, char **s);
+void		empty_line(char **line);
+void		empty_quote(t_node *node, char **str, char **s, int cash);
 
 //free.c
-void	free_token(t_token **token);
-void	free_node(t_node **node);
-void	all_free(t_tree **tree, char *line);
+void		free_token(t_token **token);
+void		free_node(t_node **node);
+void		all_free(t_tree **tree, char *line);
 
 //error.c
-int		error_flag(t_node *node, t_token *token);
-int 	check_tree(t_node *node);
-int		find_error(t_tree *tree, char *line);
+int			error_flag(t_node *node, t_token *token);
+int			check_tree(t_node *node);
+int			find_error(t_tree *tree, char *line);
 
 //error_utils.c
-void	prt_error(int flag, char *str);
-int		check_pipe(t_node *node, int flag);
-int		error_pipe(t_node *node);
-int		error_redi(t_token *token);
-int		error_quote(t_token *token);
+void		prt_error(int flag, char *str);
+int			check_pipe(t_node *node, int flag);
+int			error_pipe(t_node *node);
+int			error_redi(t_token *token);
+int			error_quote(t_token *token);
 
 //pipe.c
-void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp);
+void		main_pipe(t_tree *tree, t_envnode *envnode, char **envp);
 
 //heredoc 개수 세주는거
 int 	heredoc_count(int index, t_token *t);
 //exit.c
-int		input_exit(t_tree *tree);
-void	prt_exit(void);
+int			input_exit(t_tree *tree);
+void		prt_exit(void);
 
 //utils
-void	prt_meows(void);
-void	set_init_env(t_envnode **head, char **str);
+void		prt_meows(void);
+void		set_init_env(t_envnode **head, char **str);
+void		set_oldpwd(t_envnode **head);
 
 //builtin
 void	builtin_echo(char **command);
@@ -143,4 +144,5 @@ int	builtin_unset(t_envnode *envnode, char **command);
 int builtin_exit(char **command, int last_flag);
 void	create_heredoc_file(t_tree *tree);
 void	delete_heredoc_file(t_tree *tree);
+
 #endif
