@@ -50,4 +50,3 @@ void	set_oldpwd(t_envnode **head)
 		node = node->next;
 	}
 }
-

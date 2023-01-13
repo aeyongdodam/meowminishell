@@ -56,12 +56,12 @@ int	dallor_save(t_node *node, char **line, char **str, t_tree *tree)
 	return (0);
 }
 
-void	check_dallor(t_node *node, char **line, char **str, t_tree *tree)
+int	check_dallor(t_node *node, char **line, char **str, t_tree *tree)
 {
 	char		*str2;
 
 	if (dallor_save(node, line, str, tree))
-		return ;
+		return (1);
 	str2 = ft_calloc(1, 1);
 	(*line)++;
 	while (**line)
@@ -74,4 +74,5 @@ void	check_dallor(t_node *node, char **line, char **str, t_tree *tree)
 	}
 	str2 = change_env(str2, tree->env);
 	*str = ft_strjoin(*str, str2);
+	return (1);
 }

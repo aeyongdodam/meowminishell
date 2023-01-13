@@ -28,9 +28,9 @@ void	set_lexer(t_node **node, t_tree **tree, char **str, t_envnode *env)
 	(*node)->token->flag = 0;
 }
 
-void	set_quote(int *pair, int *flag, char **s, char **line)
+void	set_quote(int *cash, int *flag, char **s, char **line)
 {
-	*pair = 0;
+	*cash = 0;
 	*flag = get_type(*line);
 	*s = ft_calloc(1, 1);
 	(*line)++;

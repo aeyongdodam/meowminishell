@@ -4,6 +4,9 @@
         "locale": "c",
         "minishell.h": "c",
         "sstream": "c",
-        "__node_handle": "c"
+        "__node_handle": "c",
+        "tuple": "c",
+        "type_traits": "c",
+        "utility": "c"
     }
 }

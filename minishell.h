@@ -87,12 +87,12 @@ void		check_quote(t_node *node, char **line, char **str, t_tree *tree);
 
 //lexer_env.c
 char		*change_env(char *str2, t_envnode *envnode);
-void		check_dallor(t_node *node, char **line, char **str, t_tree *tree);
+int			check_dallor(t_node *node, char **line, char **str, t_tree *tree);
 
 //lexer_utils.c
 void		set_variable(t_tree *tree, int space, int pipe, int redi);
 void		set_lexer(t_node **node, t_tree **tree, char **str, t_envnode *env);
-void		set_quote(int *pair, int *flag, char **s, char **line);
+void		set_quote(int *cash, int *flag, char **s, char **line);
 void		double_redi(t_node *node, char **line, char **str, t_tree *tree);
 void		save_quote(t_node *node, char **str, t_tree *tree, int flag);
 
