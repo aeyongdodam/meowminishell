@@ -41,12 +41,11 @@ int	main(int argc, char **argv, char **envp)
 		if (!line)
 			prt_exit();
 		tree = lexer(line, envnode);
-		// prt_tree(tree->root, 0, 0);
-		// if (find_error(tree, line))
-		// 	continue ;
-		// create_heredoc_file(tree);
-		// main_pipe(tree, envnode, envp);
-		// delete_heredoc_file(tree);
+		if (find_error(tree, line))
+			continue ;
+		create_heredoc_file(tree);
+		main_pipe(tree, envnode, envp);
+		delete_heredoc_file(tree);
 		all_free(&tree, line);
 	}
 	return (0);
