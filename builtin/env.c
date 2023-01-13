@@ -1,15 +1,16 @@
 
 #include "../minishell.h"
 
-void    builtin_env(t_envnode *envnode, char **command, int last_flag)
+int	builtin_env(t_envnode *envnode, char **command, int last_flag)
 {
 	t_envnode *tmp;
 	tmp = envnode;
 	if (command[1])
 	{
 		if (last_flag == 0)
+		
 			write(2, "command error\n",15);
-		return ;
+		return (127);
 	}
 	else if (last_flag == 0)
 	{
@@ -24,4 +25,5 @@ void    builtin_env(t_envnode *envnode, char **command, int last_flag)
 		tmp = tmp->next;
 	}
 	}
+	return (0);
 }

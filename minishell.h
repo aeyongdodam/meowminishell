@@ -118,12 +118,12 @@ void	prt_meows(void);
 
 //builtin
 void	builtin_echo(char **command);
-void 	builtin_cd(char **command, t_envnode *envnode , int last_flag);
-void    builtin_pwd(char **command);
-void	builtin_env(t_envnode *envnode, char **command, int last_flag);
+int 	builtin_cd(char **command, t_envnode *envnode , int last_flag);
+void	builtin_pwd(char **command);
+int		builtin_env(t_envnode *envnode, char **command, int last_flag);
 void	builtin_export(t_envnode *envnode, char **command, int last_flag);
-void    builtin_unset(t_envnode *envnode, char **command);
+int	builtin_unset(t_envnode *envnode, char **command);
 
-void    create_heredoc_file(t_tree *tree);
-void    delete_heredoc_file(t_tree *tree);
+void	create_heredoc_file(t_tree *tree);
+void	delete_heredoc_file(t_tree *tree);
 #endif

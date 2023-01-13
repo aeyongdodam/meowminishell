@@ -144,7 +144,7 @@ void    builtin_export(t_envnode *envnode, char **command, int last_flag)
 		int err;
 		while (command[i])
 		{
-			err =check_export_err(command[i]);
+			err = check_export_err(command[i]);
 			if (err == -1)
 			{
 				write(2, "meowshell: not a valid identifier\n", 35);

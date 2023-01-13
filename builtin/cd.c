@@ -52,12 +52,12 @@ int	find_cd_path(char *s, char *buf, t_envnode *envnode, int last_flag)
 		write(2, "meowshell: cd: ", 15);
 		write(2, s, ft_strlen(s));
 		write(2, ": No such file or directory\n", 29);
-		return (-1);
+		return (1);
 	}
 	return (0);
 }
 
-void builtin_cd(char **command, t_envnode *envnode , int last_flag)
+int builtin_cd(char **command, t_envnode *envnode , int last_flag)
 {
 	char	buf[255];
 	char	next[255];
@@ -70,7 +70,7 @@ void builtin_cd(char **command, t_envnode *envnode , int last_flag)
 	int		error;
 	t_envnode *tmp;
 	tmp = envnode;
-
+	error = 0;
 	//cd 하나만 있는 경우
 	if (!command[1])
 	{
@@ -82,6 +82,7 @@ void builtin_cd(char **command, t_envnode *envnode , int last_flag)
 		{
 			update_oldpwd(envnode, "");
 			write(2, "meowshell: cd: HOME not set\n", 29);
+			error = 1;
 		}
 	}
 	else if (ft_strncmp(command[1], "--", 3) == 0) //특수문자 오는경우
@@ -99,6 +100,7 @@ void builtin_cd(char **command, t_envnode *envnode , int last_flag)
 				{
 					update_oldpwd(envnode, "");
 					write(2, "meowshell: cd: OLDPWD not set\n", 31);
+					error = 1;
 				}
 				else
 				{
@@ -108,7 +110,7 @@ void builtin_cd(char **command, t_envnode *envnode , int last_flag)
 				}
 			}					
 			else
-				find_cd_path(command[2], buf, envnode, last_flag);
+				error = find_cd_path(command[2], buf, envnode, last_flag);
 		}
 		else
 		{
@@ -118,7 +120,8 @@ void builtin_cd(char **command, t_envnode *envnode , int last_flag)
 			if (ch == -1 && last_flag != 1)
 			{
 				update_oldpwd(envnode, "");
-				write(2, "meowshell: cd: HOME not set\n", 29);				
+				write(2, "meowshell: cd: HOME not set\n", 29);
+				error = 1;
 			}
 		}
 	}
@@ -134,8 +137,10 @@ void builtin_cd(char **command, t_envnode *envnode , int last_flag)
 		{
 			update_oldpwd(envnode, "");
 			write(2, "meowshell: cd: OLDPWD not set\n", 31);
+			error = 1;
 		}
 	}
 	else
 		error = find_cd_path(command[1], buf, envnode, last_flag);
+	return (error);
 }
