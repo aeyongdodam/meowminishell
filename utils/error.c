@@ -71,26 +71,16 @@ int	error_pipe(t_node *root)
 int	error_redi(t_node *node)
 {
 	t_token	*token;
-	int		flag;
 
-	flag = node->token->flag;
-	if (flag == WORD || flag == REDI || flag == HERE)
+	if (error_redi_fun1(node))
 	{
 		token = node->token;
 		while (token)
 		{
 			if (token->flag == REDI || token->flag == HERE)
 			{
-				if (token->next == NULL)
-				{
-					prt_error(2, 0);
+				if (error_redi_fun2(token))
 					return (1);
-				}
-				else if (token->next->flag == REDI || token->next->flag == HERE)
-				{
-					prt_error(1, token->next->str);
-					return (1);
-				}
 			}
 			token = token->next;
 		}
