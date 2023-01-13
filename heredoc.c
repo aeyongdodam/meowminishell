@@ -1,6 +1,16 @@
 
 #include "minishell.h"
 
+int heredoc_count(int index, t_token *t)
+{
+    while(t)
+    {
+        if (ft_strncmp(t->str, "<<", 3) == 0 && t->flag == 6)
+            index++;
+        t = t->next;
+    }
+    return (index);
+}
 
 void    delete_heredoc_file(t_tree *tree)
 {
@@ -35,7 +45,7 @@ void    create_heredoc_file(t_tree *tree)
         tmp = tr->left_child->token;
         while (tmp)
         {
-            if (ft_strncmp(tmp->str, "<<", 3) == 0)
+            if (ft_strncmp(tmp->str, "<<", 3) == 0 && tmp->flag == 6)
             {
                 save_line = ft_calloc(1,1);
  		        line = readline("\033[34m>\033[0m ");

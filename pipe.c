@@ -95,8 +95,11 @@ char **get_redi_command(t_node *tr)
 	char **save_command;
 	while (tmp)
 	{
-		if (ft_strncmp(tmp->str, "<", 2) == 0 || ft_strncmp(tmp->str, ">>", 3) == 0 || ft_strncmp(tmp->str, ">", 2) == 0 || ft_strncmp(tmp->str, "<<", 3) == 0)
-			i -= 2;
+		if (tmp->flag != 1)
+		{
+			if (ft_strncmp(tmp->str, "<", 2) == 0 || ft_strncmp(tmp->str, ">>", 3) == 0 || ft_strncmp(tmp->str, ">", 2) == 0 || ft_strncmp(tmp->str, "<<", 3) == 0)
+				i -= 2;
+		}
 		i++;
 		tmp = tmp->next;
 	}
@@ -104,9 +107,13 @@ char **get_redi_command(t_node *tr)
 	save_command = malloc(sizeof(char *) * (i + 1));
 	while (j < i)
 	{
+		if (tmp->flag != 1)
+		{
 		if (ft_strncmp(tmp->str, "<", 2) == 0 || ft_strncmp(tmp->str, ">>", 3) == 0 || ft_strncmp(tmp->str, ">", 2) == 0 || ft_strncmp(tmp->str, "<<", 3) == 0)
 			tmp = tmp->next->next;
+		}
 		save_command[j] = tmp->str;
+
 		tmp = tmp->next;
 		j++;
 	}
@@ -164,10 +171,13 @@ int	check_redi(t_node *tr)
 	tmp = tr->left_child->token;
 	while(tmp)
 	{
-	if (ft_strncmp(tmp->str, ">", 2) == 0 || ft_strncmp(tmp->str, "<", 2) == 0 || \
-	ft_strncmp(tmp->str, ">>", 3) == 0 || ft_strncmp(tmp->str, "<<", 3) == 0)
-		flag = 1;
-	tmp = tmp->next;
+		if (tmp->flag != 1)
+		{
+			if (ft_strncmp(tmp->str, ">", 2) == 0 || ft_strncmp(tmp->str, "<", 2) == 0 || \
+			ft_strncmp(tmp->str, ">>", 3) == 0 || ft_strncmp(tmp->str, "<<", 3) == 0)
+			flag = 1;
+		}
+		tmp = tmp->next;
 	}
 	return (flag);
 }
@@ -256,6 +266,12 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 			command = get_redi_command(tr);
 		else
 			command = get_command(tr); // command를 쪼개서 넣어주는거
+	// int	k = 0;
+	// while (command[k])
+	// {
+	// 	printf("command[k] %s\n", command[k]);
+	// 	k++;
+	// }
 	str = find_path(envnode, command[0]);
 	set_signal_handler(1);
 	pid = fork();
@@ -268,7 +284,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 			tmp = tr->left_child->token;
 			while (tmp)
 			{
-				if (ft_strncmp(tmp->str, "<", 2) == 0)
+				if (ft_strncmp(tmp->str, "<", 2) == 0 && tmp->flag != 1)
 				{
 
 					openfd =  open(tmp->next->str, O_RDONLY);
@@ -307,13 +323,16 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 
 				}
 
-				if (ft_strncmp(tmp->str, ">>", 3) == 0)
+				else if (ft_strncmp(tmp->str, ">>", 3) == 0 && tmp->flag != 1)
 				{
 
 					finalfd = open(tmp->next->str, O_WRONLY | O_APPEND | O_CREAT, 0644);
 					check_stat(tmp->next->str);
 					if (finalfd >= 0)
+					{
 						err_code *= dup2(finalfd, 1);
+						close(finalfd);
+					}
 					else
 						pipe_prt_error(1, tmp->next->str);
 					if (i == tree->pipe_cnt)
@@ -340,12 +359,15 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 					}
 				}
 
-				else if (ft_strncmp(tmp->str, ">", 2) == 0)
+				else if (ft_strncmp(tmp->str, ">", 2) == 0 && tmp->flag != 1)
 				{
 					finalfd = open(tmp->next->str, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 					check_stat(tmp->next->str);
 					if (finalfd >= 0)
+					{
 						err_code *= dup2(finalfd, 1);
+						close(finalfd);
+					}
 					else
 						pipe_prt_error(1, tmp->next->str);
 					if (i == tree->pipe_cnt)
@@ -371,7 +393,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 						close(pi->fd[i][1]);
 					}
 				}
-				else if (ft_strncmp(tmp->str, "<<", 3) == 0)
+				else if (ft_strncmp(tmp->str, "<<", 3) == 0 && tmp->flag != 1)
 				{
 					file_name = ft_strjoin("tmp_file", ft_itoa(index));
 					heredoc_fd = open(file_name, O_RDONLY);
@@ -442,6 +464,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 		// printf("들어가기전 command 0 %s 1 %s\n",command[0],command[1]);
 		if (!command[0] && index > 0)
 			exit (0);
+
 		else if (ft_strncmp(command[0], "echo", 5) == 0)
 		{
 			builtin_echo(command);
@@ -469,6 +492,8 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 			builtin_unset(envnode, command);
 			exit (0);
 		}
+		else if (ft_strncmp(command[0], "exit", 5) == 0)
+			exit(builtin_exit(command));
 		else if (ft_strncmp(command[0], "$?", 3) == 0)
 		{
 			write(2, "meowshell: ", 12);
@@ -488,19 +513,21 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 		}
 	}
 	set_signal_handler(3);
-	if (i != 0)
-	{
-		close(pi->fd[i-1][0]);
-		close(pi->fd[i-1][1]);
-	}
+		if (i != 0)
+		{
+			close(pi->fd[i-1][0]);
+			close(pi->fd[i-1][1]);
+		}
+		index = heredoc_count(index, tr->left_child->token);
 		tr=tr->right_child;
 		i++;
 	}
+
 	wait_process(tree->pipe_cnt); //다 끝날때까지 부모 프로세스 기다려야함
 	tr = tree->root;
-	// printf("envnode root %p\n",envnode);
 	if (tree->pipe_cnt == 0 && (ft_strncmp(tr->left_child->token->str, "cd", 3) == 0 || \
-	ft_strncmp(tr->left_child->token->str, "export", 7) == 0) || ft_strncmp(tr->left_child->token->str, "unset", 5) == 0)
+	ft_strncmp(tr->left_child->token->str, "export", 7) == 0) || (ft_strncmp(tr->left_child->token->str, "unset", 6) == 0 && !tr->right_child)\
+	|| (ft_strncmp(tr->left_child->token->str, "exit", 5) == 0 && !tr->right_child))
 	{
 		str = find_path(envnode, tr->left_child->token->str);
 		if (check_redi(tr))
@@ -511,6 +538,8 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 			g_exit_code = builtin_cd(command, envnode, 1);
 		else if (ft_strncmp(tr->left_child->token->str, "export", 7) == 0)
 			g_exit_code = builtin_export(envnode, command, 1);
+		else if (ft_strncmp(tr->left_child->token->str, "exit", 5) == 0)
+			exit(builtin_exit(command));
 		else
 			g_exit_code = builtin_unset(envnode, command);
 	}

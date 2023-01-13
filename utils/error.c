@@ -70,7 +70,7 @@ int	find_error(t_tree *tree, char *line)
 	add_history(line);
 	if (check_tree(node))
 		return (1);
-	if (input_exit(tree))
-		prt_exit();
+	// if (input_exit(tree))
+	// 	prt_exit();
 	return (0);
 }
