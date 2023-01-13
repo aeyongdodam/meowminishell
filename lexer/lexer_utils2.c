@@ -59,9 +59,19 @@ void	empty_line(char **line)
 		(*line)--;
 }
 
-void	empty_quote(t_node *node, char **str, char **s)
+void	empty_quote(t_node *node, char **str, char **s, int cash)
 {
-	if ((*s)[0] == 0)
+	if ((*s)[0] == 0 && cash == 1)
+	{
+		free(*s);
+		return ;
+	}
+	else if ((*s)[0] == 0 && (*str)[0] != 0)
+	{
+		free(*s);
+		return ;
+	}
+	else if ((*s)[0] == 0)
 	{
 		save_token(node, "", WORD);
 		free(*s);
