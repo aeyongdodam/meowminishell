@@ -128,7 +128,7 @@ void	prt_export(t_envnode *envnode, int last_flag)
 	}
 }
 
-void    builtin_export(t_envnode *envnode, char **command, int last_flag)
+int    builtin_export(t_envnode *envnode, char **command, int last_flag)
 {
 	t_envnode *tmp;
 	tmp = envnode;
@@ -148,7 +148,7 @@ void    builtin_export(t_envnode *envnode, char **command, int last_flag)
 			if (err == -1)
 			{
 				write(2, "meowshell: not a valid identifier\n", 35);
-				return ;
+				return (1);
 			}
 			while (tmp->next)
 				tmp = tmp->next;
@@ -187,5 +187,5 @@ void    builtin_export(t_envnode *envnode, char **command, int last_flag)
 			i++;
 	}
 	}
-
+	return (0);
 }
