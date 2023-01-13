@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-int builtin_exit(char **command)
+int builtin_exit(char **command, int last_flag)
 {
     int i = 0;
     if (!command[1])
@@ -11,7 +11,7 @@ int builtin_exit(char **command)
     {
         while (command[1][i])
         {
-            if (command[1][i] < '0' || command[1][i] > '9')
+            if (command[1][i] < '0' || command[1][i] > '9' && last_flag != 1)
             {
                 write(2, "exit\n", 5);
                 write(2, "meowshell: exit: ", 18);
@@ -27,6 +27,5 @@ int builtin_exit(char **command)
         write(2, "exit: too many arguments\n", 26);
         return (1);
     }
-    printf("command %d\n",ft_atoi(command[1]));
     return (ft_atoi(command[1]));
 }
