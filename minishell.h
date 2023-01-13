@@ -133,14 +133,14 @@ void		set_init_env(t_envnode **head, char **str);
 void		set_oldpwd(t_envnode **head);
 
 //builtin
-void		builtin_echo(char **command);
-int			builtin_cd(char **command, t_envnode *envnode, int last_flag);
-void		builtin_pwd(char **command);
-int			builtin_env(t_envnode *envnode, char **command, int last_flag);
-int			builtin_export(t_envnode *envnode, char **command, int last_flag);
-int			builtin_unset(t_envnode *envnode, char **command);
-
-void		create_heredoc_file(t_tree *tree);
-void		delete_heredoc_file(t_tree *tree);
+void	builtin_echo(char **command);
+int 	builtin_cd(char **command, t_envnode *envnode , int last_flag);
+void	builtin_pwd(char **command);
+int		builtin_env(t_envnode *envnode, char **command, int last_flag);
+int	builtin_export(t_envnode *envnode, char **command, int last_flag);
+int	builtin_unset(t_envnode *envnode, char **command);
+int builtin_exit(char **command, int last_flag);
+void	create_heredoc_file(t_tree *tree);
+void	delete_heredoc_file(t_tree *tree);
 
 #endif
