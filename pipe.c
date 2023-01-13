@@ -270,8 +270,9 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 			{
 				if (ft_strncmp(tmp->str, "<", 2) == 0)
 				{
-					check_stat(tmp->next->str);
+
 					openfd =  open(tmp->next->str, O_RDONLY);
+					check_stat(tmp->next->str);
 					if (openfd >= 0)
 					{
 						err_code *= dup2(openfd, 0);
@@ -308,8 +309,9 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 
 				if (ft_strncmp(tmp->str, ">>", 3) == 0)
 				{
-					check_stat(tmp->next->str);
+
 					finalfd = open(tmp->next->str, O_WRONLY | O_APPEND | O_CREAT, 0644);
+					check_stat(tmp->next->str);
 					if (finalfd >= 0)
 						err_code *= dup2(finalfd, 1);
 					else
@@ -340,8 +342,8 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 
 				else if (ft_strncmp(tmp->str, ">", 2) == 0)
 				{
-					check_stat(tmp->next->str);
 					finalfd = open(tmp->next->str, O_WRONLY | O_TRUNC | O_CREAT, 0644);
+					check_stat(tmp->next->str);
 					if (finalfd >= 0)
 						err_code *= dup2(finalfd, 1);
 					else

@@ -1,0 +1,16 @@
+Makefile
+a
+b
+builtin
+heredoc.c
+heredoc.o
+lexer
+libft
+main.c
+main.o
+minishell
+minishell.h
+pipe.c
+pipe.o
+utils
+z.txt
