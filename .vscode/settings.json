@@ -4,6 +4,7 @@
         "locale": "c",
         "minishell.h": "c",
         "sstream": "c",
-        "__node_handle": "c"
+        "__node_handle": "c",
+        "libft.h": "c"
     }
 }
