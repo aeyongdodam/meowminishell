@@ -8,5 +8,6 @@
         "tuple": "c",
         "type_traits": "c",
         "utility": "c"
+         "libft.h": "c"
     }
 }
