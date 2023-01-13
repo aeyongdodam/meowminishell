@@ -48,5 +48,6 @@ int	main(int argc, char **argv, char **envp)
 		delete_heredoc_file(tree);
 		all_free(&tree, line);
 	}
+
 	return (0);
 }

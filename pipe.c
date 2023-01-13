@@ -425,8 +425,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 		else if(ft_strncmp(command[0], "cd", 3) == 0)
 		{
 			pi->cd_cnt += 1;
-			err_code = builtin_cd(command, envnode, 0);
-			exit (err_code);
+			exit (builtin_cd(command, envnode, 0));
 		}
 		else if(ft_strncmp(command[0], "pwd", 4) == 0)
 		{
@@ -439,10 +438,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 			exit (0);
 		}
 		else if(ft_strncmp(command[0], "export", 7) == 0)
-		{
-			builtin_export(envnode, command, 0); //이거 에러처리 해줘야함 파일 꼬일까봐 안한거
-			exit (0);
-		}
+			exit (builtin_export(envnode, command, 0));
 		else if (ft_strncmp(command[0], "unset", 6) == 0)
 		{
 			builtin_unset(envnode, command);
@@ -489,7 +485,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 		if (ft_strncmp(tr->left_child->token->str, "cd", 3) == 0)
 			g_exit_code = builtin_cd(command, envnode, 1);
 		else if (ft_strncmp(tr->left_child->token->str, "export", 7) == 0)
-			builtin_export(envnode, command, 1);
+			g_exit_code = builtin_export(envnode, command, 1);
 		else
 			g_exit_code = builtin_unset(envnode, command);
 	}
