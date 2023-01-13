@@ -46,12 +46,15 @@ int	find_cd_path(char *s, char *buf, t_envnode *envnode, int last_flag)
 	getcwd(buf, 255);
 	ch = chdir(s);
 	update_oldpwd(envnode, buf);
-	if (ch == -1 && last_flag != 1)
+	if (ch == -1)
 	{
-		update_oldpwd(envnode, "");
-		write(2, "meowshell: cd: ", 15);
-		write(2, s, ft_strlen(s));
-		write(2, ": No such file or directory\n", 29);
+		if (last_flag != 1)
+		{
+			update_oldpwd(envnode, "");
+			write(2, "meowshell: cd: ", 15);
+			write(2, s, ft_strlen(s));
+			write(2, ": No such file or directory\n", 29);
+		}
 		return (1);
 	}
 	return (0);
@@ -78,7 +81,7 @@ int builtin_cd(char **command, t_envnode *envnode , int last_flag)
 		getcwd(buf, 255);
 		ch = chdir(home);
 		update_oldpwd(envnode, buf);
-		if (ch == -1 && last_flag == 1)
+		if (ch == -1 && last_flag != 1)
 		{
 			update_oldpwd(envnode, "");
 			write(2, "meowshell: cd: HOME not set\n", 29);
@@ -98,8 +101,11 @@ int builtin_cd(char **command, t_envnode *envnode , int last_flag)
 				ch = chdir(oldpwd);
 				if (ch == -1)
 				{
-					update_oldpwd(envnode, "");
-					write(2, "meowshell: cd: OLDPWD not set\n", 31);
+					if (last_flag != 1)
+					{
+						update_oldpwd(envnode, "");
+						write(2, "meowshell: cd: OLDPWD not set\n", 31);
+					}
 					error = 1;
 				}
 				else
@@ -131,9 +137,9 @@ int builtin_cd(char **command, t_envnode *envnode , int last_flag)
 		getcwd(buf, 255);
 		ch = chdir(oldpwd);
 		update_oldpwd(envnode, buf);
-		if (last_flag == 1)
+		if (ch != -1 &&last_flag != 1)
 			printf("%s\n",buf);
-		if (ch == -1 && last_flag == 1)
+		if (ch == -1 && last_flag != 1)
 		{
 			update_oldpwd(envnode, "");
 			write(2, "meowshell: cd: OLDPWD not set\n", 31);
