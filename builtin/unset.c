@@ -1,7 +1,7 @@
 
 #include "../minishell.h"
 
-void    builtin_unset(t_envnode *envnode, char **command)
+int   builtin_unset(t_envnode *envnode, char **command)
 {
 	t_envnode *tmp;
 	tmp = envnode;
@@ -11,7 +11,7 @@ void    builtin_unset(t_envnode *envnode, char **command)
 
 	i = 1;
 	if (!command[1])
-		return ;
+		return (0);
 	while (command[i])
 	{
 		while (tmp->next)
@@ -29,4 +29,5 @@ void    builtin_unset(t_envnode *envnode, char **command)
 		}
 		i++;
 	}
+	return (0);
 }
