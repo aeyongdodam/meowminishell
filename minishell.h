@@ -106,11 +106,16 @@ void	free_node(t_node **node);
 void	all_free(t_tree **tree, char *line);
 
 //error.c
+int		error_flag(t_node *node, t_token *token);
+int 	check_tree(t_node *node);
+int		find_error(t_tree *tree, char *line);
+
+//error_utils.c
 void	prt_error(int flag, char *str);
 int		check_pipe(t_node *node, int flag);
 int		error_pipe(t_node *node);
-int		error_redi(t_node *node);
-int		find_error(t_tree *tree, char *line);
+int		error_redi(t_token *token);
+int		error_quote(t_token *token);
 
 //pipe.c
 void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp);
@@ -121,8 +126,6 @@ void	prt_exit(void);
 
 //utils
 void	prt_meows(void);
-int		error_redi_fun1(t_node *node);
-int		error_redi_fun2(t_token *token);
 void	set_init_env(t_envnode **head, char **str);
 
 //builtin

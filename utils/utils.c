@@ -28,32 +28,6 @@ void	prt_meows(void)
 	free(buf);
 }
 
-int	error_redi_fun1(t_node *node)
-{
-	if (node->token->flag == WORD)
-		return (1);
-	if (node->token->flag == REDI)
-		return (1);
-	if (node->token->flag == HERE)
-		return (1);
-	return (0);
-}
-
-int	error_redi_fun2(t_token *token)
-{
-	if (token->next == NULL)
-	{
-		prt_error(2, 0);
-		return (1);
-	}
-	else if (token->next->flag == REDI || token->next->flag == HERE)
-	{
-		prt_error(1, token->next->str);
-		return (1);
-	}
-	return (0);
-}
-
 void	set_init_env(t_envnode **head, char **str)
 {
 	*head = NULL;
