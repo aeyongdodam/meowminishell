@@ -58,6 +58,12 @@ int	error_pipe(t_node *node)
 			prt_error(1, node->right_child->token->str);
 		return (1);
 	}
+	if (node->left_child->token->flag == REDI || \
+	node->left_child->token->flag == HERE)
+	{
+		prt_error(1, node->token->str);
+		return (1);
+	}
 	return (0);
 }
 

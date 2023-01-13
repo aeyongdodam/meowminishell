@@ -52,3 +52,20 @@ char	*re_str_join(char **str, char **s)
 	free(*s);
 	return (temp);
 }
+
+void	empty_line(char **line)
+{
+	if (!(**line))
+		(*line)--;
+}
+
+void	empty_quote(t_node *node, char **str, char **s)
+{
+	if ((*s)[0] == 0)
+	{
+		save_token(node, "", WORD);
+		free(*s);
+	}
+	else
+		*str = re_str_join(str, s);
+}

@@ -102,10 +102,7 @@ void	check_quote(t_node *node, char **line, char **str, t_tree *tree)
 	int		pair;
 	char	*s;
 
-	pair = 0;
-	s = ft_calloc(1, 1);
-	flag = get_type(*line);
-	(*line)++;
+	set_quote(&pair, &flag, &s, line);
 	while (**line)
 	{
 		if (flag == 4 && **line == '$')
@@ -122,5 +119,6 @@ void	check_quote(t_node *node, char **line, char **str, t_tree *tree)
 	if (pair == 0)
 		save_quote(node, str, tree, flag);
 	else
-		*str = re_str_join(str, &s);
+		empty_quote(node, str, &s);
+	empty_line(line);
 }

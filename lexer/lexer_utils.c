@@ -28,6 +28,14 @@ void	set_lexer(t_node **node, t_tree **tree, char **str, t_envnode *env)
 	(*node)->token->flag = 0;
 }
 
+void	set_quote(int *pair, int *flag, char **s, char **line)
+{
+	*pair = 0;
+	*flag = get_type(*line);
+	*s = ft_calloc(1, 1);
+	(*line)++;
+}
+
 void	double_redi(t_node *node, char **line, char **str, t_tree *tree)
 {
 	set_variable(tree, 0, 0, 0);
