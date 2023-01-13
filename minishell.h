@@ -101,7 +101,7 @@ char	*str_one_join(char *s1, char c, t_tree *tree, int flag);
 char	*re_str(char *str);
 char	*re_str_join(char **str, char **s);
 void	empty_line(char **line);
-void	empty_quote(t_node *node, char **str, char **s);
+void	empty_quote(t_node *node, char **str, char **s, int cash);
 
 //free.c
 void	free_token(t_token **token);
