@@ -33,3 +33,21 @@ void	set_init_env(t_envnode **head, char **str)
 	*head = NULL;
 	*str = ft_calloc(1, 1);
 }
+
+void	set_oldpwd(t_envnode **head)
+{
+	t_envnode	*node;
+
+	node = *head;
+	while (node)
+	{
+		if (ft_strncmp(node->key, "OLDPWD", 7) == 0)
+		{
+			free(node->value);
+			node->value = ft_strdup("");
+			break ;
+		}
+		node = node->next;
+	}
+}
+
