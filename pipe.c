@@ -200,6 +200,13 @@ void	pipe_prt_error(int	error_code, char *s)
 	}
 }
 
+void	free_pipe(t_pipe *pi)
+{
+	int	i;
+
+	i = 0;
+}
+
 
 void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 {
