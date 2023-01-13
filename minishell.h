@@ -10,7 +10,7 @@
 # include <stdlib.h>
 # include <termios.h>
 # include <fcntl.h>
-
+# include <sys/stat.h>
 # include "./libft/libft.h"
 
 # define ROOT 0

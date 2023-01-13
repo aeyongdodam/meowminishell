@@ -44,6 +44,7 @@ int	main(int argc, char **argv, char **envp)
 		if (find_error(tree, line))
 			continue ;
 		create_heredoc_file(tree);
+		// prt_tree(tree->root, 0, 0);
 		main_pipe(tree, envnode, envp);
 		delete_heredoc_file(tree);
 		all_free(&tree, line);

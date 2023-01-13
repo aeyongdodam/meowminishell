@@ -180,7 +180,7 @@ void	pipe_prt_error(int	error_code, char *s)
 	{
 		write(2, "meowshell: ", 12);
 		write(2, s, ft_strlen(s));
-		write(2, ": No such file or directory\n", 29);
+		write(2, ": Permission denied\n", 21);
 		exit (1);
 	}
 	else if (error_code == 2)
@@ -205,6 +205,19 @@ void	free_pipe(t_pipe *pi)
 	int	i;
 
 	i = 0;
+}
+
+void	check_stat(char *s)
+{
+	struct stat buf;
+	if (stat(s, &buf) == -1)
+	{
+		write(2, "meowshell: ", 12);
+		write(2, s, ft_strlen(s));
+		write(2, " : No such file or directory\n", 30);
+		exit(1);
+	}
+
 }
 
 
@@ -257,6 +270,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 			{
 				if (ft_strncmp(tmp->str, "<", 2) == 0)
 				{
+					check_stat(tmp->next->str);
 					openfd =  open(tmp->next->str, O_RDONLY);
 					if (openfd >= 0)
 					{
@@ -294,6 +308,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 
 				if (ft_strncmp(tmp->str, ">>", 3) == 0)
 				{
+					check_stat(tmp->next->str);
 					finalfd = open(tmp->next->str, O_WRONLY | O_APPEND | O_CREAT, 0644);
 					if (finalfd >= 0)
 						err_code *= dup2(finalfd, 1);
@@ -325,6 +340,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 
 				else if (ft_strncmp(tmp->str, ">", 2) == 0)
 				{
+					check_stat(tmp->next->str);
 					finalfd = open(tmp->next->str, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 					if (finalfd >= 0)
 						err_code *= dup2(finalfd, 1);
