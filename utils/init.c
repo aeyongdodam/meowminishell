@@ -84,13 +84,12 @@ t_envnode	*init_env(char **envp, t_tree *tree)
 	int			i;
 	int			j;
 
-	head = NULL;
-	str = ft_calloc(1, 1);
-	i = 0;
-	while (envp[i] != 0)
+	set_init_env(&head, &str);
+	i = -1;
+	while (envp[++i] != 0)
 	{
-		j = 0;
-		while (envp[i][j] != 0)
+		j = -1;
+		while (envp[i][++j] != 0)
 		{
 			if (envp[i][j] == '=')
 			{
@@ -99,9 +98,7 @@ t_envnode	*init_env(char **envp, t_tree *tree)
 			}
 			else
 				str = str_one_join(str, envp[i][j], tree, 0);
-			j++;
 		}
-		i++;
 		node->value = ft_strdup(str);
 		str = re_str(str);
 	}

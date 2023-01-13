@@ -98,21 +98,29 @@ void	redi_token(t_node *node, char **line, char **str, t_tree *tree)
 
 void	check_quote(t_node *node, char **line, char **str, t_tree *tree)
 {
-	int	flag;
+	int		flag;
+	int		pair;
+	char	*s;
 
-	if (**line == '\"')
-		flag = QUOTE_D;
-	else if (**line == '\'')
-		flag = QUOTE_S;
+	pair = 0;
+	s = ft_calloc(1, 1);
+	flag = get_type(*line);
 	(*line)++;
 	while (**line)
 	{
 		if (flag == 4 && **line == '$')
-			check_dallor(node, line, str, tree);
+			check_dallor(node, line, &s, tree);
 		else if (get_type(*line) == flag)
+		{
+			pair = 1;
 			break ;
+		}
 		else
-			*str = str_one_join(*str, (*line)[0], tree, 1);
+			s = str_one_join(s, (*line)[0], tree, 1);
 		(*line)++;
 	}
+	if (pair == 0)
+		save_quote(node, str, tree, flag);
+	else
+		*str = re_str_join(str, &s);
 }

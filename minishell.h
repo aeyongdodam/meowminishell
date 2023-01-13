@@ -90,11 +90,15 @@ char	*change_env(char *str2, t_envnode *envnode);
 void	check_dallor(t_node *node, char **line, char **str, t_tree *tree);
 
 //lexer_utils.c
-char	*str_one_join(char *s1, char c, t_tree *tree, int flag);
-char	*re_str(char *str);
 void	set_variable(t_tree *tree, int space, int pipe, int redi);
 void	set_lexer(t_node **node, t_tree **tree, char **stre, t_envnode *envnode);
 void	double_redi(t_node *node, char **line, char **str, t_tree *tree);
+void	save_quote(t_node *node, char **str, t_tree *tree, int flag);
+
+//string.c
+char	*str_one_join(char *s1, char c, t_tree *tree, int flag);
+char	*re_str(char *str);
+char	*re_str_join(char **str, char **s);
 
 //free.c
 void	free_token(t_token **token);
@@ -111,10 +115,15 @@ int		find_error(t_tree *tree, char *line);
 //pipe.c
 void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp);
 
-//utils
+//exit.c
 int		input_exit(t_tree *tree);
 void	prt_exit(void);
+
+//utils
 void	prt_meows(void);
+int		error_redi_fun1(t_node *node);
+int		error_redi_fun2(t_token *token);
+void	set_init_env(t_envnode **head, char **str);
 
 //builtin
 void	builtin_echo(char **command);
