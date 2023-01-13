@@ -123,6 +123,8 @@ int		error_quote(t_token *token);
 //pipe.c
 void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp);
 
+//heredoc 개수 세주는거
+int 	heredoc_count(int index, t_token *t);
 //exit.c
 int		input_exit(t_tree *tree);
 void	prt_exit(void);
@@ -138,7 +140,7 @@ void	builtin_pwd(char **command);
 int		builtin_env(t_envnode *envnode, char **command, int last_flag);
 int	builtin_export(t_envnode *envnode, char **command, int last_flag);
 int	builtin_unset(t_envnode *envnode, char **command);
-
+int builtin_exit(char **command);
 void	create_heredoc_file(t_tree *tree);
 void	delete_heredoc_file(t_tree *tree);
 #endif

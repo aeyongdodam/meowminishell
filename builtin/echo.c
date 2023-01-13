@@ -25,7 +25,7 @@ int		find_err_code(char *s)
 	i = 0;
 	if (ft_strnstr(s, "$?", ft_strlen(s)))
 	{
-		while (s[i + 1])
+		while (i + 1< ft_strlen(s))
 		{
 			if (s[i] == '$' && s[i + 1] == '?')
 			{
