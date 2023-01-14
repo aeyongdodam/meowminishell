@@ -146,8 +146,6 @@ void		set_oldpwd(t_envnode **head);
 void		prt_exit(void);
 
 //builtin
-void	builtin_echo(char **command);
-int 	builtin_cd(char **command, t_envnode *envnode , int last_flag);
 void	builtin_pwd(char **command);
 int		builtin_env(t_envnode *envnode, char **command, int last_flag);
 int	builtin_export(t_envnode *envnode, char **command, int last_flag);
@@ -155,5 +153,39 @@ int	builtin_unset(t_envnode *envnode, char **command);
 int builtin_exit(char **command, int last_flag);
 void	create_heredoc_file(t_tree *tree);
 void	delete_heredoc_file(t_tree *tree);
+
+//cd.c
+char		*find_home(t_envnode *envnode);
+char		*find_oldpwd(t_envnode *envnode);
+void		update_oldpwd(t_envnode *envnode, char *s);
+int			find_cd_path(char *s, char *buf, t_envnode *envnode, int last_flag);
+int			builtin_cd(char **command, t_envnode *envnode, int last_flag);
+
+//cd_utils.c
+void		prt_cd_error(t_envnode *envnode, int flag);
+int			cd_one_cmd(t_envnode *envnode, int last_flag, char *buf);
+int			cd_cmd2(char **command, t_envnode *env, int last_flag, char *buf);
+int			cd_home(char **command, t_envnode *env, int last_flag, char *buf);
+int			cd_oldpwd(t_envnode *envnode, int last_flag, char *buf);
+
+//echo.c
+int			ft_newlinecmp(char *s);
+int			find_err_code(char *s);
+void		builtin_echo(char **command);
+
+//env.c
+int			builtin_env(t_envnode *envnode, char **command, int last_flag);
+
+//exit.c
+int			num_check(char *s);
+int			exit_utils(char **command, int last_flag);
+int			builtin_exit(char **command, int last_flag);
+
+//pwd.c
+void		builtin_pwd(char **command);
+
+//unset.c
+void		unset_free(t_envnode **tmp, t_envnode **free_tmp);
+int			builtin_unset(t_envnode *envnode, char **command);
 
 #endif
