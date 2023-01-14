@@ -14,7 +14,7 @@ int builtin_exit(char **command, int last_flag)
     {
         if (last_flag != 1)
             write(2, "exit: too many arguments\n", 26);
-        return (1);
+        return (-1);
     }
     else if (command[1])
     {

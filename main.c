@@ -42,14 +42,16 @@ int	main(int argc, char **argv, char **envp)
 		if (!line)
 			prt_exit();
 		tree = lexer(line, envnode);
-		prt_tree(tree->root, 0, 0);
+		// prt_tree(tree->root, 0, 0);
 		if (!(find_error(tree, line)))
 		{
 			create_heredoc_file(tree);
 			main_pipe(tree, envnode, envp);
-			delete_heredoc_file(tree);
+			delete_heredoc_file(tree);		
 		}
 		all_free(&tree, line);
+		// system("leaks minishell");	
 	}
+	// system("leaks minishell");
 	return (0);
 }

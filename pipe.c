@@ -572,7 +572,13 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 		else if (ft_strncmp(tr->left_child->token->str, "export", 7) == 0)
 			g_exit_code = builtin_export(envnode, command, 1);
 		else if (ft_strncmp(tr->left_child->token->str, "exit", 5) == 0)
-			exit(builtin_exit(command, 1));
+		{
+			g_exit_code = builtin_exit(command, 1);
+			if (g_exit_code != -1)
+				exit(g_exit_code);
+			else
+				g_exit_code = 1;
+		}
 		else
 			g_exit_code = builtin_unset(envnode, command);
 		free_split(command);
