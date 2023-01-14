@@ -158,9 +158,9 @@ int			error_quote(t_token *token);
 //pipe.c
 void		main_pipe(t_tree *tree, t_envnode *envnode, char **envp);
 int			pipe_malloc_open_init(t_pipe *pi, int pipe_cnt, t_tree *tree);
-void		wait_process(int cnt);
+void		wait_process(void);
 void		close_fd(t_pipe *pi, int cnt);
-void		set_start(t_tree *tree, t_pipe *pi, t_envnode *envnode, t_node *tr);
+void		set_start(t_pipe *pi, t_envnode *envnode, t_node *tr);
 
 //utils
 void		prt_meows(void);
@@ -249,16 +249,16 @@ void		check_stat(char *s);
 //pipe_builtin_utils.c
 void		builtin1(t_pipe *pi, t_envnode *envnode);
 void		builtin2(t_pipe *pi, t_envnode *envnode);
-int			builtin_strncmp(t_pipe *pi, t_tree *tree, t_node *tr);
+int			builtin_strncmp(t_tree *tree, t_node *tr);
 void		handle_builtin_parent(t_tree *tree, t_node *tr, \
 t_envnode *envnode, t_pipe *pi);
 
 //pipe_connect.c
-void		pipe_connect1(t_node *tr, t_pipe *pi, int i);
-void		pipe_connect2(t_node *tr, t_pipe *pi, int i);
-void		pipe_connect3(t_node *tr, t_pipe *pi, int i);
-void		pipe_connect4(t_node *tr, t_pipe *pi, int i);
-void		pipe_connect_other(t_node *tr, t_pipe *pi, int i);
+void		pipe_connect1(t_pipe *pi, int i);
+void		pipe_connect2(t_pipe *pi, int i);
+void		pipe_connect3(t_pipe *pi, int i);
+void		pipe_connect4(t_pipe *pi, int i);
+void		pipe_connect_other(t_pipe *pi, int i);
 
 //pipe_connect_fd.c
 void		pipe_connect_openfd(t_pipe *pi);

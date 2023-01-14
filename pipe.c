@@ -37,7 +37,7 @@ int	pipe_malloc_open_init(t_pipe *pi, int pipe_cnt, t_tree *tree)
 	return (0);
 }
 
-void	wait_process(int cnt)
+void	wait_process(void)
 {
 	int		status;
 	int		signo;
@@ -78,7 +78,7 @@ void	close_fd(t_pipe *pi, int cnt)
 	}
 }
 
-void	set_start(t_tree *tree, t_pipe *pi, t_envnode *envnode, t_node *tr)
+void	set_start(t_pipe *pi, t_envnode *envnode, t_node *tr)
 {
 	pi->err_code = 1;
 	if (check_redi(tr) == 1)
@@ -101,7 +101,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 		return ;
 	while (pi->i < tree->pipe_cnt + 1)
 	{
-		set_start(tree, pi, envnode, tr);
+		set_start(pi, envnode, tr);
 		set_signal_handler(1);
 		pi->pid = fork();
 		if (pi->pid < 0)
@@ -111,7 +111,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 		parent_process(tr, pi);
 		tr = tr->right_child;
 	}
-	wait_process(tree->pipe_cnt);
+	wait_process();
 	handle_builtin_parent(tree, tr, envnode, pi);
 	free_pipe(pi, tree->pipe_cnt);
 	free(pi);

@@ -49,8 +49,8 @@ void	builtin2(t_pipe *pi, t_envnode *envnode)
 	else if (ft_strncmp(pi->command[0], "exit", 5) == 0)
 		g_exit_code = (builtin_exit(pi->command, 0));
 }
-	
-int	builtin_strncmp(t_pipe *pi, t_tree *tree, t_node *tr)
+
+int	builtin_strncmp(t_tree *tree, t_node *tr)
 {
 	if (tree->pipe_cnt == 0 && \
 	((ft_strncmp(tr->left_child->token->str, "cd", 3) == 0 || \
@@ -67,7 +67,7 @@ void	handle_builtin_parent(t_tree *tree, t_node *tr, \
 t_envnode *envnode, t_pipe *pi)
 {
 	tr = tree->root;
-	if (builtin_strncmp(pi, tree, tr))
+	if (builtin_strncmp(tree, tr))
 	{
 		if (check_redi(tr))
 			pi->command = get_redi_command(tr);

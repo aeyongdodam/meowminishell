@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-void	pipe_connect1(t_node *tr, t_pipe *pi, int i)
+void	pipe_connect1(t_pipe *pi, int i)
 {
 	pipe_connect_openfd(pi);
 	if (i == pi->pipe_cnt)
@@ -36,7 +36,7 @@ void	pipe_connect1(t_node *tr, t_pipe *pi, int i)
 	}
 }
 
-void	pipe_connect2(t_node *tr, t_pipe *pi, int i)
+void	pipe_connect2(t_pipe *pi, int i)
 {
 	pi->finalfd = open(pi->tmp->next->str, O_WRONLY | O_APPEND | O_CREAT, 0644);
 	check_stat(pi->tmp->next->str);
@@ -65,7 +65,7 @@ void	pipe_connect2(t_node *tr, t_pipe *pi, int i)
 	}
 }
 
-void	pipe_connect3(t_node *tr, t_pipe *pi, int i)
+void	pipe_connect3(t_pipe *pi, int i)
 {
 	pi->finalfd = open(pi->tmp->next->str, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	check_stat(pi->tmp->next->str);
@@ -94,7 +94,7 @@ void	pipe_connect3(t_node *tr, t_pipe *pi, int i)
 	}
 }
 
-void	pipe_connect4(t_node *tr, t_pipe *pi, int i)
+void	pipe_connect4(t_pipe *pi, int i)
 {
 	pipe_connect_heredoc(pi);
 	pi->index++;
@@ -119,7 +119,7 @@ void	pipe_connect4(t_node *tr, t_pipe *pi, int i)
 	}
 }
 
-void	pipe_connect_other(t_node *tr, t_pipe *pi, int i)
+void	pipe_connect_other(t_pipe *pi, int i)
 {
 	if (i == pi->pipe_cnt)
 	{

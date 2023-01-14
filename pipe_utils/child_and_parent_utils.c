@@ -34,18 +34,18 @@ void	child_process(t_node *tr, t_pipe *pi, char **envp, t_envnode *envnode)
 		while (pi->tmp)
 		{
 			if (ft_strncmp(pi->tmp->str, "<", 2) == 0 && pi->tmp->flag != 1)
-				pipe_connect1(tr, pi, pi->i);
+				pipe_connect1(pi, pi->i);
 			else if (!(ft_strncmp(pi->tmp->str, ">>", 3)) && pi->tmp->flag != 1)
-				pipe_connect2(tr, pi, pi->i);
+				pipe_connect2(pi, pi->i);
 			else if (!(ft_strncmp(pi->tmp->str, ">", 2)) && pi->tmp->flag != 1)
-				pipe_connect3(tr, pi, pi->i);
+				pipe_connect3(pi, pi->i);
 			else if (!(ft_strncmp(pi->tmp->str, "<<", 3)) && pi->tmp->flag != 1)
-				pipe_connect4(tr, pi, pi->i);
+				pipe_connect4(pi, pi->i);
 			pi->tmp = pi->tmp->next;
 		}
 	}
 	else
-		pipe_connect_other(tr, pi, pi->i);
+		pipe_connect_other(pi, pi->i);
 	close_fd(pi, pi->pipe_cnt);
 	if (pi->err_code < 0)
 		pipe_prt_error(4, "");
