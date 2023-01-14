@@ -28,6 +28,7 @@ char	*change_env(char *str2, t_envnode *envnode)
 		}
 		node = node->next;
 	}
+	free(str2);
 	envstr = ft_calloc(1, 1);
 	envstr[0] = 0;
 	return (envstr);
@@ -73,7 +74,7 @@ int	check_dallor(t_node *node, char **line, char **str, t_tree *tree)
 		(*line)++;
 	}
 	str2 = change_env(str2, tree->env);
-	*str = ft_strjoin(*str, str2);
+	*str = re_str_join(str, &str2);
 	free(str2);
 	return (1);
 }

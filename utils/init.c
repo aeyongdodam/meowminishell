@@ -76,13 +76,11 @@ t_envnode	*init_envnode(t_envnode	**head, char *str)
 	return (node);
 }
 
-t_envnode	*init_env(char **envp, t_tree *tree)
+t_envnode	*init_env(char **envp, t_tree *tree, int i, int j)
 {
 	t_envnode	*head;
 	t_envnode	*node;
 	char		*str;
-	int			i;
-	int			j;
 
 	set_init_env(&head, &str);
 	i = -1;
