@@ -69,7 +69,7 @@ void	export_find(t_envnode **node, t_envnode **tmp, char **key, char **value)
 
 void	export_new(t_envnode **node, t_envnode **tmp, char **key)
 {
-	(*node)->key = ft_strdup(*key);
+	(*node)->key = *key;
 	(*node)->value = NULL;
 	(*tmp)->next = *node;
 	*tmp = (*tmp)->next;

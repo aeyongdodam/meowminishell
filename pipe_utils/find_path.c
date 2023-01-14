@@ -55,7 +55,6 @@ char	*split_path(char *save_path, char *s)
 char	*find_path(t_envnode *envnode, char *s)
 {
 	t_envnode	*tmp;
-	char		*for_free;
 	char		*save_path;
 	char		*ret;
 
@@ -67,9 +66,6 @@ char	*find_path(t_envnode *envnode, char *s)
 		return (ret);
 	if (!save_path[0])
 		return (ret);
-	for_free = save_path;
-	save_path = ft_substr(save_path, 5, ft_strlen(save_path));
-	free(for_free);
 	ret = split_path(save_path, s);
 	return (ret);
 }
