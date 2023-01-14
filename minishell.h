@@ -49,8 +49,21 @@ typedef struct s_tree
 }	t_tree;
 
 typedef struct s_pipe{
+	pid_t	pid;
 	int	**fd;
-	int	cd_cnt;
+	int heredoc_fd;
+	int openfd;
+	int finalfd;
+	int	pipe_cnt;
+	int final;
+	int first;
+	char *file_name;
+	int	index;
+	int	err_code;
+	char	*for_itoa;
+	char *str;
+	char **command;
+	t_token	*tmp;
 }	t_pipe;
 
 typedef struct s_envnode

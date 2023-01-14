@@ -131,7 +131,6 @@ void	free_export(t_envnode **node)
 void	prt_export(t_envnode *envnode, int last_flag)
 {
 	t_envnode	*node;
-
 	node = init_temp_env(envnode);
 	sort_env(&node);
 	if (last_flag != 1)

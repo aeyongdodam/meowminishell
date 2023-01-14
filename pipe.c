@@ -1,7 +1,9 @@
 
 #include "minishell.h"
+
 extern int	g_exit_code;
-int	pipe_malloc_open(t_pipe *pi, int pipe_cnt)
+
+int	pipe_malloc_open_init(t_pipe *pi, int pipe_cnt, t_tree *tree)
 {
 	int	i;
 	int	err_code;
@@ -15,6 +17,10 @@ int	pipe_malloc_open(t_pipe *pi, int pipe_cnt)
 			return (err_code);
 		i++;
 	}
+	pi->final = dup(1);
+	pi->first = dup(0);
+	pi->index = 0;
+	pi->pipe_cnt = tree->pipe_cnt;
 	return (0);
 }
 
@@ -29,7 +35,6 @@ void	close_pipe(t_pipe *pi, int pipe_cnt)
 		i++;
 	}
 }
-
 
 void	free_split(char **split_path)
 {
@@ -52,6 +57,7 @@ char	*find_path(t_envnode *envnode, char *s)
 	char *save_path;
 	i = 0;
 	tmp = envnode;
+	save_path = NULL;
 	while (tmp != 0)
 	{
 		if (ft_strncmp("PATH", tmp->key, 4) == 0)
@@ -66,9 +72,7 @@ char	*find_path(t_envnode *envnode, char *s)
 		return (ft_strdup(""));
 	if (!save_path[0])
 		return (ft_strdup(""));
-
 	for_free = save_path;
-
 	save_path = ft_substr(save_path, 5, ft_strlen(save_path));
 	free(for_free);
 	char **split_path;
@@ -211,8 +215,6 @@ int	check_redi(t_node *tr)
 	return (flag);
 }
 
-
-
 void	pipe_prt_error(int	error_code, char *s)
 {
 	if (error_code == 1)
@@ -262,284 +264,273 @@ void	check_stat(char *s)
 		write(2, " : No such file or directory\n", 30);
 		exit(1);
 	}
-
 }
 
+void	set_start(t_tree *tree, t_pipe *pi, t_envnode *envnode, t_node *tr)
+{
+	pi->err_code = 1;
+	if (check_redi(tr) == 1)
+		pi->command = get_redi_command(tr);
+	else
+		pi->command = get_command(tr);
+	pi->str = find_path(envnode, pi->command[0]);
+}
+
+void	pipe_connect1(t_node *tr, t_pipe *pi, int i)
+{
+	pi->openfd = open(pi->tmp->next->str, O_RDONLY);
+	check_stat(pi->tmp->next->str);
+	if (pi->openfd >= 0)
+	{
+		pi->err_code *= dup2(pi->openfd, 0);
+		close(pi->openfd);
+	}
+	else
+		pipe_prt_error(1, pi->tmp->next->str);
+	if (i == pi->pipe_cnt)
+	{
+		if (i != 0)
+		{
+			pi->err_code *= dup2(pi->final, 1);
+			close(pi->final);
+			close(pi->fd[i - 1][0]);
+			close(pi->fd[i - 1][1]);
+		}
+	}
+	else if (i == 0)
+	{
+		pi->err_code *= dup2(pi->fd[i][1], 1);
+		close(pi->fd[i][0]);
+		close(pi->fd[i][1]);
+	}
+	else
+	{
+		pi->err_code *= dup2(pi->fd[i][1], 1);
+		close(pi->fd[i - 1][0]);
+		close(pi->fd[i - 1][1]);
+		close(pi->fd[i][0]);
+		close(pi->fd[i][1]);
+	}
+}
+
+void	pipe_connect2(t_node *tr, t_pipe *pi, int i)
+{
+	pi->finalfd = open(pi->tmp->next->str, O_WRONLY | O_APPEND | O_CREAT, 0644);
+	check_stat(pi->tmp->next->str);
+	if (pi->finalfd >= 0)
+	{
+		pi->err_code *= dup2(pi->finalfd, 1);
+		close(pi->finalfd);
+	}
+	else
+		pipe_prt_error(1, pi->tmp->next->str);
+	if (i == pi->pipe_cnt)
+	{
+		if (i != 0)
+		{
+			pi->err_code *= dup2(pi->fd[i - 1][0], 0);
+			close(pi->fd[i - 1][0]);
+			close(pi->fd[i - 1][1]);
+		}
+	}
+	else if (i == 0)
+	{
+		close(pi->fd[i][0]);
+		close(pi->fd[i][1]);
+	}
+	else
+	{
+		pi->err_code *= dup2(pi->fd[i - 1][0], 0);
+		close(pi->fd[i - 1][0]);
+		close(pi->fd[i - 1][1]);
+		close(pi->fd[i][0]);
+		close(pi->fd[i][1]);
+	}
+}
+
+void	pipe_connect3(t_node *tr, t_pipe *pi, int i)
+{
+	pi->finalfd = open(pi->tmp->next->str, O_WRONLY | O_TRUNC | O_CREAT, 0644);
+	check_stat(pi->tmp->next->str);
+	if (pi->finalfd >= 0)
+	{
+		pi->err_code *= dup2(pi->finalfd, 1);
+		close(pi->finalfd);
+	}
+	else
+		pipe_prt_error(1, pi->tmp->next->str);
+	if (i == pi->pipe_cnt)
+	{
+		if (i != 0)
+		{
+			pi->err_code *= dup2(pi->fd[i - 1][0], 0);
+			close(pi->fd[i - 1][0]);
+			close(pi->fd[i - 1][1]);
+		}
+	}
+	else if (i == 0)
+	{
+		close(pi->fd[i][0]);
+		close(pi->fd[i][1]);
+	}
+	else
+	{
+		pi->err_code *= dup2(pi->fd[i - 1][0], 0);
+		close(pi->fd[i - 1][0]);
+		close(pi->fd[i - 1][1]);
+		close(pi->fd[i][0]);
+		close(pi->fd[i][1]);
+	}
+}
+
+void pipe_connect4(t_node *tr, t_pipe *pi, int i)
+{
+	pi->for_itoa = ft_itoa(pi->index);
+	pi->file_name = ft_strjoin("tmp_file", pi->for_itoa);
+	free(pi->for_itoa);
+	pi->heredoc_fd = open(pi->file_name, O_RDONLY);
+	free(pi->file_name);
+	if (pi->heredoc_fd >= 0)
+	{					
+		pi->err_code *= dup2(pi->heredoc_fd, 0);
+		close(pi->heredoc_fd);
+	}
+	else
+		pipe_prt_error(1, pi->tmp->next->str);
+	pi->index++;
+	if (i == pi->pipe_cnt)
+	{
+		if (i != 0)
+		{
+			pi->err_code *= dup2(pi->final, 1);
+			close(pi->fd[i - 1][0]);
+			close(pi->fd[i - 1][1]);
+		}
+	}
+	else if (i == 0)
+	{
+		pi->err_code *= dup2(pi->fd[i][1], 1);
+		close(pi->fd[i][0]);
+		close(pi->fd[i][1]);
+	}
+	else
+	{
+		pi->err_code *= dup2(pi->fd[i][1], 1);
+		close(pi->fd[i - 1][0]);
+		close(pi->fd[i - 1][1]);
+		close(pi->fd[i][0]);
+		close(pi->fd[i][1]);
+	}
+}
+
+void	pipe_connect_other(t_node *tr, t_pipe *pi, int i)
+{
+	if (i == pi->pipe_cnt)
+	{
+		if (i != 0)
+		{
+			pi->err_code *= dup2(pi->fd[i - 1][0], 0);
+			pi->err_code *= dup2(pi->final, 1);
+			close(pi->fd[i - 1][0]);
+			close(pi->fd[i - 1][1]);
+		}
+	}
+	else if (i == 0)
+	{
+		pi->err_code *= dup2(pi->fd[i][1], 1);
+		close(pi->fd[i][0]);
+		close(pi->fd[i][1]);
+	}
+	else
+	{
+		pi->err_code *= dup2(pi->fd[i - 1][0], 0);
+		pi->err_code *= dup2(pi->fd[i][1], 1);
+		close(pi->fd[i - 1][0]);
+		close(pi->fd[i - 1][1]);
+		close(pi->fd[i][0]);
+		close(pi->fd[i][1]);
+	}
+}
 
 void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 {
 	t_pipe *pi;
 	t_node *tr;
-
+	int	i;
 	tr = tree->root;
 	pi = malloc(sizeof(t_pipe));
-	if (pipe_malloc_open(pi, tree->pipe_cnt) == -1)
+	if (pipe_malloc_open_init(pi, tree->pipe_cnt, tree) == -1)
 		pipe_prt_error(2, "");
-	int j = 0;
-	int heredoc_fd;
-	int	err_code;
-
-	int	i;
-	char	*for_itoa;
-	pid_t	pid;
-	char *str;
-	int openfd;
-	int finalfd;
-	char **command;
-	t_token	*tmp;
-	pi->cd_cnt = 0;
-	int final = dup(1);
-	int first = dup(0);
-	int	index = 0;
-	char *file_name;
 	if (!tr->left_child)
 		return ;
 	i = 0;
 	while (i < tree->pipe_cnt + 1)
 	{
-		err_code = 1;
-		if (check_redi(tr) == 1)
-			command = get_redi_command(tr);
-		else
-			command = get_command(tr); // command를 쪼개서 넣어주는거
-	str = find_path(envnode, command[0]);
-	set_signal_handler(1);
-	pid = fork();
-	if (pid < 0)
+		set_start(tree, pi, envnode, tr);
+		set_signal_handler(1);
+		pi->pid = fork();
+	if (pi->pid < 0)
 		pipe_prt_error(3, "");
-	if (pid == 0)
+	if (pi->pid == 0)
 	{
 		if (check_redi(tr) == 1)
 		{
-			tmp = tr->left_child->token;
-			while (tmp)
+			pi->tmp = tr->left_child->token;
+			while (pi->tmp)
 			{
-				if (ft_strncmp(tmp->str, "<", 2) == 0 && tmp->flag != 1)
-				{
-
-					openfd =  open(tmp->next->str, O_RDONLY);
-					check_stat(tmp->next->str);
-					if (openfd >= 0)
-					{
-						err_code *= dup2(openfd, 0);
-						close(openfd);
-					}
-					else
-						pipe_prt_error(1, tmp->next->str);
-					if (i == tree->pipe_cnt)
-					{
-						if (i != 0)
-						{
-							err_code *= dup2(final, 1);
-							close(final);
-							close(pi->fd[i - 1][0]);
-							close(pi->fd[i - 1][1]);
-						}
-					}
-					else if (i == 0)
-					{
-						err_code *= dup2(pi->fd[i][1], 1);
-						close(pi->fd[i][0]);
-						close(pi->fd[i][1]);
-					}
-					else
-					{
-						err_code *= dup2(pi->fd[i][1], 1);
-						close(pi->fd[i - 1][0]);
-						close(pi->fd[i - 1][1]);
-						close(pi->fd[i][0]);
-						close(pi->fd[i][1]);
-					}
-
-				}
-
-				else if (ft_strncmp(tmp->str, ">>", 3) == 0 && tmp->flag != 1)
-				{
-
-					finalfd = open(tmp->next->str, O_WRONLY | O_APPEND | O_CREAT, 0644);
-					check_stat(tmp->next->str);
-					if (finalfd >= 0)
-					{
-						err_code *= dup2(finalfd, 1);
-						close(finalfd);
-					}
-					else
-						pipe_prt_error(1, tmp->next->str);
-					if (i == tree->pipe_cnt)
-					{
-						if (i != 0)
-						{
-							err_code *= dup2(pi->fd[i - 1][0], 0);
-							close(pi->fd[i - 1][0]);
-							close(pi->fd[i - 1][1]);
-						}
-					}
-					else if (i == 0)
-					{
-						close(pi->fd[i][0]);
-						close(pi->fd[i][1]);
-					}
-					else
-					{
-						err_code *= dup2(pi->fd[i - 1][0], 0);
-						close(pi->fd[i - 1][0]);
-						close(pi->fd[i - 1][1]);
-						close(pi->fd[i][0]);
-						close(pi->fd[i][1]);
-					}
-				}
-
-				else if (ft_strncmp(tmp->str, ">", 2) == 0 && tmp->flag != 1)
-				{
-					finalfd = open(tmp->next->str, O_WRONLY | O_TRUNC | O_CREAT, 0644);
-					check_stat(tmp->next->str);
-					if (finalfd >= 0)
-					{
-						err_code *= dup2(finalfd, 1);
-						close(finalfd);
-					}
-					else
-						pipe_prt_error(1, tmp->next->str);
-					if (i == tree->pipe_cnt)
-					{
-						if (i != 0)
-						{
-							err_code *= dup2(pi->fd[i - 1][0], 0);
-							close(pi->fd[i - 1][0]);
-							close(pi->fd[i - 1][1]);
-						}
-					}
-					else if (i == 0)
-					{
-						close(pi->fd[i][0]);
-						close(pi->fd[i][1]);
-					}
-					else
-					{
-						err_code *= dup2(pi->fd[i - 1][0], 0);
-						close(pi->fd[i - 1][0]);
-						close(pi->fd[i - 1][1]);
-						close(pi->fd[i][0]);
-						close(pi->fd[i][1]);
-					}
-				}
-				else if (ft_strncmp(tmp->str, "<<", 3) == 0 && tmp->flag != 1)
-				{
-					for_itoa = ft_itoa(index);
-					file_name = ft_strjoin("tmp_file", for_itoa);
-					free(for_itoa);
-					heredoc_fd = open(file_name, O_RDONLY);
-					free(file_name);
-					if (heredoc_fd >= 0)
-					{					
-						err_code *= dup2(heredoc_fd, 0);
-						close(heredoc_fd);
-					}
-					else
-						pipe_prt_error(1, tmp->next->str);
-					index++;
-					if (i == tree->pipe_cnt)
-					{
-						if (i != 0)
-						{
-							err_code *= dup2(final, 1);
-							close(pi->fd[i - 1][0]);
-							close(pi->fd[i - 1][1]);
-						}
-					}
-					else if (i == 0)
-					{
-						err_code *= dup2(pi->fd[i][1], 1);
-						close(pi->fd[i][0]);
-						close(pi->fd[i][1]);
-					}
-					else
-					{
-						err_code *= dup2(pi->fd[i][1], 1);
-						close(pi->fd[i - 1][0]);
-						close(pi->fd[i - 1][1]);
-						close(pi->fd[i][0]);
-						close(pi->fd[i][1]);
-					}
-				}
-				tmp = tmp->next;
+				if (ft_strncmp(pi->tmp->str, "<", 2) == 0 && pi->tmp->flag != 1)
+					pipe_connect1(tr, pi, i);
+				else if (ft_strncmp(pi->tmp->str, ">>", 3) == 0 && pi->tmp->flag != 1)
+					pipe_connect2(tr, pi, i);
+				else if (ft_strncmp(pi->tmp->str, ">", 2) == 0 && pi->tmp->flag != 1)
+					pipe_connect3(tr, pi, i);
+				else if (ft_strncmp(pi->tmp->str, "<<", 3) == 0 && pi->tmp->flag != 1)
+					pipe_connect4(tr, pi, i);
+				pi->tmp = pi->tmp->next;
 			}
-		}
-		else if (i == tree->pipe_cnt)
-		{
-			if (i != 0)
-			{
-				err_code *= dup2(pi->fd[i - 1][0], 0);
-				err_code *= dup2(final, 1);
-				close(pi->fd[i - 1][0]);
-				close(pi->fd[i - 1][1]);
-			}
-		}
-		else if (i == 0)
-		{
-			err_code *= dup2(pi->fd[i][1], 1);
-			close(pi->fd[i][0]);
-			close(pi->fd[i][1]);
 		}
 		else
-		{
-			err_code *= dup2(pi->fd[i - 1][0], 0);
-			err_code *= dup2(pi->fd[i][1], 1);
-			close(pi->fd[i - 1][0]);
-			close(pi->fd[i - 1][1]);
-			close(pi->fd[i][0]);
-			close(pi->fd[i][1]);
-		}
+			pipe_connect_other(tr, pi, i);
 		close_fd(pi, tree->pipe_cnt);
-		if (err_code < 0)
+		if (pi->err_code < 0)
 			pipe_prt_error(4, "");
 //파이프연결 끝
-		// printf("들어가기전 command 0 %s 1 %s\n",command[0],command[1]);
-		if (!command[0] && index > 0)
+		if (!pi->command[0] && pi->index > 0)
 			exit (0);
-		else if (ft_strncmp(command[0], "echo", 5) == 0)
+		else if (ft_strncmp(pi->command[0], "echo", 5) == 0)
 		{
-			builtin_echo(command);
-			exit (0);
-		}
-		else if(ft_strncmp(command[0], "cd", 3) == 0)
-		{
-			pi->cd_cnt += 1;
-			exit (builtin_cd(command, envnode, 0));
-		}
-		else if(ft_strncmp(command[0], "pwd", 4) == 0)
-		{
-			builtin_pwd(command);
+			builtin_echo(pi->command);
 			exit (0);
 		}
-		else if(ft_strncmp(command[0], "env", 4) == 0)
+		else if(ft_strncmp(pi->command[0], "cd", 3) == 0)
+			exit (builtin_cd(pi->command, envnode, 0));
+		else if(ft_strncmp(pi->command[0], "pwd", 4) == 0)
 		{
-			exit(builtin_env(envnode, command, 0));
+			builtin_pwd(pi->command);
 			exit (0);
 		}
-		else if(ft_strncmp(command[0], "export", 7) == 0)
-			exit (builtin_export(envnode, command, 0));
-		else if (ft_strncmp(command[0], "unset", 6) == 0)
+		else if(ft_strncmp(pi->command[0], "env", 4) == 0)
 		{
-			builtin_unset(envnode, command);
+			exit(builtin_env(envnode, pi->command, 0));
 			exit (0);
 		}
-		else if (ft_strncmp(command[0], "exit", 5) == 0)
-			g_exit_code = (builtin_exit(command, 0));
-		else if (ft_strncmp(command[0], "$?", 3) == 0)
+		else if(ft_strncmp(pi->command[0], "export", 7) == 0)
+			exit (builtin_export(envnode, pi->command, 0));
+		else if (ft_strncmp(pi->command[0], "unset", 6) == 0)
 		{
-			write(2, "meowshell: ", 12);
-			write(2, ft_itoa(g_exit_code), ft_strlen(ft_itoa(g_exit_code)));
-			write(2, ": command not found\n", 21);
-			exit (127);			
+			builtin_unset(envnode, pi->command);
+			exit (0);
 		}
+		else if (ft_strncmp(pi->command[0], "exit", 5) == 0)
+			g_exit_code = (builtin_exit(pi->command, 0));
 		else
 		{
-			if (str == NULL && (ft_strncmp(command[0], "/", 1) == 0 || ft_strncmp(command[0], "./", 2) == 0))
-				str = command[0];
-			execve(str, command, envp);
+			if (pi->str == NULL && (ft_strncmp(pi->command[0], "/", 1) == 0 || ft_strncmp(pi->command[0], "./", 2) == 0))
+				pi->str = pi->command[0];
+
+			execve(pi->str, pi->command, envp);
 			write(2, "meowshell: ", 12);
-			write(2, command[0], ft_strlen(command[0]));
+			write(2, pi->command[0], ft_strlen(pi->command[0]));
 			write(2, ": command not found\n", 21);
 			exit (127);
 		}
@@ -550,13 +541,12 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 			close(pi->fd[i-1][0]);
 			close(pi->fd[i-1][1]);
 		}
-		index = heredoc_count(index, tr->left_child->token);
+		pi->index = heredoc_count(pi->index, tr->left_child->token);
 		tr=tr->right_child;
 		i++;
-	free_split(command);
-	free(str);
+	// free_split(pi->command);
+	free(pi->str);
 	}
-
 	wait_process(tree->pipe_cnt);
 	tr = tree->root;
 	if (tree->pipe_cnt == 0 && (ft_strncmp(tr->left_child->token->str, "cd", 3) == 0 || \
@@ -564,20 +554,20 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 	|| (ft_strncmp(tr->left_child->token->str, "exit", 5) == 0 && !tr->right_child))
 	{
 		if (check_redi(tr))
-			command = get_redi_command(tr);
+			pi->command = get_redi_command(tr);
 		else
-			command = get_command(tr);
+			pi->command = get_command(tr);
 		if (ft_strncmp(tr->left_child->token->str, "cd", 3) == 0)
-			g_exit_code = builtin_cd(command, envnode, 1);
+			g_exit_code = builtin_cd(pi->command, envnode, 1);
 		else if (ft_strncmp(tr->left_child->token->str, "export", 7) == 0)
-			g_exit_code = builtin_export(envnode, command, 1);
+			g_exit_code = builtin_export(envnode, pi->command, 1);
 		else if (ft_strncmp(tr->left_child->token->str, "exit", 5) == 0)
 		{
-			g_exit_code = builtin_exit(command, 1);
+			g_exit_code = builtin_exit(pi->command, 1);
 		}
 		else
-			g_exit_code = builtin_unset(envnode, command);
-		free_split(command);
+			g_exit_code = builtin_unset(envnode, pi->command);
+		free_split(pi->command);
 	}
 	free_pipe(pi, tree->pipe_cnt);
 	free(pi);

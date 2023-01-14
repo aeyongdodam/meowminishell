@@ -42,7 +42,6 @@ int	main(int argc, char **argv, char **envp)
 		if (!line)
 			prt_exit();
 		tree = lexer(line, envnode);
-		// prt_tree(tree->root, 0, 0);
 		if (!(find_error(tree, line)))
 		{
 			create_heredoc_file(tree);
