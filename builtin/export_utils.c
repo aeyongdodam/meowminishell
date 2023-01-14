@@ -45,6 +45,7 @@ int	find_key(char *key_tmp, char *value_tmp, t_envnode *envnode)
 				tmp->value = value_tmp;
 				free(temp);
 			}
+			free (key_tmp);
 			return (1);
 		}
 		tmp = tmp->next;
