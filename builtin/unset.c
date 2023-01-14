@@ -20,8 +20,11 @@ int   builtin_unset(t_envnode *envnode, char **command)
 			{
 				free_tmp = tmp->next;
 				tmp->next = tmp->next->next;
+				free(free_tmp->key);
+				free(free_tmp->value);
 				free_tmp->key = NULL;
 				free_tmp->value = NULL;
+
 				free(free_tmp);
 				break ;
 			}
