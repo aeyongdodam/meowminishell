@@ -138,7 +138,7 @@ char **get_redi_command(t_node *tr)
 		if (ft_strncmp(tmp->str, "<", 2) == 0 || ft_strncmp(tmp->str, ">>", 3) == 0 || ft_strncmp(tmp->str, ">", 2) == 0 || ft_strncmp(tmp->str, "<<", 3) == 0)
 			tmp = tmp->next->next;
 		}
-		save_command[j] = tmp->str;
+		save_command[j] = ft_strdup(tmp->str);
 
 		tmp = tmp->next;
 		j++;

@@ -20,7 +20,7 @@ void	free_token(t_token **token)
 	{
 		temp = *token;
 		*token = (*token)->next;
-		free (temp->str);
+		free(temp->str);
 		free(temp);
 	}
 }

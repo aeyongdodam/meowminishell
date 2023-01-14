@@ -53,6 +53,7 @@ void    create_heredoc_file(t_tree *tree)
             if (ft_strncmp(tmp->str, "<<", 3) == 0 && tmp->flag == 6)
             {
                 save_line = ft_calloc(1,1);
+                set_signal_handler(1);
  		        line = readline("\033[34m>\033[0m ");
                 if (line)
                 {
