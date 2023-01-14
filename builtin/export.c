@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sohlee <sohlee@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/14 21:34:35 by sohlee            #+#    #+#             */
+/*   Updated: 2023/01/14 21:34:38 by sohlee           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../minishell.h"
 
@@ -23,7 +34,7 @@ int 	find_key(char *key_tmp, char *value_tmp, t_envnode *envnode)
 	tmp = envnode;
 	while (tmp)
 	{
-		if (ft_strncmp(key_tmp, tmp->key, ft_strlen(key_tmp)) == 0) //이미 있는 값을 갱신시킬때
+		if (ft_strncmp(key_tmp, tmp->key, ft_strlen(key_tmp)) == 0)
 		{
 			if (value_tmp != NULL)
 			{
