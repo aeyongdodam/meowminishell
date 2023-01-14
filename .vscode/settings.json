@@ -5,6 +5,7 @@
         "minishell.h": "c",
         "sstream": "c",
         "__node_handle": "c",
-        "libft.h": "c"
+        "libft.h": "c",
+        "chrono": "c"
     }
 }

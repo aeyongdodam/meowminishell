@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export_utils2.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sohlee <sohlee@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/14 23:39:31 by sohlee            #+#    #+#             */
+/*   Updated: 2023/01/15 00:22:57 by sohlee           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../minishell.h"
 
@@ -61,5 +72,5 @@ void	export_new(t_envnode **node, t_envnode **tmp, char **key, char **value)
 	(*node)->key = ft_strdup(*key);
 	(*node)->value = NULL;
 	(*tmp)->next = *node;
-	tmp = (*tmp)->next;
+	*tmp = (*tmp)->next;
 }
