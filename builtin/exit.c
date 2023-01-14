@@ -6,7 +6,8 @@ int builtin_exit(char **command, int last_flag)
     int flag = 0;
     if (!command[1])
     {
-        write(2, "exit\n", 5);
+        if (last_flag != 1)
+            write(2, "exit\n", 5);
         return (0);
     }
     else if (command[2])
@@ -33,11 +34,7 @@ int builtin_exit(char **command, int last_flag)
             i++;
         }
         if (last_flag != 1)
-        {
-            write(2, "exit ", 6);
-            write(2, command[1], ft_strlen(command[1]));
-            write(2, "\n", 2);
-        }
+            write(2, "exit\n", 6);
     }
 
     return (ft_atoi(command[1]));

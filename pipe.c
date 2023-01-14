@@ -521,7 +521,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 			exit (0);
 		}
 		else if (ft_strncmp(command[0], "exit", 5) == 0)
-			exit(builtin_exit(command, 0));
+			exit (builtin_exit(command, 0));
 		else if (ft_strncmp(command[0], "$?", 3) == 0)
 		{
 			write(2, "meowshell: ", 12);
