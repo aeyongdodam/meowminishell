@@ -38,7 +38,7 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		set_signal_handler(0);
-		line = readline("\033[34mMinishell>\033[0m ");
+		line = readline("Minishell> ");
 		if (!line)
 			prt_exit();
 		tree = lexer(line, envnode);

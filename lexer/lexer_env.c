@@ -68,7 +68,7 @@ int	check_dallor(t_node *node, char **line, char **str, t_tree *tree)
 	while (**line)
 	{
 		str2 = str_one_join(str2, (*line)[0], tree, 1);
-		if (*(*line + 1) == 0 || \
+		if (*(*line + 1) == 0 || *(*line + 1) == '$' || \
 		get_type(*line + 1) != WORD || *(*line + 1) == ' ')
 			break ;
 		(*line)++;
