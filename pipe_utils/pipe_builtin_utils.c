@@ -27,7 +27,7 @@ void	builtin1(t_pipe *pi, t_envnode *envnode)
 		exit (builtin_cd(pi->command, envnode, 0));
 	else if (ft_strncmp(pi->command[0], "pwd", 4) == 0)
 	{
-		builtin_pwd(pi->command);
+		builtin_pwd();
 		exit (0);
 	}
 	else if (ft_strncmp(pi->command[0], "env", 4) == 0)

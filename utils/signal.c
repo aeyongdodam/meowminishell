@@ -59,11 +59,15 @@ void	set_signal_handler(int flag)
 	}
 }
 
-void	set_terminal(void)
+void	set_terminal(int argc, char **argv, t_tree **tree)
 {
 	struct termios	term;
 
 	tcgetattr(STDOUT_FILENO, &term);
 	term.c_lflag &= ~(ECHOCTL);
 	tcsetattr(STDOUT_FILENO, TCSANOW, &term);
+	(void)argc;
+	(void)argv;
+	prt_meows();
+	*tree = NULL;
 }

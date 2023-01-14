@@ -23,7 +23,7 @@ int	ft_newlinecmp(char *s)
 	{
 		while (s[i] == 'n')
 			i++;
-		if (ft_strlen(s) == i)
+		if ((int)ft_strlen(s) == i)
 			return (1);
 	}
 	return (0);
@@ -31,7 +31,6 @@ int	ft_newlinecmp(char *s)
 
 void	builtin_echo(char **command)
 {
-	t_token	*tmp;
 	int		newline_flag;
 	int		i;
 

@@ -100,7 +100,7 @@ typedef struct s_envnode
 void		signal_handler(int sig);
 void		signal_handler2(int sig);
 void		set_signal_handler(int flag);
-void		set_terminal(void);
+void		set_terminal(int argc, char **argv, t_tree **tree);
 
 //init.c
 t_token		*init_token(void);
@@ -195,7 +195,7 @@ int			exit_utils(char **command, int last_flag);
 int			builtin_exit(char **command, int last_flag);
 
 //pwd.c
-void		builtin_pwd(char **command);
+void		builtin_pwd(void);
 
 //unset.c
 void		unset_free(t_envnode **tmp, t_envnode **free_tmp);
@@ -216,7 +216,7 @@ void		free_export(t_envnode **node);
 void		prt_export(t_envnode *envnode, int last_flag);
 t_envnode	*init_new_export(void);
 void		export_find(t_envnode **no, t_envnode **tmp, char **key, char **v);
-void		export_new(t_envnode **node, t_envnode **tmp, char **key, char **v);
+void		export_new(t_envnode **node, t_envnode **tmp, char **key);
 
 //child_and_parent_utils.c
 void		handle_child(t_pipe *pi, char **envp, t_envnode *envnode);

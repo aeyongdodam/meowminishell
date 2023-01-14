@@ -34,7 +34,7 @@ void	export_cmd(t_envnode *envnode, t_envnode *tmp, char **command, int i)
 	{
 		key_tmp = command[i];
 		if (find_key(key_tmp, NULL, envnode) == 0)
-			export_new(&new_node, &tmp, &key_tmp, &value_tmp);
+			export_new(&new_node, &tmp, &key_tmp);
 	}
 }
 

@@ -83,7 +83,6 @@ int	find_cd_path(char *s, char *buf, t_envnode *envnode, int last_flag)
 int	builtin_cd(char **command, t_envnode *envnode, int last_flag)
 {
 	char	buf[255];
-	char	next[255];
 	int		error;
 
 	error = 0;

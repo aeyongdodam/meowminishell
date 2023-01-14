@@ -90,7 +90,6 @@ int	cd_home(char **command, t_envnode *envnode, int last_flag, char *buf)
 
 int	cd_oldpwd(t_envnode *envnode, int last_flag, char *buf)
 {
-	char	*home;
 	char	*oldpwd;
 	int		ch;
 

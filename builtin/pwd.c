@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-void	builtin_pwd(char **command)
+void	builtin_pwd(void)
 {
 	char	buf[255];
 

@@ -34,7 +34,7 @@ int	num_check(char *s)
 			return (0);
 		i++;
 	}
-	if (i == ft_strlen(s))
+	if (i == (int)ft_strlen(s))
 		return (1);
 	else
 		return (0);

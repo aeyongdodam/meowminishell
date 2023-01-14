@@ -17,7 +17,6 @@ int	g_exit_code;
 void	prt_meows(void)
 {
 	int		fd;
-	int		n;
 	char	*buf;
 
 	fd = open("utils/meow.txt", O_RDONLY);
