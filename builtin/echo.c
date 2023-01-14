@@ -63,7 +63,7 @@ void	builtin_echo(char **command)
 		i++;
 	while (command[i])
 	{
-		if (find_err_code(command[i]) == 0)
+		// if (find_err_code(command[i]) == 0)
 			printf("%s", command[i]);
 		if (command[i + 1])
 			printf(" ");
