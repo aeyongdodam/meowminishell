@@ -12,6 +12,8 @@
 
 #include "../minishell.h"
 
+extern int	g_exit_code;
+
 char	*change_env(char *str2, t_envnode *envnode)
 {
 	char		*envstr;
@@ -36,6 +38,8 @@ char	*change_env(char *str2, t_envnode *envnode)
 
 int	dallor_save(t_node *node, char **line, char **str, t_tree *tree)
 {
+	char	*s;
+
 	if (*(*line + 1) == 0)
 	{
 		save_token(node, "$", WORD);
@@ -44,9 +48,11 @@ int	dallor_save(t_node *node, char **line, char **str, t_tree *tree)
 	}
 	else if (*(*line + 1) == '?')
 	{
-		*str = str_one_join(*str, '$', tree, 1);
-		*str = str_one_join(*str, '?', tree, 1);
+		s = ft_itoa(g_exit_code);
+		*str = re_str_join(str, &s);
+		free(s);
 		(*line)++;
+		set_variable(tree, 0, 0, 0);
 		return (1);
 	}
 	else if (get_type(*line + 1) != WORD || *(*line + 1) == ' ')
@@ -76,5 +82,6 @@ int	check_dallor(t_node *node, char **line, char **str, t_tree *tree)
 	str2 = change_env(str2, tree->env);
 	*str = re_str_join(str, &str2);
 	free(str2);
+	set_variable(tree, 0, 0, 0);
 	return (1);
 }
