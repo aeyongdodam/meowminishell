@@ -6,7 +6,7 @@
 /*   By: sohlee <sohlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/15 00:10:17 by sohlee            #+#    #+#             */
-/*   Updated: 2023/01/15 00:10:21 by sohlee           ###   ########.fr       */
+/*   Updated: 2023/01/15 00:46:31 by sohlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,9 @@ char	*find_path(t_envnode *envnode, char *s)
 	save_path = NULL;
 	find_env_path(tmp, &save_path);
 	if (!save_path)
-		return (ft_strdup(""));
+		return (ret);
 	if (!save_path[0])
-		return (ft_strdup(""));
+		return (ret);
 	for_free = save_path;
 	save_path = ft_substr(save_path, 5, ft_strlen(save_path));
 	free(for_free);
