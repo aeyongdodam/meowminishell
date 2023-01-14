@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkwon <mkwon@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: sohlee <sohlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/15 01:02:54 by mkwon             #+#    #+#             */
-/*   Updated: 2023/01/15 01:02:56 by mkwon            ###   ########.fr       */
+/*   Updated: 2023/01/15 01:19:10 by sohlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,16 @@ typedef struct s_pipe{
 	char	**command;
 	t_token	*tmp;
 }	t_pipe;
+
+typedef struct s_heredoc{
+	int		index;
+	char	*file_name;
+	char	*line;
+	char	*save_line;
+	char    *itoa_index;
+	char    *for_free;
+	int		heredoc_fd;
+}	t_heredoc;
 
 typedef struct s_envnode
 {
@@ -259,8 +269,14 @@ int			check_redi(t_node *tr);
 int			redi_command_count(t_token *tmp);
 char		**save_redi_command(t_token *tmp, int i);
 
-//heredoc 개수 세주는거
+//heredoc.c
 int			heredoc_count(int index, t_token *t);
+void		delete_heredoc_file(t_tree *tree);
+void		create_heredoc_file(t_tree *tree);
+void		heredoc_line(t_heredoc *h, t_token *tmp);
+void		heredoc_utils(t_heredoc *h);
+void		handle_heredoc_flag(t_heredoc *h, t_token *tmp);
+
 //builtin
 void		create_heredoc_file(t_tree *tree);
 void		delete_heredoc_file(t_tree *tree);

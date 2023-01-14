@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mkwon <mkwon@student.42seoul.kr>           +#+  +:+       +#+         #
+#    By: sohlee <sohlee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/15 01:02:46 by mkwon             #+#    #+#              #
-#    Updated: 2023/01/15 01:02:50 by mkwon            ###   ########.fr        #
+#    Updated: 2023/01/15 01:20:09 by sohlee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ pipe_utils/close_all_pipe.c pipe_utils/find_path.c pipe_utils/get_command.c \
 pipe_utils/handle_error.c pipe_utils/pipe_builtin_utils.c \
 pipe_utils/pipe_connect.c \
 pipe_utils/redi_command_utils.c
-SRC += pipe.c heredoc.c
+SRC += pipe.c heredoc.c heredoc_utils.c
 OBJ = $(SRC:.c=.o)
 
 LIBFT_DIR	= ./libft
