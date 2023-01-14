@@ -12,6 +12,16 @@
 
 #include "../minishell.h"
 
+int	cnt_key_len(char **command, int i)
+{
+	int	j;
+
+	j = 0;
+	while (command[i][j] != '=')
+		j++;
+	return (j);
+}
+
 void	export_cmd(t_envnode *envnode, t_envnode *tmp, char **command, int i)
 {
 	t_envnode	*new_node;
@@ -22,22 +32,22 @@ void	export_cmd(t_envnode *envnode, t_envnode *tmp, char **command, int i)
 	new_node = init_new_export();
 	if (ft_strrchr(command[i], '=') != 0)
 	{
-		j = 0;
-		while (command[i][j] != '=')
-			j++;
+		j = cnt_key_len(command, i);
 		key_tmp = ft_substr(command[i], 0, j);
 		value_tmp = ft_substr(command[i], j + 1, ft_strlen(command[i]));
 		if (find_key(key_tmp, value_tmp, envnode) == 0)
 			export_find(&new_node, &tmp, &key_tmp, &value_tmp);
+		else
+			free(new_node);
 	}
 	else
 	{
 		key_tmp = command[i];
 		if (find_key(key_tmp, NULL, envnode) == 0)
 			export_new(&new_node, &tmp, &key_tmp);
+		else
+			free(new_node);
 	}
-	if (new_node)
-		free(new_node);
 }
 
 int	builtin_export(t_envnode *envnode, char **command, int last_flag)

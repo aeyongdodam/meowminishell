@@ -202,6 +202,8 @@ void		unset_free(t_envnode **tmp, t_envnode **free_tmp);
 int			builtin_unset(t_envnode *envnode, char **command);
 
 //export.c
+int			cnt_key_len(char **command, int i);
+void		export_cmd(t_envnode *envnode, t_envnode *tmp, char **cmd, int i);
 int			builtin_export(t_envnode *envnode, char **command, int last_flag);
 
 //export_utils.c
