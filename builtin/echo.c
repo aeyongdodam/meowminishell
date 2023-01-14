@@ -5,11 +5,12 @@ extern int	g_exit_code;
 
 int	ft_newlinecmp(char *s)
 {
-	int	i = 2;
+	int	i;
 
+	i = 2;
 	if (s[0] == '-' && s[1] == 'n')
 	{
-		while(s[i] == 'n')
+		while (s[i] == 'n')
 			i++;
 		if (ft_strlen(s) == i)
 			return (1);
@@ -17,15 +18,15 @@ int	ft_newlinecmp(char *s)
 	return (0);
 }
 
-int		find_err_code(char *s)
+int	find_err_code(char *s)
 {
-	char *tmp;
-	int	i;
+	char	*tmp;
+	int		i;
 
 	i = 0;
 	if (ft_strnstr(s, "$?", ft_strlen(s)))
 	{
-		while (i + 1< ft_strlen(s))
+		while (i + 1 < ft_strlen(s))
 		{
 			if (s[i] == '$' && s[i + 1] == '?')
 			{
@@ -43,13 +44,14 @@ int		find_err_code(char *s)
 	return (0);
 }
 
-void builtin_echo(char **command)
+void	builtin_echo(char **command)
 {
-	t_token *tmp;
-	int	newline_flag;
+	t_token	*tmp;
+	int		newline_flag;
+	int		i;
 
 	newline_flag = 0;
-	int i = 1;
+	i = 1;
 	if (!command[1])
 	{
 		printf("\n");
