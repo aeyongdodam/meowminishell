@@ -43,7 +43,7 @@ int	check_export_err(char *s)
 	i = 0;
 	while (s[i])
 	{
-		if (i == 0 && s[i] == '=')
+		if (i == 0 && (s[i] == '=' || s[i] == ':' || s[i] == '.'))
 			return (-1);
 		if ((s[i] >= 'A' && s[i] < 'Z') || (s[i] >= 'a' && s[i] <= 'z') || s[i] == '_' || s[i] == '=' || s[i] == '/' || s[i] == ':' || s[i] == '.')
 		{
