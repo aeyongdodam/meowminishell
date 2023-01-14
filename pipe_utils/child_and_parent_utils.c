@@ -28,6 +28,7 @@ void	handle_child(t_pipe *pi, char **envp, t_envnode *envnode)
 
 void	child_process(t_node *tr, t_pipe *pi, char **envp, t_envnode *envnode)
 {
+	pi->str = find_path(envnode, pi->command[0]);
 	if (check_redi(tr) == 1)
 	{
 		pi->tmp = tr->left_child->token;
@@ -63,5 +64,4 @@ void	parent_process(t_node *tr, t_pipe *pi)
 	pi->index = heredoc_count(pi->index, tr->left_child->token);
 	pi->i++;
 	free_split(pi->command);
-	free (pi->str);
 }

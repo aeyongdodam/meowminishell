@@ -160,7 +160,7 @@ void		main_pipe(t_tree *tree, t_envnode *envnode, char **envp);
 int			pipe_malloc_open_init(t_pipe *pi, int pipe_cnt, t_tree *tree);
 void		wait_process(void);
 void		close_fd(t_pipe *pi, int cnt);
-void		set_start(t_pipe *pi, t_envnode *envnode, t_node *tr);
+void		set_start(t_pipe *pi, t_node *tr);
 
 //utils
 void		prt_meows(void);

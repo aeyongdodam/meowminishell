@@ -78,14 +78,13 @@ void	close_fd(t_pipe *pi, int cnt)
 	}
 }
 
-void	set_start(t_pipe *pi, t_envnode *envnode, t_node *tr)
+void	set_start(t_pipe *pi, t_node *tr)
 {
 	pi->err_code = 1;
 	if (check_redi(tr) == 1)
 		pi->command = get_redi_command(tr);
 	else
 		pi->command = get_command(tr);
-	pi->str = find_path(envnode, pi->command[0]);
 }
 
 void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
@@ -101,7 +100,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 		return ;
 	while (pi->i < tree->pipe_cnt + 1)
 	{
-		set_start(pi, envnode, tr);
+		set_start(pi, tr);
 		set_signal_handler(1);
 		pi->pid = fork();
 		if (pi->pid < 0)
