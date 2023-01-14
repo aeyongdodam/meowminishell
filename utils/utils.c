@@ -12,6 +12,8 @@
 
 #include "../minishell.h"
 
+int	g_exit_code;
+
 void	prt_meows(void)
 {
 	int		fd;
@@ -49,4 +51,10 @@ void	set_oldpwd(t_envnode **head)
 		}
 		node = node->next;
 	}
+}
+
+void	prt_exit(void)
+{
+	write(2, "exit\n", 5);
+	exit(g_exit_code);
 }

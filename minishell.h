@@ -71,7 +71,7 @@ void		set_terminal(void);
 t_token		*init_token(void);
 t_node		*init_node(void);
 t_tree		*init_tree(void);
-t_envnode	*init_env(char **envp, t_tree *tree);
+t_envnode	*init_env(char **envp, t_tree *tree, int i, int j);
 t_envnode	*init_envnode(t_envnode	**head, char *str);
 
 //lexer.c
@@ -125,14 +125,12 @@ void		main_pipe(t_tree *tree, t_envnode *envnode, char **envp);
 
 //heredoc 개수 세주는거
 int 	heredoc_count(int index, t_token *t);
-//exit.c
-int			input_exit(t_tree *tree);
-void		prt_exit(void);
 
 //utils
 void		prt_meows(void);
 void		set_init_env(t_envnode **head, char **str);
 void		set_oldpwd(t_envnode **head);
+void		prt_exit(void);
 
 //builtin
 void	builtin_echo(char **command);

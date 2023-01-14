@@ -33,7 +33,7 @@ int	main(int argc, char **argv, char **envp)
 
 	set_terminal();
 	prt_meows();
-	envnode = init_env(envp, tree);
+	envnode = init_env(envp, tree, -1, -1);
 	set_oldpwd(&envnode);
 	while (1)
 	{
