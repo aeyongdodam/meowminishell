@@ -29,12 +29,15 @@ char *find_oldpwd(t_envnode *envnode)
 void update_oldpwd(t_envnode *envnode, char *s)
 {
 	t_envnode *tmp;
+	char	*for_free;
 	tmp = envnode;
 	while (tmp)
 	{
 		if (ft_strncmp(tmp->key, "OLDPWD", 6) == 0)
 		{
-			tmp->value = ft_strdup(s);		
+			for_free = tmp->value;
+			tmp->value = ft_strdup(s);
+			free(for_free);		
 			break ;
 		}
 		tmp = tmp->next;

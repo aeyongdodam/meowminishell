@@ -102,5 +102,6 @@ t_envnode	*init_env(char **envp, t_tree *tree)
 		node->value = ft_strdup(str);
 		str = re_str(str);
 	}
+	free (str);
 	return (head);
 }

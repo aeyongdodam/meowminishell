@@ -30,9 +30,24 @@ void	close_pipe(t_pipe *pi, int pipe_cnt)
 	}
 }
 
+
+void	free_split(char **split_path)
+{
+	int	i;
+
+	i = 0;
+	while (split_path[i])
+	{
+		free(split_path[i]);
+		i++;
+	}
+	free(split_path);
+}
+
 char	*find_path(t_envnode *envnode, char *s)
 {
-	t_envnode *tmp;
+	t_envnode	*tmp;
+	char		*for_free;
 	int	i;
 	char *save_path;
 	i = 0;
@@ -46,21 +61,31 @@ char	*find_path(t_envnode *envnode, char *s)
 		}
 		tmp = tmp->next;
 	}
-	if (!save_path)
+	if (!save_path[0])
 		return (NULL);
+	for_free = save_path;
 	save_path = ft_substr(save_path, 5, ft_strlen(save_path));
+	// free(for_free);
 	char **split_path;
+	char	*ret;
+	ret = NULL;
 	split_path = ft_split(save_path, ':');
+	free(save_path);
 	i = 0;
 	while(split_path[i])
 	{
+		for_free = split_path[i];
 		split_path[i] = ft_strjoin(split_path[i], "/");
+		free(for_free);
+		for_free = split_path[i];
 		split_path[i] = ft_strjoin(split_path[i], s);
+		free(for_free);
 		if (access(split_path[i], X_OK) == 0)
-			return (split_path[i]);
+			ret = ft_strdup(split_path[i]);
 		i++;
 	}
-	return (NULL);
+	free_split(split_path);
+	return (ret);
 }
 
 void wait_process(int cnt)
@@ -141,7 +166,6 @@ char **get_command(t_node *tr)
 	while (tmp)
 	{
 		save_command[i] = ft_strdup(tmp->str);
-
 		tmp = tmp->next;
 		i++;
 	}
@@ -210,11 +234,17 @@ void	pipe_prt_error(int	error_code, char *s)
 	}
 }
 
-void	free_pipe(t_pipe *pi)
+void	free_pipe(t_pipe *pi, int cnt)
 {
 	int	i;
 
 	i = 0;
+	while (i < cnt)
+	{
+		free(pi->fd[i]);
+		i++;
+	}
+	free(pi->fd);
 }
 
 void	check_stat(char *s)
@@ -245,6 +275,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 	int	err_code;
 
 	int	i;
+	char	*for_itoa;
 	pid_t	pid;
 	char *str;
 	int openfd;
@@ -266,12 +297,6 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 			command = get_redi_command(tr);
 		else
 			command = get_command(tr); // command를 쪼개서 넣어주는거
-	// int	k = 0;
-	// while (command[k])
-	// {
-	// 	printf("command[k] %s\n", command[k]);
-	// 	k++;
-	// }
 	str = find_path(envnode, command[0]);
 	set_signal_handler(1);
 	pid = fork();
@@ -395,8 +420,11 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 				}
 				else if (ft_strncmp(tmp->str, "<<", 3) == 0 && tmp->flag != 1)
 				{
-					file_name = ft_strjoin("tmp_file", ft_itoa(index));
+					for_itoa = ft_itoa(index);
+					file_name = ft_strjoin("tmp_file", for_itoa);
+					free(for_itoa);
 					heredoc_fd = open(file_name, O_RDONLY);
+					free(file_name);
 					if (heredoc_fd >= 0)
 					{					
 						err_code *= dup2(heredoc_fd, 0);
@@ -464,7 +492,6 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 		// printf("들어가기전 command 0 %s 1 %s\n",command[0],command[1]);
 		if (!command[0] && index > 0)
 			exit (0);
-
 		else if (ft_strncmp(command[0], "echo", 5) == 0)
 		{
 			builtin_echo(command);
@@ -512,7 +539,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 			exit (127);
 		}
 	}
-	set_signal_handler(3);
+		set_signal_handler(3);
 		if (i != 0)
 		{
 			close(pi->fd[i-1][0]);
@@ -521,9 +548,11 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 		index = heredoc_count(index, tr->left_child->token);
 		tr=tr->right_child;
 		i++;
+	free_split(command);
+	free(str);
 	}
 
-	wait_process(tree->pipe_cnt); //다 끝날때까지 부모 프로세스 기다려야함
+	wait_process(tree->pipe_cnt);
 	tr = tree->root;
 	if (tree->pipe_cnt == 0 && (ft_strncmp(tr->left_child->token->str, "cd", 3) == 0 || \
 	ft_strncmp(tr->left_child->token->str, "export", 7) == 0) || (ft_strncmp(tr->left_child->token->str, "unset", 6) == 0 && !tr->right_child)\
@@ -542,5 +571,9 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 			exit(builtin_exit(command, 1));
 		else
 			g_exit_code = builtin_unset(envnode, command);
+		free_split(command);
+		free(str);
 	}
+	free_pipe(pi, tree->pipe_cnt);
+	free(pi);
 }
