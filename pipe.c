@@ -529,7 +529,7 @@ void	child_process(t_node *tr, t_pipe *pi, char **envp, t_envnode *envnode)
 	handle_builtin_child(pi, envp, envnode);
 }
 
-void	handle_builtin_parent(t_tree *tree, t_node *tr, t_envnode *envnode)
+void	handle_builtin_parent(t_tree *tree, t_node *tr, t_envnode *envnode, t_pipe *pi)
 {
 	tr = tree->root;
 	if (tree->pipe_cnt == 0 && (ft_strncmp(tr->left_child->token->str, "cd", 3) == 0 || \
@@ -591,7 +591,7 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 		tr = tr->right_child;
 	}
 	wait_process(tree->pipe_cnt);
-	handle_builtin_parent(tree, tr, envnode);
+	handle_builtin_parent(tree, tr, envnode, pi);
 	free_pipe(pi, tree->pipe_cnt);
 	free(pi);
 }
