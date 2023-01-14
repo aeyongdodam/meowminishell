@@ -27,7 +27,6 @@ void	export_cmd(t_envnode *envnode, t_envnode *tmp, char **command, int i)
 			j++;
 		key_tmp = ft_substr(command[i], 0, j);
 		value_tmp = ft_substr(command[i], j + 1, ft_strlen(command[i]));
-		printf("here\n");
 		if (find_key(key_tmp, value_tmp, envnode) == 0)
 			export_find(&new_node, &tmp, &key_tmp, &value_tmp);
 	}
