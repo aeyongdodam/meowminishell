@@ -147,7 +147,6 @@ void		set_oldpwd(t_envnode **head);
 void		prt_exit(void);
 
 //builtin
-int	builtin_export(t_envnode *envnode, char **command, int last_flag);
 void	create_heredoc_file(t_tree *tree);
 void	delete_heredoc_file(t_tree *tree);
 
@@ -183,5 +182,20 @@ void		builtin_pwd(char **command);
 //unset.c
 void		unset_free(t_envnode **tmp, t_envnode **free_tmp);
 int			builtin_unset(t_envnode *envnode, char **command);
+
+//export.c
+int			builtin_export(t_envnode *envnode, char **command, int last_flag);
+
+//export_utils.c
+void		prt_env(t_envnode *envnode);
+int			find_key(char *key_tmp, char *value_tmp, t_envnode *envnode);
+int			check_export_err(char *s);
+t_envnode	*init_temp_env(t_envnode *envnode, t_envnode *start);
+void		sort_env(t_envnode **envnode);
+
+//export_utils2.c
+void		free_export(t_envnode **node);
+void		prt_export(t_envnode *envnode, int last_flag);
+t_envnode	*init_new_export(void);
 
 #endif
