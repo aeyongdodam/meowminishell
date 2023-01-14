@@ -28,7 +28,6 @@ char	**get_redi_command(t_node *tr)
 char	**get_command(t_node *tr)
 {
 	int		i;
-	int		j;
 	char	**save_command;
 	t_token	*tmp;
 

@@ -56,7 +56,6 @@ char	*find_path(t_envnode *envnode, char *s)
 {
 	t_envnode	*tmp;
 	char		*for_free;
-	int			i;
 	char		*save_path;
 	char		*ret;
 
