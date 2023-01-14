@@ -29,12 +29,16 @@ void	export_cmd(t_envnode *envnode, t_envnode *tmp, char **command, int i)
 		value_tmp = ft_substr(command[i], j + 1, ft_strlen(command[i]));
 		if (find_key(key_tmp, value_tmp, envnode) == 0)
 			export_find(&new_node, &tmp, &key_tmp, &value_tmp);
+		else
+			free(new_node);
 	}
 	else
 	{
 		key_tmp = command[i];
 		if (find_key(key_tmp, NULL, envnode) == 0)
 			export_new(&new_node, &tmp, &key_tmp);
+		else
+			free(new_node);
 	}
 }
 

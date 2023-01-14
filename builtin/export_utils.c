@@ -32,6 +32,7 @@ void	prt_env(t_envnode *envnode)
 int	find_key(char *key_tmp, char *value_tmp, t_envnode *envnode)
 {
 	t_envnode	*tmp;
+	char		*temp;
 
 	tmp = envnode;
 	while (tmp)
@@ -40,7 +41,9 @@ int	find_key(char *key_tmp, char *value_tmp, t_envnode *envnode)
 		{
 			if (value_tmp != NULL)
 			{
+				temp = tmp->value;
 				tmp->value = value_tmp;
+				free(temp);
 			}
 			return (1);
 		}
