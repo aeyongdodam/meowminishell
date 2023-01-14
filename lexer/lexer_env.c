@@ -82,6 +82,5 @@ int	check_dallor(t_node *node, char **line, char **str, t_tree *tree)
 	str2 = change_env(str2, tree->env);
 	*str = re_str_join(str, &str2);
 	free(str2);
-	set_variable(tree, 0, 0, 0);
 	return (1);
 }
