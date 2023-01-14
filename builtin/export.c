@@ -7,6 +7,11 @@ void prt_env(t_envnode *envnode)
 	tmp = envnode;
 	while (tmp)
 	{
+		if (ft_strncmp(tmp->key, "OLDPWD", 7) == 0)
+		{
+			if (tmp->value == NULL)
+				continue;
+		}
 		printf("tmp %s %p\n", tmp->key, tmp->value);
 		tmp = tmp->next;
 	}
@@ -109,6 +114,20 @@ void	sort_env(t_envnode **envnode)
 	}
 }
 
+void	free_export(t_envnode **node)
+{
+	t_envnode	*temp;
+
+	while (*node)
+	{
+		temp = *node;
+		*node = (*node)->next;
+		free(temp->key);
+		free(temp->value);
+		free(temp);
+	}
+}
+
 void	prt_export(t_envnode *envnode, int last_flag)
 {
 	t_envnode	*node;
@@ -127,6 +146,7 @@ void	prt_export(t_envnode *envnode, int last_flag)
 			node = node->next;
 		}
 	}
+	free_export(&node);
 }
 
 int    builtin_export(t_envnode *envnode, char **command, int last_flag)

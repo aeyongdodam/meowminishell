@@ -46,7 +46,7 @@ void	set_oldpwd(t_envnode **head)
 		if (ft_strncmp(node->key, "OLDPWD", 7) == 0)
 		{
 			free(node->value);
-			node->value = ft_strdup("");
+			node->value = NULL;
 			break ;
 		}
 		node = node->next;

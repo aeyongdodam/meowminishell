@@ -115,7 +115,7 @@ void	check_quote(t_node *node, char **line, char **str, t_tree *tree)
 	}
 	if (get_type(*line) != flag)
 		save_quote(node, str, tree, flag);
-	else
+	else if (*(*line + 1) == ' ' || *(*line + 1) == 0)
 		empty_quote(node, str, &s, cash);
 	free(s);
 	empty_line(line);
