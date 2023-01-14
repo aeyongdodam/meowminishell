@@ -56,15 +56,19 @@ char	*find_path(t_envnode *envnode, char *s)
 	{
 		if (ft_strncmp("PATH", tmp->key, 4) == 0)
 		{
-			save_path = ft_strdup(tmp->value);
+			if (tmp->value)
+				save_path = ft_strdup(tmp->value);
 			break;
 		}
 		tmp = tmp->next;
 	}
+	if (!save_path)
+		return (ft_strdup(""));
 	if (!save_path[0])
 		return (ft_strdup(""));
+
 	for_free = save_path;
-	// printf("save_path %s %p\n", save_path, save_path);
+
 	save_path = ft_substr(save_path, 5, ft_strlen(save_path));
 	free(for_free);
 	char **split_path;
@@ -559,7 +563,6 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 	ft_strncmp(tr->left_child->token->str, "export", 7) == 0) || (ft_strncmp(tr->left_child->token->str, "unset", 6) == 0 && !tr->right_child)\
 	|| (ft_strncmp(tr->left_child->token->str, "exit", 5) == 0 && !tr->right_child))
 	{
-		str = find_path(envnode, tr->left_child->token->str);
 		if (check_redi(tr))
 			command = get_redi_command(tr);
 		else
@@ -573,7 +576,6 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 		else
 			g_exit_code = builtin_unset(envnode, command);
 		free_split(command);
-		free(str);
 	}
 	free_pipe(pi, tree->pipe_cnt);
 	free(pi);
