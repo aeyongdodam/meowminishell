@@ -62,10 +62,11 @@ char	*find_path(t_envnode *envnode, char *s)
 		tmp = tmp->next;
 	}
 	if (!save_path[0])
-		return (NULL);
+		return (ft_strdup(""));
 	for_free = save_path;
+	// printf("save_path %s %p\n", save_path, save_path);
 	save_path = ft_substr(save_path, 5, ft_strlen(save_path));
-	// free(for_free);
+	free(for_free);
 	char **split_path;
 	char	*ret;
 	ret = NULL;

@@ -54,18 +54,21 @@ void    create_heredoc_file(t_tree *tree)
             {
                 save_line = ft_calloc(1,1);
  		        line = readline("\033[34m>\033[0m ");
-                while (ft_strncmp(line, tmp->next->str, ft_strlen(tmp->next->str) + 1) != 0)
+                if (line)
                 {
-                    for_free = save_line;
-                    save_line = ft_strjoin(save_line, line);
+                    while (ft_strncmp(line, tmp->next->str, ft_strlen(tmp->next->str) + 1) != 0)
+                    {
+                        for_free = save_line;
+                        save_line = ft_strjoin(save_line, line);
+                        free(line);
+                        free(for_free);
+                        for_free = save_line;
+                        save_line = ft_strjoin(save_line, "\n");
+                        free(for_free);
+                        line = readline("\033[34m>\033[0m ");
+                    }
                     free(line);
-                    free(for_free);
-                    for_free = save_line;
-                    save_line = ft_strjoin(save_line, "\n");
-                    free(for_free);
-                    line = readline("\033[34m>\033[0m ");
                 }
-                free(line);
                 for_free = save_line;
                 save_line = ft_strjoin(save_line, "\n");
                 free(for_free);
