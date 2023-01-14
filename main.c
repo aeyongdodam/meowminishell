@@ -49,8 +49,6 @@ int	main(int argc, char **argv, char **envp)
 			delete_heredoc_file(tree);		
 		}
 		all_free(&tree, line);
-		// system("leaks minishell");	
 	}
-	// system("leaks minishell");
 	return (0);
 }
