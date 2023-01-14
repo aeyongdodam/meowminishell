@@ -6,7 +6,7 @@
 /*   By: sohlee <sohlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/15 01:02:54 by mkwon             #+#    #+#             */
-/*   Updated: 2023/01/15 01:19:10 by sohlee           ###   ########.fr       */
+/*   Updated: 2023/01/15 01:22:17 by sohlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,8 @@ typedef struct s_heredoc{
 	char	*file_name;
 	char	*line;
 	char	*save_line;
-	char    *itoa_index;
-	char    *for_free;
+	char	*itoa_index;
+	char	*for_free;
 	int		heredoc_fd;
 }	t_heredoc;
 

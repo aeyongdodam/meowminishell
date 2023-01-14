@@ -6,7 +6,7 @@
 /*   By: sohlee <sohlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/15 01:14:43 by sohlee            #+#    #+#             */
-/*   Updated: 2023/01/15 01:19:39 by sohlee           ###   ########.fr       */
+/*   Updated: 2023/01/15 01:21:46 by sohlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	heredoc_utils(t_heredoc *h)
 
 void	handle_heredoc_flag(t_heredoc *h, t_token *tmp)
 {
-    h->save_line = ft_calloc(1, 1);
+	h->save_line = ft_calloc(1, 1);
 	set_signal_handler (0);
 	h->line = readline("> ");
 	if (h->line)
