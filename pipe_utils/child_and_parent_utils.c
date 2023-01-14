@@ -14,16 +14,27 @@
 
 void	handle_child(t_pipe *pi, char **envp, t_envnode *envnode)
 {
-	builtin1(pi, envnode);
-	builtin2(pi, envnode);
-	if (pi->str == NULL && (ft_strncmp(pi->command[0], "/", 1) == 0 \
-	|| ft_strncmp(pi->command[0], "./", 2) == 0))
-		pi->str = pi->command[0];
-	execve(pi->str, pi->command, envp);
-	write(2, "meowshell: ", 12);
-	write(2, pi->command[0], ft_strlen(pi->command[0]));
-	write(2, ": command not found\n", 21);
-	exit (127);
+	if ((!pi->command[0] && pi->index > 0) || \
+	ft_strncmp(pi->command[0], "cd", 3) == 0 || \
+	ft_strncmp(pi->command[0], "pwd", 4) == 0 || \
+	ft_strncmp(pi->command[0], "env", 4) == 0 || \
+	ft_strncmp(pi->command[0], "export", 7) == 0)
+		builtin1(pi, envnode);
+	else if (ft_strncmp(pi->command[0], "unset", 6) == 0 || \
+	ft_strncmp(pi->command[0], "exit", 5) == 0)
+		builtin2(pi, envnode);
+	else
+	{
+		if (pi->str == NULL && (ft_strncmp(pi->command[0], "/", 1) == 0 \
+		|| ft_strncmp(pi->command[0], "./", 2) == 0))
+			pi->str = pi->command[0];
+		execve(pi->str, pi->command, envp);
+		write(2, "meowshell: ", 12);
+		write(2, pi->command[0], ft_strlen(pi->command[0]));
+		write(2, ": command not found\n", 21);
+		exit (127);
+	}
+	exit (1);
 }
 
 void	child_process(t_node *tr, t_pipe *pi, char **envp, t_envnode *envnode)
