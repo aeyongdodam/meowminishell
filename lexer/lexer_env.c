@@ -74,5 +74,6 @@ int	check_dallor(t_node *node, char **line, char **str, t_tree *tree)
 	}
 	str2 = change_env(str2, tree->env);
 	*str = ft_strjoin(*str, str2);
+	free(str2);
 	return (1);
 }

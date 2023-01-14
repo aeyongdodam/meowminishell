@@ -49,7 +49,6 @@ char	*re_str_join(char **str, char **s)
 
 	temp = ft_strjoin(*str, *s);
 	free(*str);
-	free(*s);
 	return (temp);
 }
 
@@ -62,20 +61,11 @@ void	empty_line(char **line)
 void	empty_quote(t_node *node, char **str, char **s, int cash)
 {
 	if ((*s)[0] == 0 && cash == 1)
-	{
-		free(*s);
 		return ;
-	}
 	else if ((*s)[0] == 0 && (*str)[0] != 0)
-	{
-		free(*s);
 		return ;
-	}
 	else if ((*s)[0] == 0)
-	{
 		save_token(node, "", WORD);
-		free(*s);
-	}
 	else
 		*str = re_str_join(str, s);
 }
