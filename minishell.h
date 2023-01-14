@@ -57,6 +57,7 @@ typedef struct s_pipe{
 	int	pipe_cnt;
 	int final;
 	int first;
+	int	i;
 	char *file_name;
 	int	index;
 	int	err_code;

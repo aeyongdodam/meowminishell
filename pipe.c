@@ -20,6 +20,7 @@ int	pipe_malloc_open_init(t_pipe *pi, int pipe_cnt, t_tree *tree)
 	pi->final = dup(1);
 	pi->first = dup(0);
 	pi->index = 0;
+	pi->i = 0;
 	pi->pipe_cnt = tree->pipe_cnt;
 	return (0);
 }
@@ -109,10 +110,17 @@ void wait_process(int cnt)
 		if (WIFSIGNALED(status))
 		{
 			signo = WTERMSIG(status);
+			if (signo == 13)
+			{
+				g_exit_code = WEXITSTATUS(status);
+				continue;
+			}
 			if (signo == SIGINT && i++ == 0)
 				ft_putstr_fd("^C\n", STDERR_FILENO);
 			else if (signo == SIGQUIT && i++ == 0)
 				ft_putstr_fd("^\\Quit: 3\n", STDERR_FILENO);
+			// printf ("%d\n",g_exit_code);
+			// printf("%d\n",signo);
 			g_exit_code = 128 + signo;
 		}
 		else
@@ -452,102 +460,77 @@ void	pipe_connect_other(t_node *tr, t_pipe *pi, int i)
 	}
 }
 
-void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
+void	handle_builtin_child(t_pipe *pi, char **envp, t_envnode *envnode)
 {
-	t_pipe *pi;
-	t_node *tr;
-	int	i;
-	tr = tree->root;
-	pi = malloc(sizeof(t_pipe));
-	if (pipe_malloc_open_init(pi, tree->pipe_cnt, tree) == -1)
-		pipe_prt_error(2, "");
-	if (!tr->left_child)
-		return ;
-	i = 0;
-	while (i < tree->pipe_cnt + 1)
+	if (!pi->command[0] && pi->index > 0)
+		exit (0);
+	else if (ft_strncmp(pi->command[0], "echo", 5) == 0)
 	{
-		set_start(tree, pi, envnode, tr);
-		set_signal_handler(1);
-		pi->pid = fork();
-	if (pi->pid < 0)
-		pipe_prt_error(3, "");
-	if (pi->pid == 0)
+		builtin_echo(pi->command);
+		exit (0);
+	}
+	else if(ft_strncmp(pi->command[0], "cd", 3) == 0)
+		exit (builtin_cd(pi->command, envnode, 0));
+	else if(ft_strncmp(pi->command[0], "pwd", 4) == 0)
 	{
-		if (check_redi(tr) == 1)
-		{
-			pi->tmp = tr->left_child->token;
-			while (pi->tmp)
-			{
-				if (ft_strncmp(pi->tmp->str, "<", 2) == 0 && pi->tmp->flag != 1)
-					pipe_connect1(tr, pi, i);
-				else if (ft_strncmp(pi->tmp->str, ">>", 3) == 0 && pi->tmp->flag != 1)
-					pipe_connect2(tr, pi, i);
-				else if (ft_strncmp(pi->tmp->str, ">", 2) == 0 && pi->tmp->flag != 1)
-					pipe_connect3(tr, pi, i);
-				else if (ft_strncmp(pi->tmp->str, "<<", 3) == 0 && pi->tmp->flag != 1)
-					pipe_connect4(tr, pi, i);
-				pi->tmp = pi->tmp->next;
-			}
-		}
-		else
-			pipe_connect_other(tr, pi, i);
-		close_fd(pi, tree->pipe_cnt);
-		if (pi->err_code < 0)
-			pipe_prt_error(4, "");
-//파이프연결 끝
-		if (!pi->command[0] && pi->index > 0)
-			exit (0);
-		else if (ft_strncmp(pi->command[0], "echo", 5) == 0)
-		{
-			builtin_echo(pi->command);
-			exit (0);
-		}
-		else if(ft_strncmp(pi->command[0], "cd", 3) == 0)
-			exit (builtin_cd(pi->command, envnode, 0));
-		else if(ft_strncmp(pi->command[0], "pwd", 4) == 0)
-		{
-			builtin_pwd(pi->command);
-			exit (0);
-		}
-		else if(ft_strncmp(pi->command[0], "env", 4) == 0)
-		{
-			exit(builtin_env(envnode, pi->command, 0));
-			exit (0);
-		}
-		else if(ft_strncmp(pi->command[0], "export", 7) == 0)
-			exit (builtin_export(envnode, pi->command, 0));
-		else if (ft_strncmp(pi->command[0], "unset", 6) == 0)
-		{
-			builtin_unset(envnode, pi->command);
-			exit (0);
-		}
-		else if (ft_strncmp(pi->command[0], "exit", 5) == 0)
-			g_exit_code = (builtin_exit(pi->command, 0));
-		else
-		{
-			if (pi->str == NULL && (ft_strncmp(pi->command[0], "/", 1) == 0 || ft_strncmp(pi->command[0], "./", 2) == 0))
-				pi->str = pi->command[0];
+		builtin_pwd(pi->command);
+		exit (0);
+	}
+	else if(ft_strncmp(pi->command[0], "env", 4) == 0)
+	{
+		exit(builtin_env(envnode, pi->command, 0));
+		exit (0);
+	}
+	else if(ft_strncmp(pi->command[0], "export", 7) == 0)
+		exit (builtin_export(envnode, pi->command, 0));
+	else if (ft_strncmp(pi->command[0], "unset", 6) == 0)
+	{
+		builtin_unset(envnode, pi->command);
+		exit (0);
+	}
+	else if (ft_strncmp(pi->command[0], "exit", 5) == 0)
+		g_exit_code = (builtin_exit(pi->command, 0));
+	else
+	{
+		if (pi->str == NULL && (ft_strncmp(pi->command[0], "/", 1) == 0 || ft_strncmp(pi->command[0], "./", 2) == 0))
+			pi->str = pi->command[0];
 
-			execve(pi->str, pi->command, envp);
-			write(2, "meowshell: ", 12);
-			write(2, pi->command[0], ft_strlen(pi->command[0]));
-			write(2, ": command not found\n", 21);
-			exit (127);
-		}
+		execve(pi->str, pi->command, envp);
+		write(2, "meowshell: ", 12);
+		write(2, pi->command[0], ft_strlen(pi->command[0]));
+		write(2, ": command not found\n", 21);
+		exit (127);
 	}
-		set_signal_handler(3);
-		if (i != 0)
+}
+
+void	child_process(t_node *tr, t_pipe *pi, char **envp, t_envnode *envnode)
+{
+	if (check_redi(tr) == 1)
+	{
+		pi->tmp = tr->left_child->token;
+		while (pi->tmp)
 		{
-			close(pi->fd[i-1][0]);
-			close(pi->fd[i-1][1]);
+			if (ft_strncmp(pi->tmp->str, "<", 2) == 0 && pi->tmp->flag != 1)
+				pipe_connect1(tr, pi, pi->i);
+			else if (ft_strncmp(pi->tmp->str, ">>", 3) == 0 && pi->tmp->flag != 1)
+				pipe_connect2(tr, pi, pi->i);
+			else if (ft_strncmp(pi->tmp->str, ">", 2) == 0 && pi->tmp->flag != 1)
+				pipe_connect3(tr, pi, pi->i);
+			else if (ft_strncmp(pi->tmp->str, "<<", 3) == 0 && pi->tmp->flag != 1)
+				pipe_connect4(tr, pi, pi->i);
+			pi->tmp = pi->tmp->next;
 		}
-		pi->index = heredoc_count(pi->index, tr->left_child->token);
-		tr=tr->right_child;
-		i++;
-	// free_split(pi->command);
-	free(pi->str);
 	}
-	wait_process(tree->pipe_cnt);
+	else
+		pipe_connect_other(tr, pi, pi->i);
+	close_fd(pi, pi->pipe_cnt);
+	if (pi->err_code < 0)
+		pipe_prt_error(4, "");
+	handle_builtin_child(pi, envp, envnode);
+}
+
+void	handle_builtin_parent(t_tree *tree, t_node *tr, t_envnode *envnode)
+{
 	tr = tree->root;
 	if (tree->pipe_cnt == 0 && (ft_strncmp(tr->left_child->token->str, "cd", 3) == 0 || \
 	ft_strncmp(tr->left_child->token->str, "export", 7) == 0) || (ft_strncmp(tr->left_child->token->str, "unset", 6) == 0 && !tr->right_child)\
@@ -569,6 +552,46 @@ void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
 			g_exit_code = builtin_unset(envnode, pi->command);
 		free_split(pi->command);
 	}
+}
+
+void	parent_process(t_node *tr, t_pipe *pi)
+{
+	set_signal_handler(3);
+	if (pi->i != 0)
+	{
+		close(pi->fd[(pi->i) - 1][0]);
+		close(pi->fd[(pi->i) - 1][1]);
+	}
+	pi->index = heredoc_count(pi->index, tr->left_child->token);
+	pi->i++;
+	free_split(pi->command);
+	free(pi->str);	
+}
+
+void	main_pipe(t_tree *tree, t_envnode *envnode, char **envp)
+{
+	t_pipe *pi;
+	t_node *tr;
+	tr = tree->root;
+	pi = malloc(sizeof(t_pipe));
+	if (pipe_malloc_open_init(pi, tree->pipe_cnt, tree) == -1)
+		pipe_prt_error(2, "");
+	if (!tr->left_child)
+		return ;
+	while (pi->i < tree->pipe_cnt + 1)
+	{
+		set_start(tree, pi, envnode, tr);
+		set_signal_handler(1);
+		pi->pid = fork();
+		if (pi->pid < 0)
+			pipe_prt_error(3, "");
+		if (pi->pid == 0)
+			child_process(tr, pi, envp, envnode);
+		parent_process(tr, pi);
+		tr = tr->right_child;
+	}
+	wait_process(tree->pipe_cnt);
+	handle_builtin_parent(tree, tr, envnode);
 	free_pipe(pi, tree->pipe_cnt);
 	free(pi);
 }
