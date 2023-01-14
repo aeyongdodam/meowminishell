@@ -6,7 +6,7 @@
 /*   By: sohlee <sohlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/15 00:10:50 by sohlee            #+#    #+#             */
-/*   Updated: 2023/01/15 00:26:48 by sohlee           ###   ########.fr       */
+/*   Updated: 2023/01/15 01:48:50 by sohlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,16 +49,16 @@ void	builtin2(t_pipe *pi, t_envnode *envnode)
 	else if (ft_strncmp(pi->command[0], "exit", 5) == 0)
 		g_exit_code = (builtin_exit(pi->command, 0));
 }
-
+	
 int	builtin_strncmp(t_pipe *pi, t_tree *tree, t_node *tr)
 {
 	if (tree->pipe_cnt == 0 && \
-	(ft_strncmp(tr->left_child->token->str, "cd", 3) == 0 || \
+	((ft_strncmp(tr->left_child->token->str, "cd", 3) == 0 || \
 	ft_strncmp(tr->left_child->token->str, "export", 7) == 0) || \
 	(ft_strncmp(tr->left_child->token->str, "unset", 6) == 0 && \
 	!tr->right_child) || \
 	(ft_strncmp(tr->left_child->token->str, "exit", 5) == 0 \
-	&& !tr->right_child))
+	&& !tr->right_child)))
 		return (1);
 	return (0);
 }
