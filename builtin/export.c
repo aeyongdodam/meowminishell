@@ -6,7 +6,7 @@
 /*   By: sohlee <sohlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/14 21:34:35 by sohlee            #+#    #+#             */
-/*   Updated: 2023/01/15 01:42:19 by sohlee           ###   ########.fr       */
+/*   Updated: 2023/01/15 01:58:06 by sohlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	export_cmd(t_envnode *envnode, t_envnode *tmp, char **command, int i)
 			j++;
 		key_tmp = ft_substr(command[i], 0, j);
 		value_tmp = ft_substr(command[i], j + 1, ft_strlen(command[i]));
+		printf("here\n");
 		if (find_key(key_tmp, value_tmp, envnode) == 0)
 			export_find(&new_node, &tmp, &key_tmp, &value_tmp);
 	}
