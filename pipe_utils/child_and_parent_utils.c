@@ -15,6 +15,7 @@
 void	handle_child(t_pipe *pi, char **envp, t_envnode *envnode)
 {
 	if ((!pi->command[0] && pi->index > 0) || \
+	ft_strncmp(pi->command[0], "echo", 5) == 0 || \
 	ft_strncmp(pi->command[0], "cd", 3) == 0 || \
 	ft_strncmp(pi->command[0], "pwd", 4) == 0 || \
 	ft_strncmp(pi->command[0], "env", 4) == 0 || \
@@ -25,8 +26,8 @@ void	handle_child(t_pipe *pi, char **envp, t_envnode *envnode)
 		builtin2(pi, envnode);
 	else
 	{
-		if (pi->str == NULL && (ft_strncmp(pi->command[0], "/", 1) == 0 \
-		|| ft_strncmp(pi->command[0], "./", 2) == 0))
+		if (ft_strncmp(pi->command[0], "/", 1) == 0 \
+		|| ft_strncmp(pi->command[0], "./", 2) == 0)
 			pi->str = pi->command[0];
 		execve(pi->str, pi->command, envp);
 		write(2, "meowshell: ", 12);

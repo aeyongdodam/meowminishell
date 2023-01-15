@@ -26,7 +26,7 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		set_signal_handler(0);
-		line = readline("Minishell> ");
+		line = readline("Meowshell> ");
 		if (!line)
 			prt_exit();
 		tree = lexer(line, envnode);
